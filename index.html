@@ -389,7 +389,7 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
         </div>
       </div>
     </div>
-    <div class="footer-bottom">© 2025 مبادرة أثر+ · جميع الحقوق محفوظة</div>
+    <div class="footer-bottom" id="footer-year">© 2025 م مبادرة أثر+ · جميع الحقوق محفوظة</div>
   </footer>
 </div>
 
@@ -751,7 +751,7 @@ function cardHTML(a){
   return `<div class="card" onclick="openArticle(${a.id})">
     <div class="card-img">${img}</div>
     <div class="card-body">
-      <div class="card-year">${(a.date||'').split('-')[0]}</div>
+      <div class="card-year">${(a.date||'').split('-')[0]} م · ${toHijri(a.date).split(' ').pop()||''} هـ</div>
       <div class="card-title">${a.title}</div>
       <div class="card-excerpt">${a.lead||''}</div>
     </div>
@@ -782,6 +782,21 @@ function setPill(el){
   el.classList.add('active');activeFilter=el.dataset.cat;renderGallery();
 }
 
+// ── HIJRI DATE ──
+function toHijri(dateStr){
+  try{
+    const d = new Date(dateStr);
+    if(isNaN(d)) return '';
+    return d.toLocaleDateString('ar-SA-u-ca-islamic',{year:'numeric',month:'long',day:'numeric'});
+  }catch{return '';}
+}
+function formatDualDate(dateStr){
+  if(!dateStr) return '';
+  const miladi = new Date(dateStr).toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'});
+  const hijri  = toHijri(dateStr);
+  return hijri ? `${hijri} · ${miladi}` : miladi;
+}
+
 // ARTICLE
 async function openArticle(id){
   currentArticleId=id;currentRating=0;
@@ -792,7 +807,7 @@ async function openArticle(id){
   const art=a[0];
   updateMeta(art.title,art.lead||'');
   document.getElementById('a-tag').textContent=art.cat;
-  document.getElementById('a-date').textContent=(art.date||'').replace(/-/g,'/');
+  document.getElementById('a-date').textContent=formatDualDate(art.date);
   document.getElementById('a-title').textContent=art.title;
   document.getElementById('a-lead').textContent=art.lead||'';
   let body=(art.body||'').split('\n\n').map(p=>`<p>${p}</p>`).join('');
@@ -830,7 +845,7 @@ async function loadComments(id){
         <span class="comment-author">${c.author}</span>
         <span style="display:flex;align-items:center;gap:8px">
           ${c.rating?`<span class="comment-stars">${'★'.repeat(c.rating)}${'☆'.repeat(5-c.rating)}</span>`:''}
-          <span class="comment-date">${new Date(c.created_at).toLocaleDateString('ar-SA')}</span>
+          <span class="comment-date">${toHijri(c.created_at)||new Date(c.created_at).toLocaleDateString('ar-SA')}</span>
         </span>
       </div>
       ${c.body?`<div class="comment-text">${c.body}</div>`:''}
