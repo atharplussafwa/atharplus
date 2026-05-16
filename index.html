@@ -262,7 +262,7 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
     <div class="stats-row">
       <div class="stat"><div class="stat-num" id="cnt-h">0</div><div class="stat-label">مكرَّم</div></div>
       <div class="stat"><div class="stat-num" id="cnt-e">0</div><div class="stat-label">حفل تكريم</div></div>
-      <div class="stat"><div class="stat-num" id="cnt-y">5</div><div class="stat-label">سنوات</div></div>
+      <div class="stat"><div class="stat-num" id="cnt-y">0</div><div class="stat-label">سنوات</div></div>
     </div>
   </div>
   <div class="wall-section">
@@ -655,6 +655,12 @@ async function submitContact(){
 function animateStats(pub){
   anim('cnt-h', pub, 1200);
   anim('cnt-e', pub, 900);
+  // سنوات المبادرة محسوبة من سبتمبر ٢٠٢٥
+  const founding = new Date('2025-09-01');
+  const now = new Date();
+  const months = (now.getFullYear()-founding.getFullYear())*12 + (now.getMonth()-founding.getMonth());
+  const yrs = months < 12 ? +(months/12).toFixed(1) : Math.floor(months/12);
+  document.getElementById('cnt-y').textContent = yrs;
 }
 function anim(id,target,dur){
   const el=document.getElementById(id);if(!el)return;
