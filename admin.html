@@ -16,10 +16,9 @@
 }
 body{font-family:'Tajawal',sans-serif;background:var(--dark);color:var(--text);direction:rtl;min-height:100vh}
 
-/* ── LOGIN SCREEN ── */
 .login-screen{position:fixed;inset:0;background:var(--dark);display:flex;align-items:center;justify-content:center;z-index:200}
 .login-screen.hidden{display:none}
-.login-box{background:var(--dark2);border:1px solid rgba(201,162,39,0.2);border-radius:18px;padding:3rem 2.5rem;width:360px;text-align:center}
+.login-box{background:var(--dark2);border:1px solid rgba(201,162,39,.2);border-radius:18px;padding:3rem 2.5rem;width:360px;text-align:center}
 .login-logo{font-size:2.2rem;font-weight:800;color:var(--gold);margin-bottom:.3rem}
 .login-logo span{color:var(--text);font-weight:300}
 .login-tagline{font-size:.82rem;color:var(--text-muted);margin-bottom:.4rem}
@@ -29,14 +28,11 @@ body{font-family:'Tajawal',sans-serif;background:var(--dark);color:var(--text);d
 .login-err{color:var(--red);font-size:.8rem;min-height:1.1rem;margin-bottom:.8rem}
 .login-btn{background:var(--gold);color:var(--dark);width:100%;padding:13px;border-radius:10px;font-family:'Tajawal',sans-serif;font-weight:700;font-size:1rem;border:none;cursor:pointer;transition:background .2s}
 .login-btn:hover{background:var(--gold-light)}
-.login-back{margin-top:1.2rem;font-size:.8rem;color:var(--text-muted);cursor:pointer;transition:color .2s}
+.login-back{margin-top:1.2rem;font-size:.8rem;color:var(--text-muted);cursor:pointer;transition:color .2s;display:block;text-decoration:none}
 .login-back:hover{color:var(--gold)}
 
-/* ── APP LAYOUT ── */
-.app{display:none;min-height:100vh}
-.app.visible{display:flex;flex-direction:column}
-
-/* TOP BAR */
+.app{display:none;min-height:100vh;flex-direction:column}
+.app.visible{display:flex}
 .topbar{height:58px;background:var(--dark2);border-bottom:1px solid rgba(201,162,39,.15);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;position:sticky;top:0;z-index:50}
 .topbar-logo{font-size:1.3rem;font-weight:800;color:var(--gold)}
 .topbar-logo span{color:var(--text);font-weight:300}
@@ -45,30 +41,24 @@ body{font-family:'Tajawal',sans-serif;background:var(--dark);color:var(--text);d
 .topbar-site:hover{color:var(--gold);border-color:rgba(201,162,39,.3)}
 .topbar-logout{font-size:.82rem;color:var(--text-muted);cursor:pointer;transition:color .2s;background:transparent;border:none;font-family:'Tajawal',sans-serif}
 .topbar-logout:hover{color:var(--red)}
-
-/* BODY */
 .admin-body{display:flex;flex:1}
-
-/* SIDEBAR */
 .sidebar{width:var(--sidebar);background:var(--dark2);border-left:1px solid rgba(255,255,255,.05);padding:1.5rem 0;flex-shrink:0;position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto}
 .sb-section{padding:.35rem 1.25rem;font-size:.65rem;font-weight:700;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-top:1rem}
 .sb-item{display:flex;align-items:center;gap:10px;padding:10px 1.25rem;color:var(--text-muted);cursor:pointer;transition:all .2s;font-size:.86rem;border-right:3px solid transparent}
 .sb-item:hover{color:var(--text);background:rgba(255,255,255,.03)}
 .sb-item.active{color:var(--gold);border-right-color:var(--gold);background:rgba(201,162,39,.06)}
 .sb-badge{background:var(--gold);color:var(--dark);border-radius:10px;font-size:.65rem;font-weight:700;padding:2px 7px;margin-right:auto}
-
-/* MAIN */
 .admin-main{flex:1;padding:2rem;overflow-y:auto;min-width:0}
 .adm-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.8rem;flex-wrap:wrap;gap:1rem}
 .adm-title{font-size:1.4rem;font-weight:800}
+.adm-tab{display:none}
+.adm-tab.active{display:block}
 
-/* STAT CARDS */
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin-bottom:2rem}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1rem;margin-bottom:2rem}
 .stat-card{background:var(--dark2);border:1px solid rgba(255,255,255,.05);border-radius:12px;padding:1.2rem}
 .stat-card-num{font-size:2rem;font-weight:800;color:var(--gold)}
 .stat-card-label{font-size:.78rem;color:var(--text-muted);margin-top:3px}
 
-/* TABLE */
 .tbl-wrap{background:var(--dark2);border-radius:12px;border:1px solid rgba(255,255,255,.05);overflow:hidden;margin-bottom:2rem}
 .tbl-head{display:grid;grid-template-columns:2fr 1fr 1fr 120px;padding:10px 1.25rem;background:var(--dark3);font-size:.75rem;color:var(--text-muted);font-weight:700;letter-spacing:1px}
 .tbl-row{display:grid;grid-template-columns:2fr 1fr 1fr 120px;padding:13px 1.25rem;border-top:1px solid rgba(255,255,255,.04);align-items:center;transition:background .2s}
@@ -81,7 +71,6 @@ body{font-family:'Tajawal',sans-serif;background:var(--dark);color:var(--text);d
 .badge-pub{background:rgba(57,197,120,.12);color:var(--green)}
 .badge-draft{background:rgba(255,255,255,.06);color:var(--text-muted)}
 
-/* FORM */
 .form-panel{background:var(--dark2);border-radius:12px;border:1px solid rgba(255,255,255,.05);padding:2rem}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.3rem}
 .fg{display:flex;flex-direction:column;gap:5px}
@@ -99,34 +88,30 @@ select option{background:var(--dark2)}
 .form-foot{display:flex;gap:1rem;justify-content:flex-end;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.05)}
 .btn-save{background:var(--gold);color:var(--dark);padding:10px 28px;border-radius:8px;font-family:'Tajawal',sans-serif;font-weight:700;font-size:.9rem;border:none;cursor:pointer;transition:all .2s}
 .btn-save:hover{background:var(--gold-light)}
+.btn-save:disabled{opacity:.5;cursor:not-allowed}
 .btn-cancel{background:transparent;color:var(--text-muted);padding:10px 28px;border-radius:8px;font-family:'Tajawal',sans-serif;font-weight:500;font-size:.9rem;border:1px solid rgba(255,255,255,.1);cursor:pointer;transition:all .2s}
 .btn-cancel:hover{color:var(--text);border-color:rgba(255,255,255,.2)}
 .img-gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-top:8px}
 .img-thumb-wrap{position:relative;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,.1)}
 .img-thumb-wrap img{width:100%;height:75px;object-fit:cover;display:block}
 .img-rm{position:absolute;top:3px;left:3px;background:rgba(225,72,67,.85);border:none;color:#fff;width:20px;height:20px;border-radius:50%;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-
-/* WALL ADMIN */
 .wall-admin-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem}
 .wall-slot{background:var(--dark2);border-radius:12px;border:1px solid rgba(255,255,255,.06);padding:1.5rem}
 .wall-slot-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
 .wall-slot-title{font-weight:700;color:var(--gold);font-size:.95rem}
-
-/* INBOX ITEM */
 .inbox-item{background:var(--dark2);border-radius:12px;border:1px solid rgba(255,255,255,.05);padding:1.25rem;margin-bottom:1rem}
-.inbox-item-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px}
+.inbox-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px}
 .inbox-name{font-size:.98rem;font-weight:700}
 .inbox-date{font-size:.73rem;color:var(--text-muted)}
 .inbox-meta{font-size:.8rem;color:var(--gold);margin-bottom:6px}
 .inbox-body{font-size:.86rem;color:#C8C4B8;line-height:1.7}
 .inbox-by{font-size:.78rem;color:var(--text-muted);margin-top:6px}
 .empty-state{color:var(--text-muted);font-size:.88rem;padding:1rem 0}
+.loading{color:var(--text-muted);font-size:.88rem;padding:1rem 0}
 
-/* NOTIF */
 .notif{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--green);color:#0D1117;padding:10px 22px;border-radius:8px;font-weight:700;font-size:.85rem;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 .notif.show{opacity:1}
 
-/* RESPONSIVE */
 @media(max-width:768px){
   .sidebar{display:none}
   .form-grid{grid-template-columns:1fr}
@@ -139,10 +124,9 @@ select option{background:var(--dark2)}
 </head>
 <body>
 
-<!-- NOTIF -->
 <div class="notif" id="notif"></div>
 
-<!-- ═══ LOGIN ═══ -->
+<!-- LOGIN -->
 <div class="login-screen" id="login-screen">
   <div class="login-box">
     <div class="login-logo">أثر<span>+</span></div>
@@ -151,14 +135,12 @@ select option{background:var(--dark2)}
     <input type="password" id="login-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')tryLogin()">
     <div class="login-err" id="login-err"></div>
     <button class="login-btn" onclick="tryLogin()">دخول</button>
-    <div class="login-back" onclick="window.location.href='index.html'">← العودة للموقع</div>
+    <a class="login-back" href="index.html">← العودة للموقع</a>
   </div>
 </div>
 
-<!-- ═══ ADMIN APP ═══ -->
+<!-- APP -->
 <div class="app" id="admin-app">
-
-  <!-- TOP BAR -->
   <div class="topbar">
     <div class="topbar-logo">أثر<span>+</span> <span style="font-size:.7rem;color:var(--text-muted);font-weight:400;margin-right:.5rem">لوحة التحكم</span></div>
     <div class="topbar-right">
@@ -166,10 +148,7 @@ select option{background:var(--dark2)}
       <button class="topbar-logout" onclick="logout()">تسجيل خروج</button>
     </div>
   </div>
-
   <div class="admin-body">
-
-    <!-- SIDEBAR -->
     <div class="sidebar">
       <div class="sb-section">المحتوى</div>
       <div class="sb-item active" data-tab="dashboard" onclick="switchTab(this,'dashboard')">📊 لوحة التحكم</div>
@@ -180,40 +159,38 @@ select option{background:var(--dark2)}
       <div class="sb-item" data-tab="nominations" onclick="switchTab(this,'nominations')">🌟 الترشيحات <span class="sb-badge" id="badge-noms">0</span></div>
       <div class="sb-item" data-tab="messages" onclick="switchTab(this,'messages')">✉️ الرسائل <span class="sb-badge" id="badge-msgs">0</span></div>
     </div>
-
-    <!-- MAIN -->
     <div class="admin-main">
 
-      <!-- ── DASHBOARD ── -->
-      <div id="tab-dashboard" class="adm-tab">
+      <!-- DASHBOARD -->
+      <div id="tab-dashboard" class="adm-tab active">
         <div class="adm-header"><div class="adm-title">لوحة التحكم</div></div>
         <div class="stats-grid">
-          <div class="stat-card"><div class="stat-card-num" id="s-total">0</div><div class="stat-card-label">إجمالي التكريمات</div></div>
-          <div class="stat-card"><div class="stat-card-num" id="s-pub">0</div><div class="stat-card-label">منشور</div></div>
-          <div class="stat-card"><div class="stat-card-num" id="s-draft">0</div><div class="stat-card-label">مسودة</div></div>
-          <div class="stat-card"><div class="stat-card-num" id="s-noms">0</div><div class="stat-card-label">ترشيحات</div></div>
-          <div class="stat-card"><div class="stat-card-num" id="s-msgs">0</div><div class="stat-card-label">رسائل</div></div>
+          <div class="stat-card"><div class="stat-card-num" id="s-total">-</div><div class="stat-card-label">إجمالي التكريمات</div></div>
+          <div class="stat-card"><div class="stat-card-num" id="s-pub">-</div><div class="stat-card-label">منشور</div></div>
+          <div class="stat-card"><div class="stat-card-num" id="s-draft">-</div><div class="stat-card-label">مسودة</div></div>
+          <div class="stat-card"><div class="stat-card-num" id="s-noms">-</div><div class="stat-card-label">ترشيحات</div></div>
+          <div class="stat-card"><div class="stat-card-num" id="s-msgs">-</div><div class="stat-card-label">رسائل</div></div>
         </div>
         <div class="tbl-wrap">
           <div style="padding:1rem 1.25rem;font-size:.8rem;font-weight:700;color:var(--text-muted);border-bottom:1px solid rgba(255,255,255,.04)">آخر التكريمات</div>
-          <div id="recent-list"></div>
+          <div id="recent-list"><div class="loading" style="padding:1rem 1.25rem">جاري التحميل...</div></div>
         </div>
       </div>
 
-      <!-- ── ARTICLES LIST ── -->
-      <div id="tab-articles" class="adm-tab" style="display:none">
+      <!-- ARTICLES -->
+      <div id="tab-articles" class="adm-tab">
         <div class="adm-header">
           <div class="adm-title">التكريمات</div>
           <button class="btn-save" onclick="openAddForm()">+ إضافة جديد</button>
         </div>
         <div class="tbl-wrap">
           <div class="tbl-head"><div>العنوان</div><div>التصنيف</div><div>الحالة</div><div>إجراءات</div></div>
-          <div id="articles-table"></div>
+          <div id="articles-table"><div class="loading" style="padding:1rem 1.25rem">جاري التحميل...</div></div>
         </div>
       </div>
 
-      <!-- ── ADD / EDIT ── -->
-      <div id="tab-add" class="adm-tab" style="display:none">
+      <!-- ADD/EDIT -->
+      <div id="tab-add" class="adm-tab">
         <div class="adm-header"><div class="adm-title" id="form-label">إضافة تكريم جديد</div></div>
         <div class="form-panel">
           <input type="hidden" id="f-id">
@@ -235,7 +212,7 @@ select option{background:var(--dark2)}
               <input type="file" id="f-img" accept="image/*" style="display:none" onchange="previewCover(this)">
               <div id="cover-preview" style="display:none;margin-top:10px">
                 <img id="cover-thumb" style="max-height:120px;border-radius:8px;border:1px solid rgba(255,255,255,.1)">
-                <button onclick="removeCover()" style="display:block;margin-top:6px;background:transparent;border:none;color:var(--red);font-family:'Tajawal',sans-serif;cursor:pointer;font-size:.8rem">✕ إزالة الصورة</button>
+                <button onclick="removeCover()" style="display:block;margin-top:6px;background:transparent;border:none;color:var(--red);font-family:'Tajawal',sans-serif;cursor:pointer;font-size:.8rem">✕ إزالة</button>
               </div>
             </div>
             <div class="fg full">
@@ -254,27 +231,27 @@ select option{background:var(--dark2)}
           </div>
           <div class="form-foot">
             <button class="btn-cancel" onclick="switchTabByName('articles')">إلغاء</button>
-            <button class="btn-save" onclick="saveArticle()">💾 حفظ</button>
+            <button class="btn-save" id="save-btn" onclick="saveArticle()">💾 حفظ</button>
           </div>
         </div>
       </div>
 
-      <!-- ── WALL ── -->
-      <div id="tab-wall" class="adm-tab" style="display:none">
+      <!-- WALL -->
+      <div id="tab-wall" class="adm-tab">
         <div class="adm-header"><div class="adm-title">جدار الأثر</div></div>
-        <div class="wall-admin-grid" id="wall-admin-cards"></div>
+        <div class="wall-admin-grid" id="wall-admin-cards"><div class="loading">جاري التحميل...</div></div>
       </div>
 
-      <!-- ── NOMINATIONS ── -->
-      <div id="tab-nominations" class="adm-tab" style="display:none">
+      <!-- NOMINATIONS -->
+      <div id="tab-nominations" class="adm-tab">
         <div class="adm-header"><div class="adm-title">الترشيحات الواردة</div></div>
-        <div id="nominations-list"><div class="empty-state">لا توجد ترشيحات بعد</div></div>
+        <div id="nominations-list"><div class="loading">جاري التحميل...</div></div>
       </div>
 
-      <!-- ── MESSAGES ── -->
-      <div id="tab-messages" class="adm-tab" style="display:none">
+      <!-- MESSAGES -->
+      <div id="tab-messages" class="adm-tab">
         <div class="adm-header"><div class="adm-title">رسائل التواصل</div></div>
-        <div id="messages-list"><div class="empty-state">لا توجد رسائل بعد</div></div>
+        <div id="messages-list"><div class="loading">جاري التحميل...</div></div>
       </div>
 
     </div>
@@ -283,52 +260,47 @@ select option{background:var(--dark2)}
 
 <script>
 const ADMIN_PASSWORD = 'athar2025';
+const SUPA_URL = 'https://nhsklhgoybiutnbxzwkg.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5oc2tsaGdveWJpdXRuYnh6d2tnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjIwMjUsImV4cCI6MjA5NDQ5ODAyNX0.NBHKay0OOt1Hw0S7sD8XMrAscWScvPSdfyPA3agecyw';
 
-// ═══════════════════════════════════════
-//  STORAGE
-// ═══════════════════════════════════════
-const DB = {
-  get:(k)=>{try{return JSON.parse(localStorage.getItem('athar_'+k))||null}catch{return null}},
-  set:(k,v)=>{try{localStorage.setItem('athar_'+k,JSON.stringify(v))}catch{}},
+// ── SUPABASE API ──
+const api = async (path, opts={}) => {
+  const res = await fetch(`${SUPA_URL}/rest/v1/${path}`, {
+    headers:{
+      'apikey': SUPA_KEY,
+      'Authorization': `Bearer ${SUPA_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': opts.prefer ?? 'return=representation',
+      ...opts.headers
+    }, ...opts
+  });
+  if(!res.ok){ const e=await res.text(); console.error(path, e); showNotif('⚠️ خطأ: '+res.status); return null; }
+  const txt = await res.text();
+  return txt ? JSON.parse(txt) : null;
+};
+const db = {
+  get:   (t,q='')    => api(`${t}${q?'?'+q:''}`),
+  post:  (t,body)    => api(t, {method:'POST', body:JSON.stringify(body)}),
+  patch: (t,q,body)  => api(`${t}?${q}`, {method:'PATCH', body:JSON.stringify(body)}),
+  del:   (t,q)       => api(`${t}?${q}`, {method:'DELETE', prefer:''}),
 };
 
-const DEFAULT_ARTICLES = [
-  {id:1,title:'تكريم الطلاب المتفوقين في المرحلة الثانوية 2024',cat:'تعليم',date:'2024-05-15',
-   lead:'في حفل بهيج جمع عائلات الطلاب وأعضاء المجلس، تم تكريم نخبة من أبرز المتفوقين.',
-   body:'أقام مجلس عادل علي آل قريش حفل تكريم مميزًا احتفاءً بالطلاب المتفوقين.\n\nتحدث رئيس المجلس عن أهمية تحفيز الأجيال القادمة نحو التميز.\n\nوتوِّج الحفل بتسليم الدروع والشهادات التقديرية.',
-   status:'منشور',img:'',imgs:[]},
-  {id:2,title:'تكريم الرياضيين المتألقين في البطولات الإقليمية',cat:'رياضة',date:'2024-03-10',
-   lead:'تقديرًا لجهود الرياضيين الشباب الذين رفعوا اسم صفوى في المحافل الإقليمية.',
-   body:'نظّم المجلس حفل تكريم خاصًا بالرياضيين الشباب.\n\nتضمّن الحفل عروضًا رياضية وكلمات مؤثرة من المكرَّمين.',
-   status:'منشور',img:'',imgs:[]},
-  {id:3,title:'معرض الفنانين الشباب - إبداعات من صفوى',cat:'فنون',date:'2023-11-20',
-   lead:'احتفاء بالطاقات الإبداعية في مجال الفنون البصرية.',
-   body:'أقام المجلس معرضًا فنيًا احتفى بالفنانين الشباب الموهوبين.\n\nضم المعرض أعمالًا متنوعة واستقطب اهتمامًا واسعًا.',
-   status:'منشور',img:'',imgs:[]}
-];
+// ── IMAGE → BASE64 ──
+const toB64 = file => new Promise(r=>{
+  const rd=new FileReader(); rd.onload=e=>r(e.target.result); rd.readAsDataURL(file);
+});
 
-const DEFAULT_WALL = [
-  {q:'Q1',label:'يناير – مارس',honoree:'أحمد محمد السعيد',field:'تعليم · تفوق أكاديمي',desc:'حقق المرتبة الأولى على مستوى المنطقة.',img:'',articleId:1,status:'done'},
-  {q:'Q2',label:'أبريل – يونيو',honoree:'',field:'',desc:'',img:'',articleId:null,status:'upcoming'},
-  {q:'Q3',label:'يوليو – سبتمبر',honoree:'',field:'',desc:'',img:'',articleId:null,status:'upcoming'},
-  {q:'Q4',label:'أكتوبر – ديسمبر',honoree:'',field:'',desc:'',img:'',articleId:null,status:'upcoming'},
-];
-
-let articles = [];
-let wallData  = [];
 let editingId = null;
+let pendingCover = null;
 let pendingMultiImgs = [];
 
-// ═══════════════════════════════════════
-//  AUTH
-// ═══════════════════════════════════════
+// ── AUTH ──
 function tryLogin(){
   const pw = document.getElementById('login-pw').value;
   if(pw === ADMIN_PASSWORD){
     document.getElementById('login-screen').classList.add('hidden');
     document.getElementById('admin-app').classList.add('visible');
-    loadData();
-    refreshDashboard();
+    loadDashboard();
   } else {
     document.getElementById('login-err').textContent = 'كلمة المرور غير صحيحة';
     document.getElementById('login-pw').value = '';
@@ -343,72 +315,56 @@ function logout(){
 }
 document.getElementById('login-pw').focus();
 
-// ═══════════════════════════════════════
-//  DATA
-// ═══════════════════════════════════════
-function loadData(){
-  articles = DB.get('articles') || DEFAULT_ARTICLES;
-  if(!DB.get('articles')) DB.set('articles', DEFAULT_ARTICLES);
-  wallData  = DB.get('wall')     || DEFAULT_WALL;
-  if(!DB.get('wall')) DB.set('wall', DEFAULT_WALL);
-}
-
-function saveArticles(){ DB.set('articles', articles); }
-function saveWall(){      DB.set('wall', wallData); }
-
-// ═══════════════════════════════════════
-//  NAV TABS
-// ═══════════════════════════════════════
+// ── TABS ──
 function switchTab(el, tab){
-  document.querySelectorAll('.adm-tab').forEach(t=>t.style.display='none');
+  document.querySelectorAll('.adm-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(s=>s.classList.remove('active'));
-  document.getElementById('tab-'+tab).style.display='block';
+  document.getElementById('tab-'+tab).classList.add('active');
   if(el) el.classList.add('active');
-  if(tab==='articles')   renderTable();
-  if(tab==='wall')       renderWallAdmin();
-  if(tab==='nominations')renderNominations();
-  if(tab==='messages')   renderMessages();
-  if(tab==='dashboard')  refreshDashboard();
+  if(tab==='dashboard')   loadDashboard();
+  if(tab==='articles')    loadTable();
+  if(tab==='wall')        loadWallAdmin();
+  if(tab==='nominations') loadNominations();
+  if(tab==='messages')    loadMessages();
 }
 function switchTabByName(tab){
-  document.querySelectorAll('.adm-tab').forEach(t=>t.style.display='none');
-  document.getElementById('tab-'+tab).style.display='block';
-  document.querySelectorAll('.sb-item').forEach(s=>{
-    s.classList.toggle('active', s.dataset.tab===tab);
-  });
-  if(tab==='articles') renderTable();
+  document.querySelectorAll('.adm-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(s=>s.classList.toggle('active', s.dataset.tab===tab));
+  if(tab==='articles') loadTable();
 }
 
-// ═══════════════════════════════════════
-//  DASHBOARD
-// ═══════════════════════════════════════
-function refreshDashboard(){
-  loadData();
-  const noms = DB.get('nominations')||[];
-  const msgs = DB.get('contact_messages')||[];
-  const pub  = articles.filter(x=>x.status==='منشور').length;
-  const dft  = articles.filter(x=>x.status==='مسودة').length;
-  document.getElementById('s-total').textContent  = articles.length;
-  document.getElementById('s-pub').textContent    = pub;
-  document.getElementById('s-draft').textContent  = dft;
-  document.getElementById('s-noms').textContent   = noms.length;
-  document.getElementById('s-msgs').textContent   = msgs.length;
-  document.getElementById('badge-noms').textContent = noms.length;
-  document.getElementById('badge-msgs').textContent = msgs.length;
-  // recent list
-  const rl = document.getElementById('recent-list');
-  rl.innerHTML = articles.slice(0,5).map(a=>`
+// ── DASHBOARD ──
+async function loadDashboard(){
+  const [arts, noms, msgs] = await Promise.all([
+    db.get('articles','select=id,status'),
+    db.get('nominations','select=id'),
+    db.get('contact_messages','select=id'),
+  ]);
+  const total = arts?.length||0;
+  const pub   = arts?.filter(a=>a.status==='منشور').length||0;
+  const dft   = arts?.filter(a=>a.status==='مسودة').length||0;
+  const nc    = noms?.length||0;
+  const mc    = msgs?.length||0;
+  document.getElementById('s-total').textContent = total;
+  document.getElementById('s-pub').textContent   = pub;
+  document.getElementById('s-draft').textContent = dft;
+  document.getElementById('s-noms').textContent  = nc;
+  document.getElementById('s-msgs').textContent  = mc;
+  document.getElementById('badge-noms').textContent = nc;
+  document.getElementById('badge-msgs').textContent = mc;
+  const recent = await db.get('articles','select=id,title,status&order=created_at.desc&limit=5');
+  document.getElementById('recent-list').innerHTML = (recent||[]).map(a=>`
     <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 1.25rem;border-top:1px solid rgba(255,255,255,.04);font-size:.86rem">
       <div>${a.title}</div>
       <span class="badge ${a.status==='منشور'?'badge-pub':'badge-draft'}">${a.status}</span>
-    </div>`).join('');
+    </div>`).join('') || '<div style="padding:1rem 1.25rem;color:var(--text-muted);font-size:.85rem">لا توجد تكريمات بعد</div>';
 }
 
-// ═══════════════════════════════════════
-//  ARTICLES TABLE
-// ═══════════════════════════════════════
-function renderTable(){
-  document.getElementById('articles-table').innerHTML = articles.map(a=>`
+// ── ARTICLES TABLE ──
+async function loadTable(){
+  const rows = await db.get('articles','select=id,title,cat,status&order=created_at.desc');
+  document.getElementById('articles-table').innerHTML = (rows||[]).map(a=>`
     <div class="tbl-row">
       <div style="font-size:.86rem;font-weight:500">${a.title}</div>
       <div style="font-size:.8rem;color:var(--text-muted)">${a.cat}</div>
@@ -417,49 +373,61 @@ function renderTable(){
         <button class="act-btn" onclick="editArticle(${a.id})">تعديل</button>
         <button class="act-btn del" onclick="deleteArticle(${a.id})">حذف</button>
       </div>
-    </div>`).join('');
+    </div>`).join('') || '<div style="padding:1rem 1.25rem;color:var(--text-muted);font-size:.85rem">لا توجد تكريمات بعد</div>';
 }
 
-// ═══════════════════════════════════════
-//  ADD / EDIT FORM
-// ═══════════════════════════════════════
+// ── ADD/EDIT FORM ──
 function openAddForm(){
-  editingId = null; pendingMultiImgs = [];
-  document.getElementById('form-label').textContent = 'إضافة تكريم جديد';
+  editingId=null; pendingCover=null; pendingMultiImgs=[];
+  document.getElementById('form-label').textContent='إضافة تكريم جديد';
   clearForm();
   switchTabByName('add');
 }
 
-function editArticle(id){
-  loadData();
-  const a = articles.find(x=>x.id===id); if(!a)return;
-  editingId = id; pendingMultiImgs = [...(a.imgs||[])];
-  document.getElementById('form-label').textContent = 'تعديل التكريم';
+async function editArticle(id){
+  const rows = await db.get(`articles?id=eq.${id}`);
+  if(!rows||!rows.length) return;
+  const a = rows[0];
+  editingId=id; pendingCover=null;
+  const imgs = Array.isArray(a.imgs)?a.imgs:(a.imgs?JSON.parse(a.imgs):[]);
+  pendingMultiImgs = [...imgs];
+  document.getElementById('form-label').textContent='تعديل التكريم';
   document.getElementById('f-id').value    = id;
-  document.getElementById('f-title').value = a.title;
-  document.getElementById('f-cat').value   = a.cat;
-  document.getElementById('f-date').value  = a.date;
-  document.getElementById('f-lead').value  = a.lead;
-  document.getElementById('f-body').value  = a.body;
-  document.getElementById('f-status').value= a.status;
-  if(a.img){document.getElementById('cover-thumb').src=a.img;document.getElementById('cover-preview').style.display='block';}
-  else{document.getElementById('cover-preview').style.display='none';}
+  document.getElementById('f-title').value = a.title||'';
+  document.getElementById('f-cat').value   = a.cat||'تعليم';
+  document.getElementById('f-date').value  = a.date||'';
+  document.getElementById('f-lead').value  = a.lead||'';
+  document.getElementById('f-body').value  = a.body||'';
+  document.getElementById('f-status').value= a.status||'منشور';
+  if(a.img){
+    document.getElementById('cover-thumb').src = a.img;
+    document.getElementById('cover-preview').style.display='block';
+  } else {
+    document.getElementById('cover-preview').style.display='none';
+  }
   renderMultiPreviews();
   switchTabByName('add');
 }
 
-function deleteArticle(id){
-  if(!confirm('هل أنت متأكد من حذف هذا التكريم؟'))return;
-  articles = articles.filter(x=>x.id!==id);
-  saveArticles();
-  renderTable();
-  refreshDashboard();
+async function deleteArticle(id){
+  if(!confirm('هل أنت متأكد من حذف هذا التكريم؟')) return;
+  await db.del('articles',`id=eq.${id}`);
   showNotif('تم الحذف');
+  loadTable(); loadDashboard();
 }
 
-function saveArticle(){
+async function saveArticle(){
   const title = document.getElementById('f-title').value.trim();
-  if(!title){alert('الرجاء كتابة عنوان التكريم');return;}
+  if(!title){ alert('الرجاء كتابة عنوان التكريم'); return; }
+  const btn = document.getElementById('save-btn');
+  btn.disabled=true; btn.textContent='جاري الحفظ...';
+  // cover image
+  let imgVal = '';
+  if(pendingCover){
+    imgVal = await toB64(pendingCover);
+  } else if(document.getElementById('cover-preview').style.display!=='none'){
+    imgVal = document.getElementById('cover-thumb').src;
+  }
   const obj = {
     title,
     cat   : document.getElementById('f-cat').value,
@@ -467,151 +435,162 @@ function saveArticle(){
     lead  : document.getElementById('f-lead').value.trim(),
     body  : document.getElementById('f-body').value.trim(),
     status: document.getElementById('f-status').value,
-    img   : document.getElementById('cover-preview').style.display!=='none' ? document.getElementById('cover-thumb').src : '',
-    imgs  : [...pendingMultiImgs]
+    img   : imgVal,
+    imgs  : JSON.stringify(pendingMultiImgs)
   };
+  let result;
   if(editingId){
-    const i = articles.findIndex(x=>x.id===editingId);
-    articles[i] = {...articles[i], ...obj};
-    editingId = null;
+    result = await db.patch('articles',`id=eq.${editingId}`, obj);
   } else {
-    obj.id = Date.now();
-    articles.unshift(obj);
+    result = await db.post('articles', obj);
   }
-  saveArticles();
-  showNotif('✓ تم الحفظ بنجاح');
-  switchTabByName('articles');
-  refreshDashboard();
-  pendingMultiImgs = [];
+  btn.disabled=false; btn.textContent='💾 حفظ';
+  if(result){
+    showNotif('✓ تم الحفظ بنجاح');
+    editingId=null; pendingCover=null; pendingMultiImgs=[];
+    switchTabByName('articles');
+    loadDashboard();
+  }
 }
 
 function clearForm(){
   ['f-id','f-title','f-lead','f-body'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('f-cat').value    = 'تعليم';
-  document.getElementById('f-date').value   = '';
-  document.getElementById('f-status').value = 'منشور';
-  document.getElementById('cover-preview').style.display = 'none';
-  document.getElementById('multi-preview').innerHTML = '';
+  document.getElementById('f-cat').value='تعليم';
+  document.getElementById('f-date').value='';
+  document.getElementById('f-status').value='منشور';
+  document.getElementById('cover-preview').style.display='none';
+  document.getElementById('multi-preview').innerHTML='';
+  pendingCover=null; pendingMultiImgs=[];
 }
 
 function previewCover(inp){
-  if(!inp.files||!inp.files[0])return;
+  if(!inp.files||!inp.files[0]) return;
+  pendingCover = inp.files[0];
   const r=new FileReader();
   r.onload=e=>{document.getElementById('cover-thumb').src=e.target.result;document.getElementById('cover-preview').style.display='block';};
   r.readAsDataURL(inp.files[0]);
 }
 function removeCover(){
+  pendingCover=null;
   document.getElementById('cover-preview').style.display='none';
   document.getElementById('f-img').value='';
 }
 
-function previewMulti(inp){
-  if(!inp.files||!inp.files.length)return;
-  const files=Array.from(inp.files); let loaded=0;
-  files.forEach(file=>{
-    const r=new FileReader();
-    r.onload=e=>{pendingMultiImgs.push(e.target.result);loaded++;if(loaded===files.length)renderMultiPreviews();};
-    r.readAsDataURL(file);
-  });
+async function previewMulti(inp){
+  if(!inp.files||!inp.files.length) return;
+  const files=Array.from(inp.files);
+  for(const f of files){
+    const b64=await toB64(f);
+    pendingMultiImgs.push(b64);
+  }
+  renderMultiPreviews();
   inp.value='';
 }
 function renderMultiPreviews(){
-  document.getElementById('multi-preview').innerHTML = pendingMultiImgs.map((src,i)=>`
+  document.getElementById('multi-preview').innerHTML=pendingMultiImgs.map((src,i)=>`
     <div class="img-thumb-wrap"><img src="${src}">
       <button class="img-rm" onclick="removeMultiImg(${i})">✕</button>
     </div>`).join('');
 }
 function removeMultiImg(i){ pendingMultiImgs.splice(i,1); renderMultiPreviews(); }
 
-// ═══════════════════════════════════════
-//  WALL ADMIN
-// ═══════════════════════════════════════
-function renderWallAdmin(){
-  loadData();
-  document.getElementById('wall-admin-cards').innerHTML = wallData.map((w,i)=>`
+// ── WALL ──
+async function loadWallAdmin(){
+  const [wallRows, artRows] = await Promise.all([
+    db.get('wall','order=id.asc'),
+    db.get('articles','select=id,title&status=eq.منشور&order=created_at.desc'),
+  ]);
+  const arts = artRows||[];
+  document.getElementById('wall-admin-cards').innerHTML = (wallRows||[]).map((w,i)=>`
     <div class="wall-slot">
       <div class="wall-slot-head">
         <div class="wall-slot-title">${w.q} · ${w.label}</div>
         <span class="badge ${w.status==='done'?'badge-pub':'badge-draft'}">${w.status==='done'?'مكتمل':'قادم'}</span>
       </div>
       <div style="display:flex;flex-direction:column;gap:10px">
-        <div class="fg"><label>اسم المكرَّم/المكرَّمة</label><input type="text" value="${w.honoree}" onchange="wallData[${i}].honoree=this.value" placeholder="الاسم الكامل"></div>
-        <div class="fg"><label>المجال / الإنجاز</label><input type="text" value="${w.field}" onchange="wallData[${i}].field=this.value" placeholder="تعليم · تفوق أكاديمي"></div>
-        <div class="fg"><label>وصف مختصر</label><input type="text" value="${w.desc}" onchange="wallData[${i}].desc=this.value" placeholder="جملة قصيرة"></div>
+        <div class="fg"><label>اسم المكرَّم/المكرَّمة</label>
+          <input type="text" id="wn-${w.id}" value="${w.honoree||''}" placeholder="الاسم الكامل"></div>
+        <div class="fg"><label>المجال / الإنجاز</label>
+          <input type="text" id="wf-${w.id}" value="${w.field||''}" placeholder="تعليم · تفوق أكاديمي"></div>
+        <div class="fg"><label>وصف مختصر</label>
+          <input type="text" id="wd-${w.id}" value="${w.description||''}" placeholder="جملة قصيرة"></div>
         <div class="fg"><label>ربط بمقال</label>
-          <select onchange="wallData[${i}].articleId=this.value?+this.value:null">
+          <select id="wa-${w.id}">
             <option value="">— بدون ربط —</option>
-            ${articles.filter(a=>a.status==='منشور').map(a=>`<option value="${a.id}" ${w.articleId===a.id?'selected':''}>${a.title}</option>`).join('')}
+            ${arts.map(a=>`<option value="${a.id}" ${w.article_id==a.id?'selected':''}>${a.title}</option>`).join('')}
           </select></div>
         <div class="fg"><label>صورة المكرَّم</label>
-          <div class="upload-zone" style="padding:1rem" onclick="document.getElementById('wi-${i}').click()">
+          <div class="upload-zone" style="padding:1rem" onclick="document.getElementById('wi-${w.id}').click()">
             ${w.img?`<img src="${w.img}" style="max-height:70px;border-radius:6px">`:`<div class="upload-text" style="font-size:.82rem">اضغط لرفع الصورة</div>`}
           </div>
-          <input type="file" id="wi-${i}" accept="image/*" style="display:none" onchange="uploadWallImg(this,${i})"></div>
+          <input type="file" id="wi-${w.id}" accept="image/*" style="display:none" onchange="uploadWallImg(this,${w.id})"></div>
         <div class="fg"><label>الحالة</label>
-          <select onchange="wallData[${i}].status=this.value">
+          <select id="ws-${w.id}">
             <option value="done" ${w.status==='done'?'selected':''}>مكتمل</option>
             <option value="upcoming" ${w.status==='upcoming'?'selected':''}>قادم</option>
           </select></div>
-        <button class="btn-save" onclick="saveWallSlot(${i})" style="align-self:flex-start">حفظ</button>
+        <button class="btn-save" onclick="saveWallSlot(${w.id})" style="align-self:flex-start">حفظ</button>
       </div>
     </div>`).join('');
 }
 
-function uploadWallImg(inp,i){
-  if(!inp.files||!inp.files[0])return;
-  const r=new FileReader();
-  r.onload=e=>{wallData[i].img=e.target.result;renderWallAdmin();};
-  r.readAsDataURL(inp.files[0]);
-}
-function saveWallSlot(i){
-  saveWall();
-  showNotif(`✓ تم حفظ ${wallData[i].q}`);
+async function uploadWallImg(inp, wid){
+  if(!inp.files||!inp.files[0]) return;
+  const b64 = await toB64(inp.files[0]);
+  await db.patch('wall',`id=eq.${wid}`,{img:b64});
+  showNotif('✓ تم رفع الصورة');
+  loadWallAdmin();
 }
 
-// ═══════════════════════════════════════
-//  NOMINATIONS
-// ═══════════════════════════════════════
-function renderNominations(){
-  const noms = DB.get('nominations')||[];
+async function saveWallSlot(wid){
+  const obj = {
+    honoree    : document.getElementById(`wn-${wid}`).value,
+    field      : document.getElementById(`wf-${wid}`).value,
+    description: document.getElementById(`wd-${wid}`).value,
+    article_id : document.getElementById(`wa-${wid}`).value || null,
+    status     : document.getElementById(`ws-${wid}`).value,
+  };
+  await db.patch('wall',`id=eq.${wid}`, obj);
+  showNotif('✓ تم الحفظ');
+}
+
+// ── NOMINATIONS ──
+async function loadNominations(){
+  const rows = await db.get('nominations','order=created_at.desc');
   const el = document.getElementById('nominations-list');
-  if(!noms.length){el.innerHTML=`<div class="empty-state">لا توجد ترشيحات بعد</div>`;return;}
-  el.innerHTML = noms.map(n=>`
+  if(!rows||!rows.length){ el.innerHTML='<div class="empty-state">لا توجد ترشيحات بعد</div>'; return; }
+  el.innerHTML = rows.map(n=>`
     <div class="inbox-item">
-      <div class="inbox-item-head">
+      <div class="inbox-head">
         <div class="inbox-name">${n.name}</div>
-        <span class="inbox-date">${n.date}</span>
+        <span class="inbox-date">${new Date(n.created_at).toLocaleDateString('ar-SA')}</span>
       </div>
       ${n.field?`<div class="inbox-meta">المجال: ${n.field}</div>`:''}
       <div class="inbox-body">${n.reason}</div>
-      ${n.by?`<div class="inbox-by">مُرشَّح بواسطة: ${n.by}${n.phone?' · '+n.phone:''}</div>`:''}
+      ${n.submitted_by?`<div class="inbox-by">مُرشَّح بواسطة: ${n.submitted_by}${n.phone?' · '+n.phone:''}</div>`:''}
     </div>`).join('');
 }
 
-// ═══════════════════════════════════════
-//  MESSAGES
-// ═══════════════════════════════════════
-function renderMessages(){
-  const msgs = DB.get('contact_messages')||[];
+// ── MESSAGES ──
+async function loadMessages(){
+  const rows = await db.get('contact_messages','order=created_at.desc');
   const el = document.getElementById('messages-list');
-  if(!msgs.length){el.innerHTML=`<div class="empty-state">لا توجد رسائل بعد</div>`;return;}
-  el.innerHTML = msgs.map(m=>`
+  if(!rows||!rows.length){ el.innerHTML='<div class="empty-state">لا توجد رسائل بعد</div>'; return; }
+  el.innerHTML = rows.map(m=>`
     <div class="inbox-item">
-      <div class="inbox-item-head">
+      <div class="inbox-head">
         <div class="inbox-name">${m.name}</div>
-        <span class="inbox-date">${m.date}</span>
+        <span class="inbox-date">${new Date(m.created_at).toLocaleDateString('ar-SA')}</span>
       </div>
       <div class="inbox-meta">${m.email}${m.phone?' · '+m.phone:''}</div>
-      <div class="inbox-body">${m.msg}</div>
+      <div class="inbox-body">${m.message}</div>
     </div>`).join('');
 }
 
-// ═══════════════════════════════════════
-//  NOTIF
-// ═══════════════════════════════════════
+// ── NOTIF ──
 function showNotif(msg){
   const n=document.getElementById('notif');
-  n.textContent=msg;n.classList.add('show');
+  n.textContent=msg; n.classList.add('show');
   setTimeout(()=>n.classList.remove('show'),2600);
 }
 </script>
