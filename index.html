@@ -18,10 +18,15 @@ html{scroll-behavior:smooth}
 body{font-family:'Tajawal',sans-serif;background:var(--dark);color:var(--text);direction:rtl;overflow-x:hidden}
 
 /* ANN BAR */
-.ann-bar{background:linear-gradient(90deg,var(--gold-dark),var(--gold),var(--gold-dark));color:var(--dark);text-align:center;padding:9px 3rem;font-size:.85rem;font-weight:700;position:relative;display:flex;align-items:center;justify-content:center;gap:12px;cursor:pointer}
-.ann-close{position:absolute;left:1rem;background:transparent;border:none;color:var(--dark);font-size:1.1rem;cursor:pointer;opacity:.7;line-height:1;padding:0}
-.ann-countdown{display:inline-flex;align-items:center;gap:6px;background:rgba(0,0,0,.15);padding:3px 10px;border-radius:20px;font-size:.78rem}
+.ann-bar{background:linear-gradient(90deg,var(--gold-dark),var(--gold),var(--gold-dark));color:var(--dark);padding:0;position:relative;overflow:hidden;height:36px;display:flex;align-items:center}
 .ann-bar.hidden{display:none}
+.ann-track-wrap{flex:1;overflow:hidden;height:100%;display:flex;align-items:center}
+.ann-track{display:flex;align-items:center;white-space:nowrap;animation:ticker linear infinite}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ann-item{display:inline-flex;align-items:center;gap:10px;padding:0 3rem;font-size:.83rem;font-weight:700}
+.ann-item-sep{opacity:.4;font-size:.7rem}
+.ann-close{flex-shrink:0;width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.15);border:none;color:var(--dark);font-size:1rem;cursor:pointer;opacity:.7;transition:opacity .2s}
+.ann-close:hover{opacity:1}
 
 /* NAV */
 nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,.96);backdrop-filter:blur(14px);border-bottom:1px solid rgba(201,162,39,.18);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px}
@@ -273,10 +278,11 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
 </head>
 <body>
 
-<div class="ann-bar" id="ann-bar" onclick="goPage('gallery')">
-  <span id="ann-text">✦ تابع آخر التكريمات</span>
-  <span class="ann-countdown" id="ann-countdown"></span>
-  <button class="ann-close" onclick="event.stopPropagation();document.getElementById('ann-bar').classList.add('hidden')">✕</button>
+<div class="ann-bar" id="ann-bar">
+  <div class="ann-track-wrap">
+    <div class="ann-track" id="ann-track"></div>
+  </div>
+  <button class="ann-close" onclick="document.getElementById('ann-bar').classList.add('hidden')">✕</button>
 </div>
 
 <nav>
@@ -553,24 +559,35 @@ function updateMeta(title,desc){
   document.querySelector('meta[property="og:description"]').setAttribute('content',desc||'');
 }
 
-// ANNOUNCEMENT
+// ANNOUNCEMENT TICKER
 async function loadAnnouncement(){
-  const rows=await db.get('announcements','active=eq.true&order=created_at.desc&limit=1');
+  const rows=await db.get('announcements','active=eq.true&order=created_at.desc');
   if(!rows||!rows.length){document.getElementById('ann-bar').classList.add('hidden');return;}
-  const ann=rows[0];
-  document.getElementById('ann-text').textContent=ann.text;
-  if(ann.target_date){
-    const target=new Date(ann.target_date);
-    const tick=()=>{
-      const diff=target-new Date();
-      if(diff<=0){document.getElementById('ann-countdown').textContent='';return;}
-      const d=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000);
-      document.getElementById('ann-countdown').textContent=`${d} يوم ${h} ساعة`;
-    };
-    tick();setInterval(tick,60000);
-  } else {
-    document.getElementById('ann-countdown').textContent='';
+
+  // build countdown label for items that have a target_date
+  function countdownLabel(target_date){
+    if(!target_date)return '';
+    const diff=new Date(target_date)-new Date();
+    if(diff<=0)return '';
+    const d=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000);
+    return ` <span style="background:rgba(0,0,0,.18);padding:2px 9px;border-radius:20px;font-size:.75rem">${d}د ${h}س</span>`;
   }
+
+  // build items HTML — duplicate for seamless loop
+  const items=rows.map(a=>`<span class="ann-item">${a.text}${countdownLabel(a.target_date)}<span class="ann-item-sep">◆</span></span>`).join('');
+  const track=document.getElementById('ann-track');
+  track.innerHTML=items+items; // duplicate for infinite loop
+
+  // set animation speed: ~80px per second
+  const totalWidth=track.scrollWidth/2;
+  const duration=Math.max(totalWidth/80,8);
+  track.style.animationDuration=duration+'s';
+
+  // refresh countdowns every minute
+  setInterval(()=>{
+    track.innerHTML=rows.map(a=>`<span class="ann-item">${a.text}${countdownLabel(a.target_date)}<span class="ann-item-sep">◆</span></span>`).join('')
+      +rows.map(a=>`<span class="ann-item">${a.text}${countdownLabel(a.target_date)}<span class="ann-item-sep">◆</span></span>`).join('');
+  },60000);
 }
 
 // NAV
