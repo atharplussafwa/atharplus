@@ -238,7 +238,10 @@ select option{background:var(--dark2)}
 
       <!-- WALL -->
       <div id="tab-wall" class="adm-tab">
-        <div class="adm-header"><div class="adm-title">جدار الأثر</div></div>
+        <div class="adm-header">
+          <div class="adm-title">جدار الأثر</div>
+          <button class="btn-save" onclick="addWallSlot()">+ إضافة ربع جديد</button>
+        </div>
         <div class="wall-admin-grid" id="wall-admin-cards"><div class="loading">جاري التحميل...</div></div>
       </div>
 
@@ -497,17 +500,19 @@ function removeMultiImg(i){ pendingMultiImgs.splice(i,1); renderMultiPreviews();
 // ── WALL ──
 async function loadWallAdmin(){
   const [wallRows, artRows] = await Promise.all([
-    db.get('wall','order=id.asc'),
+    db.get('wall','order=year.asc,id.asc'),
     db.get('articles','select=id,title&status=eq.منشور&order=created_at.desc'),
   ]);
   const arts = artRows||[];
   document.getElementById('wall-admin-cards').innerHTML = (wallRows||[]).map((w,i)=>`
     <div class="wall-slot">
       <div class="wall-slot-head">
-        <div class="wall-slot-title">${w.q} · ${w.label}</div>
+        <div class="wall-slot-title">${w.q} · ${w.label} · ${w.year||''}</div>
         <span class="badge ${w.status==='done'?'badge-pub':'badge-draft'}">${w.status==='done'?'مكتمل':'قادم'}</span>
       </div>
       <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="fg"><label>السنة</label>
+          <input type="number" id="wy-${w.id}" value="${w.year||new Date().getFullYear()}" placeholder="2026" min="2020" max="2099"></div>
         <div class="fg"><label>اسم المكرَّم/المكرَّمة</label>
           <input type="text" id="wn-${w.id}" value="${w.honoree||''}" placeholder="الاسم الكامل"></div>
         <div class="fg"><label>المجال / الإنجاز</label>
@@ -534,6 +539,19 @@ async function loadWallAdmin(){
     </div>`).join('');
 }
 
+async function addWallSlot(){
+  const qs = ['Q1','Q2','Q3','Q4'];
+  const labels = ['يناير – مارس','أبريل – يونيو','يوليو – سبتمبر','أكتوبر – ديسمبر'];
+  const q = prompt('اختر الربع (Q1 / Q2 / Q3 / Q4):','Q1');
+  if(!q || !qs.includes(q)) return;
+  const yr = prompt('أدخل السنة:',new Date().getFullYear());
+  if(!yr) return;
+  const idx = qs.indexOf(q);
+  await db.post('wall',{q, label:labels[idx], year:parseInt(yr), honoree:'', field:'', description:'', img:'', article_id:null, status:'upcoming'});
+  showNotif('✓ تم إضافة الربع');
+  loadWallAdmin();
+}
+
 async function uploadWallImg(inp, wid){
   if(!inp.files||!inp.files[0]) return;
   const b64 = await toB64(inp.files[0]);
@@ -544,6 +562,7 @@ async function uploadWallImg(inp, wid){
 
 async function saveWallSlot(wid){
   const obj = {
+    year       : parseInt(document.getElementById(`wy-${wid}`).value)||new Date().getFullYear(),
     honoree    : document.getElementById(`wn-${wid}`).value,
     field      : document.getElementById(`wf-${wid}`).value,
     description: document.getElementById(`wd-${wid}`).value,
