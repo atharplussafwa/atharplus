@@ -109,6 +109,31 @@ select option{background:var(--dark2)}
 .empty-state{color:var(--text-muted);font-size:.88rem;padding:1rem 0}
 .loading{color:var(--text-muted);font-size:.88rem;padding:1rem 0}
 
+/* ANALYTICS */
+.analytics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;margin-bottom:2rem}
+.an-card{background:var(--dark2);border:1px solid rgba(255,255,255,.05);border-radius:12px;padding:1.4rem}
+.an-card-num{font-size:2.2rem;font-weight:800;color:var(--gold)}
+.an-card-label{font-size:.78rem;color:var(--text-muted);margin-top:4px}
+.an-card-sub{font-size:.72rem;color:var(--green);margin-top:3px}
+.chart-wrap{background:var(--dark2);border-radius:12px;border:1px solid rgba(255,255,255,.05);padding:1.5rem;margin-bottom:1.5rem}
+.chart-title{font-size:.88rem;font-weight:700;color:var(--text-muted);margin-bottom:1.2rem;letter-spacing:.5px}
+.bar-chart{display:flex;flex-direction:column;gap:10px}
+.bar-row{display:grid;grid-template-columns:180px 1fr 50px;align-items:center;gap:10px}
+.bar-label{font-size:.82rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{background:rgba(255,255,255,.05);border-radius:4px;height:10px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gold-dark),var(--gold));transition:width .8s ease}
+.bar-val{font-size:.78rem;color:var(--text-muted);text-align:left}
+.cat-chart{display:flex;gap:1rem;flex-wrap:wrap;margin-top:.5rem}
+.cat-item{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.03);border-radius:8px;padding:8px 14px}
+.cat-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.cat-name{font-size:.82rem}
+.cat-count{font-size:.82rem;color:var(--gold);font-weight:700;margin-right:4px}
+.period-btns{display:flex;gap:6px;margin-bottom:1.5rem}
+.period-btn{padding:6px 14px;border-radius:6px;border:1px solid rgba(255,255,255,.1);background:transparent;color:var(--text-muted);cursor:pointer;font-family:'Tajawal',sans-serif;font-size:.8rem;transition:all .2s}
+.period-btn.active,.period-btn:hover{background:rgba(201,162,39,.1);border-color:rgba(201,162,39,.3);color:var(--gold)}
+.export-btn{background:transparent;border:1px solid rgba(255,255,255,.12);color:var(--text-muted);padding:8px 18px;border-radius:8px;font-family:'Tajawal',sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.export-btn:hover{border-color:rgba(201,162,39,.4);color:var(--gold)}
+
 .notif{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--green);color:#0D1117;padding:10px 22px;border-radius:8px;font-weight:700;font-size:.85rem;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 .notif.show{opacity:1}
 
@@ -152,6 +177,7 @@ select option{background:var(--dark2)}
     <div class="sidebar">
       <div class="sb-section">المحتوى</div>
       <div class="sb-item active" data-tab="dashboard" onclick="switchTab(this,'dashboard')">📊 لوحة التحكم</div>
+      <div class="sb-item" data-tab="analytics" onclick="switchTab(this,'analytics')">📈 الإحصائيات</div>
       <div class="sb-item" data-tab="articles" onclick="switchTab(this,'articles')">📋 التكريمات</div>
       <div class="sb-item" data-tab="add" onclick="switchTab(this,'add')">➕ إضافة تكريم</div>
       <div class="sb-item" data-tab="wall" onclick="switchTab(this,'wall')">🏆 جدار الأثر</div>
@@ -178,6 +204,39 @@ select option{background:var(--dark2)}
         <div class="tbl-wrap">
           <div style="padding:1rem 1.25rem;font-size:.8rem;font-weight:700;color:var(--text-muted);border-bottom:1px solid rgba(255,255,255,.04)">آخر التكريمات</div>
           <div id="recent-list"><div class="loading" style="padding:1rem 1.25rem">جاري التحميل...</div></div>
+        </div>
+      </div>
+
+      <!-- ANALYTICS -->
+      <div id="tab-analytics" class="adm-tab">
+        <div class="adm-header">
+          <div class="adm-title">الإحصائيات المتقدمة</div>
+          <button class="export-btn" onclick="exportData()">⬇ تصدير Excel</button>
+        </div>
+        <div class="period-btns">
+          <button class="period-btn active" data-days="7" onclick="setPeriod(this,7)">آخر 7 أيام</button>
+          <button class="period-btn" data-days="30" onclick="setPeriod(this,30)">آخر 30 يوم</button>
+          <button class="period-btn" data-days="90" onclick="setPeriod(this,90)">آخر 3 أشهر</button>
+          <button class="period-btn" data-days="365" onclick="setPeriod(this,365)">كل الوقت</button>
+        </div>
+        <div class="analytics-grid">
+          <div class="an-card"><div class="an-card-num" id="an-views">-</div><div class="an-card-label">مشاهدة</div><div class="an-card-sub" id="an-views-sub"></div></div>
+          <div class="an-card"><div class="an-card-num" id="an-arts">-</div><div class="an-card-label">تكريم منشور</div></div>
+          <div class="an-card"><div class="an-card-num" id="an-comments">-</div><div class="an-card-label">تعليق معتمد</div></div>
+          <div class="an-card"><div class="an-card-num" id="an-noms">-</div><div class="an-card-label">ترشيح</div></div>
+          <div class="an-card"><div class="an-card-num" id="an-avg">-</div><div class="an-card-label">متوسط التقييم</div></div>
+        </div>
+        <div class="chart-wrap">
+          <div class="chart-title">🏆 أكثر التكريمات مشاهدةً</div>
+          <div class="bar-chart" id="top-articles-chart"><div class="loading" style="padding:1rem 0">جاري التحميل...</div></div>
+        </div>
+        <div class="chart-wrap">
+          <div class="chart-title">📂 التكريمات حسب التصنيف</div>
+          <div class="cat-chart" id="cat-chart"><div class="loading" style="padding:1rem 0">جاري التحميل...</div></div>
+        </div>
+        <div class="chart-wrap">
+          <div class="chart-title">📅 المشاهدات اليومية</div>
+          <div id="daily-chart" style="display:flex;align-items:flex-end;gap:4px;height:100px;padding-top:10px"></div>
         </div>
       </div>
 
@@ -464,6 +523,7 @@ function switchTab(el, tab){
   document.getElementById('tab-'+tab).classList.add('active');
   if(el) el.classList.add('active');
   if(tab==='dashboard')   loadDashboard();
+  if(tab==='analytics')   loadAnalytics();
   if(tab==='articles')    loadTable();
   if(tab==='wall')        loadWallAdmin();
   if(tab==='honorees')    loadHonoreesAdmin();
@@ -478,6 +538,163 @@ function switchTabByName(tab){
   document.getElementById('tab-'+tab).classList.add('active');
   document.querySelectorAll('.sb-item').forEach(s=>s.classList.toggle('active', s.dataset.tab===tab));
   if(tab==='articles') loadTable();
+}
+
+// ── ANALYTICS ──
+let analyticsDays = 7;
+const CAT_COLORS = {تعليم:'#C9A227',رياضة:'#4ADE80',فنون:'#F472B6',علوم:'#60A5FA',أدب:'#A78BFA',ريادة:'#FB923C',مجتمع:'#34D399'};
+
+function setPeriod(el, days){
+  document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  analyticsDays = days;
+  loadAnalytics();
+}
+
+async function loadAnalytics(){
+  const since = new Date(Date.now() - analyticsDays * 86400000).toISOString();
+
+  const [views, allViews, arts, comments, noms, allComments] = await Promise.all([
+    db.get('article_views', `viewed_at=gte.${since}&select=article_id,viewed_at`),
+    db.get('article_views', 'select=article_id,viewed_at'),
+    db.get('articles', 'status=eq.منشور&select=id,title,cat'),
+    db.get('comments', `approved=eq.true&created_at=gte.${since}&select=id,rating`),
+    db.get('nominations', `created_at=gte.${since}&select=id`),
+    db.get('comments', 'approved=eq.true&rating=gt.0&select=rating'),
+  ]);
+
+  const vList = views||[];
+  const allVList = allViews||[];
+  const artList = arts||[];
+  const cmtList = comments||[];
+  const nomList = noms||[];
+  const allCmts = allComments||[];
+
+  // total views in period
+  document.getElementById('an-views').textContent = vList.length;
+  // compare with previous period
+  const prevSince = new Date(Date.now() - analyticsDays*2*86400000).toISOString();
+  const prevViews = allVList.filter(v=>v.viewed_at>=prevSince && v.viewed_at<since).length;
+  const diff = vList.length - prevViews;
+  const subEl = document.getElementById('an-views-sub');
+  subEl.textContent = diff>0?`↑ ${diff} مقارنة بالفترة السابقة`:diff<0?`↓ ${Math.abs(diff)} مقارنة بالفترة السابقة`:'مستقر';
+  subEl.style.color = diff>=0?'var(--green)':'var(--red)';
+
+  document.getElementById('an-arts').textContent = artList.length;
+  document.getElementById('an-comments').textContent = cmtList.length;
+  document.getElementById('an-noms').textContent = nomList.length;
+
+  // avg rating
+  const rated = allCmts.filter(c=>c.rating>0);
+  const avg = rated.length ? (rated.reduce((s,c)=>s+c.rating,0)/rated.length).toFixed(1) : '-';
+  document.getElementById('an-avg').textContent = avg + (avg!=='-'?' ★':'');
+
+  // top articles chart
+  const viewCounts = {};
+  allVList.forEach(v=>{ viewCounts[v.article_id]=(viewCounts[v.article_id]||0)+1; });
+  const periodCounts = {};
+  vList.forEach(v=>{ periodCounts[v.article_id]=(periodCounts[v.article_id]||0)+1; });
+  const sorted = Object.entries(periodCounts).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const maxV = sorted[0]?.[1]||1;
+  const artMap = {};
+  artList.forEach(a=>artMap[a.id]=a.title);
+  document.getElementById('top-articles-chart').innerHTML = sorted.length
+    ? sorted.map(([id,cnt])=>`
+      <div class="bar-row">
+        <div class="bar-label" title="${artMap[id]||'#'+id}">${artMap[id]||'مقال #'+id}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(cnt/maxV*100).toFixed(1)}%"></div></div>
+        <div class="bar-val">${cnt}</div>
+      </div>`).join('')
+    : '<div style="color:var(--text-muted);font-size:.85rem">لا توجد مشاهدات في هذه الفترة</div>';
+
+  // category chart
+  const catCount = {};
+  artList.forEach(a=>{ catCount[a.cat]=(catCount[a.cat]||0)+1; });
+  document.getElementById('cat-chart').innerHTML = Object.entries(catCount)
+    .sort((a,b)=>b[1]-a[1])
+    .map(([cat,cnt])=>`
+      <div class="cat-item">
+        <div class="cat-dot" style="background:${CAT_COLORS[cat]||'#8B949E'}"></div>
+        <span class="cat-count">${cnt}</span>
+        <span class="cat-name">${cat}</span>
+      </div>`).join('') || '<div style="color:var(--text-muted);font-size:.85rem">لا توجد بيانات</div>';
+
+  // daily views bar chart
+  const days = Math.min(analyticsDays, 30);
+  const dailyMap = {};
+  for(let i=0;i<days;i++){
+    const d = new Date(Date.now()-i*86400000).toISOString().split('T')[0];
+    dailyMap[d]=0;
+  }
+  vList.forEach(v=>{ const d=v.viewed_at?.split('T')[0]; if(d&&dailyMap[d]!==undefined) dailyMap[d]++; });
+  const dailyEntries = Object.entries(dailyMap).sort((a,b)=>a[0]>b[0]?1:-1);
+  const maxDay = Math.max(...dailyEntries.map(([,v])=>v),1);
+  document.getElementById('daily-chart').innerHTML = dailyEntries.map(([date,cnt])=>`
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px" title="${date}: ${cnt} مشاهدة">
+      <div style="width:100%;background:rgba(201,162,39,.15);border-radius:3px 3px 0 0;height:${Math.max((cnt/maxDay*80),2)}px;transition:height .5s;background:linear-gradient(to top,var(--gold-dark),var(--gold))"></div>
+      <div style="font-size:.55rem;color:var(--text-muted);transform:rotate(-45deg);white-space:nowrap">${date.slice(5)}</div>
+    </div>`).join('');
+}
+
+// ── EXPORT EXCEL ──
+async function exportData(){
+  showNotif('⏳ جاري تحضير الملف...');
+  const [arts, noms, msgs, comments, views] = await Promise.all([
+    db.get('articles','order=created_at.desc'),
+    db.get('nominations','order=created_at.desc'),
+    db.get('contact_messages','order=created_at.desc'),
+    db.get('comments','order=created_at.desc'),
+    db.get('article_views','select=article_id,viewed_at&order=viewed_at.desc'),
+  ]);
+
+  // build CSV sheets
+  const toCSV = (headers, rows) => {
+    const h = headers.join(',');
+    const r = rows.map(row=>headers.map(k=>`"${(row[k]||'').toString().replace(/"/g,'""')}"`).join(',')).join('\n');
+    return h+'\n'+r;
+  };
+
+  const artCSV = toCSV(['id','title','cat','date','status','lead'],arts||[]);
+  const nomCSV = toCSV(['name','field','reason','submitted_by','phone','created_at'],noms||[]);
+  const msgCSV = toCSV(['name','email','phone','message','created_at'],msgs||[]);
+  const cmtCSV = toCSV(['author','body','rating','approved','created_at'],comments||[]);
+
+  // article view counts
+  const vcMap = {};
+  (views||[]).forEach(v=>vcMap[v.article_id]=(vcMap[v.article_id]||0)+1);
+  const artMap = {};
+  (arts||[]).forEach(a=>artMap[a.id]=a.title);
+  const viewCSV = 'article_id,title,views\n' + Object.entries(vcMap).sort((a,b)=>b[1]-a[1])
+    .map(([id,cnt])=>`${id},"${(artMap[id]||'').replace(/"/g,'""')}",${cnt}`).join('\n');
+
+  // combine into one HTML file with multiple tables (opens in Excel)
+  const section = (title, csv) => {
+    const rows = csv.split('\n');
+    const headers = rows[0].split(',').map(h=>h.replace(/"/g,''));
+    const body = rows.slice(1).map(r=>{
+      const cells = r.match(/(".*?"|[^,]+)/g)||[];
+      return '<tr>'+cells.map(c=>`<td>${c.replace(/^"|"$/g,'').replace(/""/g,'"')}</td>`).join('')+'</tr>';
+    }).join('');
+    return `<h2 style="font-family:Arial;color:#C9A227;margin:20px 0 8px">${title}</h2>
+    <table border="1" style="border-collapse:collapse;font-family:Arial;font-size:12px;margin-bottom:30px">
+      <thead><tr>${headers.map(h=>`<th style="background:#161B22;color:#C9A227;padding:6px 12px">${h}</th>`).join('')}</tr></thead>
+      <tbody>${body}</tbody></table>`;
+  };
+
+  const html = `<html><head><meta charset="UTF-8"></head><body style="background:#0D1117;color:#F0EDE8">
+    ${section('التكريمات',artCSV)}
+    ${section('المشاهدات',viewCSV)}
+    ${section('الترشيحات',nomCSV)}
+    ${section('رسائل التواصل',msgCSV)}
+    ${section('التعليقات',cmtCSV)}
+  </body></html>`;
+
+  const blob = new Blob([html],{type:'application/vnd.ms-excel;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download=`atharplus-export-${new Date().toISOString().split('T')[0]}.xls`;
+  a.click(); URL.revokeObjectURL(url);
+  showNotif('✓ تم تصدير الملف');
 }
 
 // ── DASHBOARD ──
