@@ -3,26 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>أثر+ | مبادرة تكريم الطاقات الشابة</title>
+<title>أثر+ | مبادرة تكريم الطاقات الشابة من صفوى</title>
+<meta name="description" content="أثر+ مبادرة توثيقية من مجلس الحاج عادل علي آل قريش تحتفي بالطاقات الشابة المبدعة من مدينة صفوى وتُخلِّد لحظات التكريم.">
+<meta property="og:title" content="أثر+ | مبادرة تكريم الطاقات الشابة">
+<meta property="og:description" content="مبادرة توثيقية تحتفي بالطاقات الشابة المبدعة من مدينة صفوى">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ar_SA">
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --gold:#C9A227;--gold-light:#E8C84A;
-  --dark:#0D1117;--dark2:#161B22;--dark3:#21262D;
-  --text:#F0EDE8;--text-muted:#8B949E;
-  --green:#39C578;--red:#E14843;
-}
+:root{--gold:#C9A227;--gold-light:#E8C84A;--gold-dark:#A07B10;--dark:#0D1117;--dark2:#161B22;--dark3:#21262D;--text:#F0EDE8;--text-muted:#8B949E;--green:#39C578;--red:#E14843;}
 html{scroll-behavior:smooth}
 body{font-family:'Tajawal',sans-serif;background:var(--dark);color:var(--text);direction:rtl;overflow-x:hidden}
 
-nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,0.95);backdrop-filter:blur(14px);border-bottom:1px solid rgba(201,162,39,0.18);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px}
+/* ANN BAR */
+.ann-bar{background:linear-gradient(90deg,var(--gold-dark),var(--gold),var(--gold-dark));color:var(--dark);text-align:center;padding:9px 3rem;font-size:.85rem;font-weight:700;position:relative;display:flex;align-items:center;justify-content:center;gap:12px;cursor:pointer}
+.ann-close{position:absolute;left:1rem;background:transparent;border:none;color:var(--dark);font-size:1.1rem;cursor:pointer;opacity:.7;line-height:1;padding:0}
+.ann-countdown{display:inline-flex;align-items:center;gap:6px;background:rgba(0,0,0,.15);padding:3px 10px;border-radius:20px;font-size:.78rem}
+.ann-bar.hidden{display:none}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,.96);backdrop-filter:blur(14px);border-bottom:1px solid rgba(201,162,39,.18);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px}
 .logo{font-weight:800;font-size:1.6rem;color:var(--gold);cursor:pointer;user-select:none}
 .logo span{color:var(--text);font-weight:300}
-.nav-links{display:flex;gap:1.8rem;list-style:none}
-.nav-links a{color:var(--text-muted);text-decoration:none;font-size:.92rem;transition:color .2s;cursor:pointer}
+.nav-links{display:flex;gap:1.5rem;list-style:none}
+.nav-links a{color:var(--text-muted);text-decoration:none;font-size:.88rem;transition:color .2s;cursor:pointer}
 .nav-links a:hover,.nav-links a.active{color:var(--gold)}
-.nav-admin{color:var(--text-muted);padding:7px 16px;border-radius:6px;font-family:'Tajawal',sans-serif;font-weight:500;font-size:.85rem;border:1px solid rgba(255,255,255,.1);cursor:pointer;transition:all .2s;text-decoration:none;background:transparent}
+.nav-admin{color:var(--text-muted);padding:7px 14px;border-radius:6px;font-family:'Tajawal',sans-serif;font-weight:500;font-size:.82rem;border:1px solid rgba(255,255,255,.1);cursor:pointer;transition:all .2s;text-decoration:none;background:transparent}
 .nav-admin:hover{border-color:rgba(201,162,39,.4);color:var(--gold)}
 .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:transparent;border:none}
 .hamburger span{display:block;width:24px;height:2px;background:var(--text);border-radius:2px;transition:all .3s}
@@ -31,14 +39,15 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,0.95);backdrop-fi
 .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
 .mobile-drawer{position:fixed;top:64px;right:0;width:72%;max-width:270px;height:calc(100vh - 64px);background:var(--dark2);border-left:1px solid rgba(201,162,39,.15);z-index:99;transform:translateX(100%);transition:transform .3s ease;padding:1rem 0;overflow-y:auto}
 .mobile-drawer.open{transform:translateX(0)}
-.mobile-drawer a{display:block;padding:14px 1.5rem;color:var(--text-muted);font-size:1rem;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04);transition:all .2s;text-decoration:none}
+.mobile-drawer a{display:block;padding:13px 1.5rem;color:var(--text-muted);font-size:.96rem;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04);transition:all .2s;text-decoration:none}
 .mobile-drawer a:hover{color:var(--gold);background:rgba(201,162,39,.04)}
-.drawer-admin-btn{margin:1rem 1.5rem;display:block;background:transparent;color:var(--text-muted);padding:11px;border-radius:8px;font-family:'Tajawal',sans-serif;font-weight:500;font-size:.92rem;text-align:center;cursor:pointer;border:1px solid rgba(255,255,255,.1);width:calc(100% - 3rem);transition:all .2s;text-decoration:none}
+.drawer-admin-btn{margin:1rem 1.5rem;display:block;background:transparent;color:var(--text-muted);padding:10px;border-radius:8px;font-family:'Tajawal',sans-serif;font-weight:500;font-size:.9rem;text-align:center;cursor:pointer;border:1px solid rgba(255,255,255,.1);width:calc(100% - 3rem);transition:all .2s;text-decoration:none}
 .drawer-overlay{position:fixed;inset:0;top:64px;background:rgba(0,0,0,.5);z-index:98;display:none}
 .drawer-overlay.open{display:block}
 
 .page{display:none}.page.active{display:block}
 
+/* HERO */
 .hero{min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4rem 2rem;position:relative;overflow:hidden}
 .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 55% at 50% -5%,rgba(201,162,39,.09) 0%,transparent 65%),radial-gradient(ellipse 50% 40% at 85% 90%,rgba(139,92,246,.05) 0%,transparent 60%);pointer-events:none}
 .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(201,162,39,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(201,162,39,.03) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
@@ -60,6 +69,16 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,0.95);backdrop-fi
 .stat-num{font-size:2.6rem;font-weight:800;color:var(--gold)}
 .stat-label{font-size:.82rem;color:var(--text-muted);margin-top:4px}
 
+/* SPONSOR STRIP */
+.sponsor-strip{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1);border-bottom:1px solid rgba(201,162,39,.1);padding:1.2rem 2rem;display:flex;align-items:center;gap:2rem;overflow:hidden}
+.sponsor-strip-label{font-size:.72rem;color:var(--text-muted);white-space:nowrap;letter-spacing:1px;opacity:.7}
+.sponsor-strip-logos{display:flex;gap:2rem;align-items:center;flex-wrap:wrap}
+.sstrip-logo{display:flex;align-items:center;gap:8px;opacity:.6;transition:opacity .2s;text-decoration:none}
+.sstrip-logo:hover{opacity:1}
+.sstrip-logo img{height:28px;object-fit:contain;filter:grayscale(1) brightness(1.5)}
+.sstrip-logo span{font-size:.85rem;color:var(--text-muted);font-weight:700}
+
+/* SECTIONS */
 .section{padding:5rem 2rem;max-width:1200px;margin:0 auto}
 .wall-section{padding:5rem 2rem;max-width:1200px;margin:0 auto}
 .sec-header{text-align:center;margin-bottom:3rem}
@@ -68,7 +87,11 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,0.95);backdrop-fi
 .divider{width:52px;height:3px;background:linear-gradient(90deg,var(--gold),transparent);margin:.8rem auto;border-radius:2px}
 .sec-desc{color:var(--text-muted);font-size:.9rem}
 
+/* WALL */
 .wall-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:2rem;align-items:start}
+.year-sep{grid-column:1/-1;display:flex;align-items:center;gap:1rem;margin-top:1.5rem}
+.year-sep-label{font-size:.72rem;font-weight:800;color:var(--gold);letter-spacing:3px;opacity:.7}
+.year-sep-line{flex:1;height:1px;background:rgba(201,162,39,.15)}
 .wall-card{border-radius:14px;overflow:hidden;border:1px solid rgba(201,162,39,.1);background:var(--dark2);position:relative;transition:all .3s}
 .wall-card.done{cursor:pointer}
 .wall-card.done:hover{transform:translateY(-4px);border-color:rgba(201,162,39,.38);box-shadow:0 14px 36px rgba(0,0,0,.5)}
@@ -87,6 +110,15 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,0.95);backdrop-fi
 .wall-upcoming-body .icon{font-size:1.8rem;opacity:.25}
 .wall-upcoming-body .lbl{font-size:.78rem;color:var(--text-muted);opacity:.55}
 
+/* FILTER */
+.filter-bar{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;align-items:center}
+.search-input{background:var(--dark2);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:9px 14px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;flex:1;min-width:200px}
+.search-input:focus{border-color:rgba(201,162,39,.45)}
+.filter-pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.1);background:transparent;color:var(--text-muted);cursor:pointer;font-family:'Tajawal',sans-serif;font-size:.8rem;transition:all .2s}
+.pill:hover,.pill.active{background:rgba(201,162,39,.12);border-color:rgba(201,162,39,.4);color:var(--gold)}
+
+/* CARDS */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}
 .card{background:var(--dark2);border-radius:12px;overflow:hidden;border:1px solid rgba(201,162,39,.07);transition:all .3s;cursor:pointer}
 .card:hover{transform:translateY(-5px);border-color:rgba(201,162,39,.32);box-shadow:0 16px 40px rgba(0,0,0,.5)}
@@ -103,7 +135,9 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,0.95);backdrop-fi
 .tag{background:rgba(201,162,39,.11);color:var(--gold);padding:4px 12px;border-radius:4px;font-size:.73rem;font-weight:700}
 .read-more{color:var(--text-muted);font-size:.78rem;transition:color .2s}
 .card:hover .read-more{color:var(--gold)}
+.no-results{color:var(--text-muted);font-size:.9rem;padding:3rem;text-align:center;grid-column:1/-1}
 
+/* ARTICLE */
 .art-hero{background:var(--dark2);padding:3rem 2rem;border-bottom:1px solid rgba(201,162,39,.12)}
 .art-hero-inner{max-width:800px;margin:0 auto}
 .back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--text-muted);cursor:pointer;font-size:.88rem;transition:color .2s;margin-bottom:1.5rem;background:transparent;border:none;font-family:'Tajawal',sans-serif}
@@ -120,6 +154,16 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,0.95);backdrop-fi
 .art-gallery img{width:100%;height:155px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,.07);cursor:pointer;transition:transform .2s}
 .art-gallery img:hover{transform:scale(1.02)}
 
+/* SHARE */
+.share-bar{max-width:800px;margin:0 auto;padding:0 2rem 1.5rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.share-label{font-size:.82rem;color:var(--text-muted)}
+.share-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:transparent;color:var(--text-muted);font-family:'Tajawal',sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s;text-decoration:none}
+.share-btn:hover{transform:translateY(-1px)}
+.share-wa{border-color:rgba(37,211,102,.3);color:#25D366}.share-wa:hover{background:rgba(37,211,102,.1)}
+.share-tw{border-color:rgba(29,155,240,.3);color:#1D9BF0}.share-tw:hover{background:rgba(29,155,240,.1)}
+.share-copy:hover{border-color:rgba(201,162,39,.4);color:var(--gold)}
+
+/* COMMENTS */
 .comments-section{max-width:800px;margin:2rem auto;padding:0 2rem 3rem}
 .comments-title{font-size:1.05rem;font-weight:700;margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid rgba(255,255,255,.07)}
 .avg-rating{display:inline-flex;align-items:center;gap:8px;background:rgba(201,162,39,.09);border:1px solid rgba(201,162,39,.2);border-radius:8px;padding:6px 14px;margin-bottom:1.5rem}
@@ -145,6 +189,18 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,0.95);backdrop-fi
 .comment-date{font-size:.73rem;color:var(--text-muted)}
 .comment-text{font-size:.86rem;color:#C8C4B8;line-height:1.65}
 
+/* SPONSORS PAGE */
+.sponsors-page-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.5rem;margin-top:1rem}
+.sp-page-card{background:var(--dark2);border-radius:14px;border:1px solid rgba(255,255,255,.07);padding:2rem;display:flex;flex-direction:column;align-items:center;gap:12px;text-decoration:none;transition:all .3s}
+.sp-page-card:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,.4)}
+.sp-page-card img{max-height:70px;max-width:80%;object-fit:contain}
+.sp-page-card .sp-name{font-weight:700;font-size:.95rem;text-align:center}
+.sp-lvl{font-size:.7rem;font-weight:700;letter-spacing:2px;padding:3px 12px;border-radius:20px}
+.sp-gold{background:rgba(201,162,39,.15);color:var(--gold);border:1px solid rgba(201,162,39,.3)}
+.sp-silver{background:rgba(192,192,192,.1);color:#C0C0C0;border:1px solid rgba(192,192,192,.2)}
+.sp-bronze{background:rgba(176,141,87,.1);color:#B08D57;border:1px solid rgba(176,141,87,.2)}
+
+/* ABOUT */
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
 .about-text p{color:#D0CBB8;line-height:2;margin-bottom:1.4rem;font-size:.98rem}
 .timeline{position:relative;padding-right:2rem}
@@ -155,6 +211,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,0.95);backdrop-fi
 .tl-title{font-size:.96rem;font-weight:700;margin-bottom:3px}
 .tl-desc{font-size:.83rem;color:var(--text-muted);line-height:1.6}
 
+/* FORMS */
 .form-page{padding:5rem 2rem;max-width:680px;margin:0 auto}
 .form-panel{background:var(--dark2);border-radius:14px;border:1px solid rgba(255,255,255,.06);padding:2rem}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.3rem}
@@ -168,13 +225,13 @@ label{font-size:.82rem;color:var(--text-muted);font-weight:700}
 .btn-submit{background:var(--gold);color:var(--dark);width:100%;padding:13px;border-radius:8px;font-family:'Tajawal',sans-serif;font-weight:700;font-size:1rem;border:none;cursor:pointer;transition:all .2s}
 .btn-submit:hover{background:var(--gold-light)}
 .btn-submit:disabled{opacity:.5;cursor:not-allowed}
-
 .contact-cards{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem}
 .contact-card{background:var(--dark2);border-radius:10px;border:1px solid rgba(201,162,39,.1);padding:1.2rem;display:flex;align-items:center;gap:12px}
 .cc-icon{font-size:1.4rem}
 .cc-label{font-size:.73rem;color:var(--text-muted);margin-bottom:2px}
 .contact-card a{color:var(--gold);font-size:.88rem;text-decoration:none}
 
+/* FOOTER */
 footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
 .footer-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:2rem;padding:3rem 2rem 2rem}
 .f-logo{font-size:1.5rem;font-weight:800;color:var(--gold);margin-bottom:.6rem}
@@ -191,7 +248,6 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
 .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:500;display:flex;align-items:center;justify-content:center}
 .lightbox img{max-width:90vw;max-height:90vh;border-radius:8px}
 .lightbox-close{position:fixed;top:20px;left:20px;background:rgba(255,255,255,.1);border:none;color:#fff;font-size:1.4rem;width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
-
 .notif{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--green);color:#0D1117;padding:11px 24px;border-radius:8px;font-weight:700;font-size:.86rem;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 .notif.show{opacity:1}
 .loading{text-align:center;padding:3rem;color:var(--text-muted);font-size:.9rem}
@@ -209,31 +265,39 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
   .section,.wall-section,.form-page{padding:3rem 1.2rem}
   .art-hero{padding:2rem 1.2rem}
   .art-title{font-size:1.35rem}
-  .art-body,.comments-section{padding:0 1.2rem 2rem}
+  .art-body,.comments-section,.share-bar{padding:0 1.2rem 2rem}
+  .filter-bar{flex-direction:column;align-items:stretch}
+  .ann-bar{font-size:.78rem;padding:8px 3rem}
 }
 </style>
 </head>
 <body>
+
+<div class="ann-bar" id="ann-bar" onclick="goPage('gallery')">
+  <span id="ann-text">✦ تابع آخر التكريمات</span>
+  <span class="ann-countdown" id="ann-countdown"></span>
+  <button class="ann-close" onclick="event.stopPropagation();document.getElementById('ann-bar').classList.add('hidden')">✕</button>
+</div>
 
 <nav>
   <div class="logo" onclick="goPage('home')">أثر<span>+</span></div>
   <ul class="nav-links">
     <li><a id="nav-home" class="active" onclick="goPage('home')">الرئيسية</a></li>
     <li><a id="nav-gallery" onclick="goPage('gallery')">التكريمات</a></li>
+    <li><a id="nav-sponsors" onclick="goPage('sponsors')">رعاتنا</a></li>
     <li><a id="nav-about" onclick="goPage('about')">عن المبادرة</a></li>
     <li><a id="nav-nominate" onclick="goPage('nominate')">رشِّح</a></li>
     <li><a id="nav-contact" onclick="goPage('contact')">تواصل معنا</a></li>
   </ul>
   <a class="nav-admin" href="admin.html">لوحة التحكم</a>
-  <button class="hamburger" id="hamburger" onclick="toggleDrawer()">
-    <span></span><span></span><span></span>
-  </button>
+  <button class="hamburger" id="hamburger" onclick="toggleDrawer()"><span></span><span></span><span></span></button>
 </nav>
 
 <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
 <div class="mobile-drawer" id="mobile-drawer">
   <a onclick="goPage('home');closeDrawer()">الرئيسية</a>
   <a onclick="goPage('gallery');closeDrawer()">التكريمات</a>
+  <a onclick="goPage('sponsors');closeDrawer()">رعاتنا</a>
   <a onclick="goPage('about');closeDrawer()">عن المبادرة</a>
   <a onclick="goPage('nominate');closeDrawer()">رشِّح شخصًا</a>
   <a onclick="goPage('contact');closeDrawer()">تواصل معنا</a>
@@ -249,8 +313,7 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
 <!-- HOME -->
 <div id="page-home" class="page active">
   <div class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-grid"></div>
+    <div class="hero-bg"></div><div class="hero-grid"></div>
     <div class="stars-wrap" id="stars"></div>
     <div class="hero-badge">✦ مبادرة من مجلس الحاج عادل علي آل قريش</div>
     <h1 class="hero-title">نُكرِّم <span class="gold">المبدعين</span><br>ونُخلِّد <span class="gold">أثرهم</span></h1>
@@ -264,6 +327,10 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
       <div class="stat"><div class="stat-num" id="cnt-e">0</div><div class="stat-label">حفل تكريم</div></div>
       <div class="stat"><div class="stat-num" id="cnt-y">0</div><div class="stat-label">سنوات</div></div>
     </div>
+  </div>
+  <div class="sponsor-strip" id="gold-strip" style="display:none">
+    <span class="sponsor-strip-label">بدعم كريم من</span>
+    <div class="sponsor-strip-logos" id="gold-strip-logos"></div>
   </div>
   <div class="wall-section">
     <div class="sec-header">
@@ -291,6 +358,7 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
         <div class="f-col-title">روابط سريعة</div>
         <div class="f-links">
           <span onclick="goPage('gallery')">التكريمات</span>
+          <span onclick="goPage('sponsors')">رعاتنا</span>
           <span onclick="goPage('nominate')">رشِّح شخصًا</span>
           <span onclick="goPage('contact')">تواصل معنا</span>
           <span onclick="goPage('about')">عن المبادرة</span>
@@ -299,12 +367,8 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
       <div>
         <div class="f-col-title">تابعنا</div>
         <div class="social-row">
-          <a class="soc-btn" href="https://www.instagram.com" target="_blank">
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#C9A227" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="#C9A227" stroke="none"/></svg>
-          </a>
-          <a class="soc-btn" href="https://www.youtube.com" target="_blank">
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#C9A227" stroke-width="1.8"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#C9A227" stroke="none"/></svg>
-          </a>
+          <a class="soc-btn" href="https://www.instagram.com" target="_blank"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#C9A227" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="#C9A227" stroke="none"/></svg></a>
+          <a class="soc-btn" href="https://www.youtube.com" target="_blank"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#C9A227" stroke-width="1.8"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#C9A227" stroke="none"/></svg></a>
         </div>
       </div>
     </div>
@@ -318,7 +382,20 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
     <div class="sec-header">
       <div class="sec-title">أرشيف <span class="gold">التكريمات</span></div>
       <div class="divider"></div>
-      <div class="sec-desc">توثيق شامل لجميع حفلات تكريم الطاقات الشابة من صفوى</div>
+      <div class="sec-desc">توثيق شامل لجميع حفلات تكريم الطاقات الشابة</div>
+    </div>
+    <div class="filter-bar">
+      <input class="search-input" id="search-input" placeholder="🔍  ابحث عن تكريم..." oninput="renderGallery()">
+      <div class="filter-pills">
+        <button class="pill active" data-cat="" onclick="setPill(this)">الكل</button>
+        <button class="pill" data-cat="تعليم" onclick="setPill(this)">تعليم</button>
+        <button class="pill" data-cat="رياضة" onclick="setPill(this)">رياضة</button>
+        <button class="pill" data-cat="فنون" onclick="setPill(this)">فنون</button>
+        <button class="pill" data-cat="علوم" onclick="setPill(this)">علوم</button>
+        <button class="pill" data-cat="أدب" onclick="setPill(this)">أدب</button>
+        <button class="pill" data-cat="ريادة" onclick="setPill(this)">ريادة</button>
+        <button class="pill" data-cat="مجتمع" onclick="setPill(this)">مجتمع</button>
+      </div>
     </div>
     <div class="grid" id="gallery-grid"><div class="loading">جاري التحميل...</div></div>
   </div>
@@ -329,15 +406,24 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
   <div class="art-hero">
     <div class="art-hero-inner">
       <button class="back-btn" onclick="goPage('gallery')">← رجوع</button>
-      <div class="art-meta">
-        <span class="art-tag" id="a-tag"></span>
-        <span class="art-date" id="a-date"></span>
-      </div>
+      <div class="art-meta"><span class="art-tag" id="a-tag"></span><span class="art-date" id="a-date"></span></div>
       <div class="art-title" id="a-title"></div>
       <div class="art-lead" id="a-lead"></div>
     </div>
   </div>
   <div class="art-body" id="a-body"></div>
+  <div class="share-bar">
+    <span class="share-label">شارك:</span>
+    <a class="share-btn share-wa" id="share-wa" href="#" target="_blank">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      واتساب
+    </a>
+    <a class="share-btn share-tw" id="share-tw" href="#" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      تويتر / X
+    </a>
+    <button class="share-btn share-copy" onclick="copyLink()">🔗 نسخ الرابط</button>
+  </div>
   <div class="comments-section">
     <div id="avg-rating-display"></div>
     <div class="comments-title">التعليقات والتقييمات</div>
@@ -345,10 +431,8 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
       <div class="rating-row">
         <span class="rating-label">تقييمك:</span>
         <div class="stars-input" id="star-input">
-          <span data-v="1" onclick="setRating(1)">★</span>
-          <span data-v="2" onclick="setRating(2)">★</span>
-          <span data-v="3" onclick="setRating(3)">★</span>
-          <span data-v="4" onclick="setRating(4)">★</span>
+          <span data-v="1" onclick="setRating(1)">★</span><span data-v="2" onclick="setRating(2)">★</span>
+          <span data-v="3" onclick="setRating(3)">★</span><span data-v="4" onclick="setRating(4)">★</span>
           <span data-v="5" onclick="setRating(5)">★</span>
         </div>
       </div>
@@ -357,6 +441,18 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
       <button class="submit-comment" onclick="submitComment()">إرسال</button>
     </div>
     <div id="comments-list"></div>
+  </div>
+</div>
+
+<!-- SPONSORS -->
+<div id="page-sponsors" class="page">
+  <div class="section">
+    <div class="sec-header">
+      <div class="sec-title">رعاة <span class="gold">المبادرة</span></div>
+      <div class="divider"></div>
+      <div class="sec-desc">شركاء نجاح مبادرة أثر+ في تكريم الطاقات الشابة من صفوى</div>
+    </div>
+    <div id="sponsors-page-content"><div class="loading">جاري التحميل...</div></div>
   </div>
 </div>
 
@@ -370,12 +466,12 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
     <div class="about-grid">
       <div class="about-text">
         <p>مبادرة <strong style="color:var(--gold)">أثر+</strong> منصة توثيقية تحتفي بالطاقات الشابة المبدعة من مدينة صفوى، وتُخلِّد لحظات التكريم التي يُقيمها أعضاء مجلس الحاج عادل علي آل قريش.</p>
-        <p>يسعى المجلس من خلال هذه المبادرة إلى ترسيخ ثقافة التقدير والاعتراف بالجهود المتميزة، وتحفيز الأجيال القادمة على العطاء والإبداع.</p>
+        <p>يسعى المجلس من خلال هذه المبادرة إلى ترسيخ ثقافة التقدير والاعتراف بالجهود المتميزة، وتحفيز الأجيال القادمة على العطاء والإبداع في مختلف المجالات.</p>
         <p>تضم المنصة مقالات تفصيلية وصورًا توثيقية من كل حفل، تاركةً أثرًا حيًّا يُلهم الأجيال.</p>
       </div>
       <div class="timeline">
-        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">الانطلاقة</div><div class="tl-title">تأسيس مبادرة أثر+</div><div class="tl-desc">إطلاق المبادرة رسميًا بهدف توثيق مسيرة التكريم</div></div>
-        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">التوسع</div><div class="tl-title">تنويع مجالات التكريم</div><div class="tl-desc">امتداد التكريم ليشمل الأدب والعلوم والفنون والرياضة والريادة</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">سبتمبر 2025</div><div class="tl-title">انطلاقة مبادرة أثر+</div><div class="tl-desc">إطلاق المبادرة بأول حفل تكريم في الربع الرابع من 2025</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">2026</div><div class="tl-title">التوسع والانتشار</div><div class="tl-desc">امتداد التكريم ليشمل الأدب والعلوم والفنون والرياضة والريادة</div></div>
         <div class="tl-item"><div class="tl-dot"></div><div class="tl-year">التوثيق الرقمي</div><div class="tl-title">إطلاق منصة أثر+ الرقمية</div><div class="tl-desc">تحويل الأرشيف إلى منصة رقمية متاحة لأبناء صفوى</div></div>
       </div>
     </div>
@@ -428,80 +524,118 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
 </div>
 
 <script>
-const SUPA_URL = 'https://nhsklhgoybiutnbxzwkg.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5oc2tsaGdveWJpdXRuYnh6d2tnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjIwMjUsImV4cCI6MjA5NDQ5ODAyNX0.NBHKay0OOt1Hw0S7sD8XMrAscWScvPSdfyPA3agecyw';
+const SUPA_URL='https://nhsklhgoybiutnbxzwkg.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5oc2tsaGdveWJpdXRuYnh6d2tnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjIwMjUsImV4cCI6MjA5NDQ5ODAyNX0.NBHKay0OOt1Hw0S7sD8XMrAscWScvPSdfyPA3agecyw';
+const SITE_URL='https://quraishfamily.github.io/atharplus';
 
-const api = async (path, opts={}) => {
-  const res = await fetch(`${SUPA_URL}/rest/v1/${path}`, {
-    headers: {
-      'apikey': SUPA_KEY,
-      'Authorization': `Bearer ${SUPA_KEY}`,
-      'Content-Type': 'application/json',
-      'Prefer': opts.prefer || 'return=representation',
-      ...opts.headers
-    },
-    ...opts
+const api=async(path,opts={})=>{
+  const res=await fetch(`${SUPA_URL}/rest/v1/${path}`,{
+    headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Content-Type':'application/json','Prefer':opts.prefer??'return=representation',...opts.headers},...opts
   });
-  if(!res.ok){ const e=await res.text(); console.error(e); return null; }
-  const txt = await res.text();
-  return txt ? JSON.parse(txt) : null;
+  if(!res.ok){console.error(path,res.status,await res.text());return null;}
+  const t=await res.text();return t?JSON.parse(t):null;
+};
+const db={
+  get:(t,q='')=>api(`${t}${q?'?'+q:''}`),
+  post:(t,b)=>api(t,{method:'POST',body:JSON.stringify(b)}),
+  patch:(t,q,b)=>api(`${t}?${q}`,{method:'PATCH',body:JSON.stringify(b)}),
+  del:(t,q)=>api(`${t}?${q}`,{method:'DELETE',prefer:''}),
 };
 
-const db = {
-  get:  (t, q='')       => api(`${t}?${q}`),
-  post: (t, body)       => api(t, {method:'POST', body:JSON.stringify(body)}),
-  patch:(t, q, body)    => api(`${t}?${q}`, {method:'PATCH', body:JSON.stringify(body), prefer:'return=representation'}),
-  del:  (t, q)          => api(`${t}?${q}`, {method:'DELETE', prefer:''}),
-};
+let currentArticleId=null,currentRating=0,allArticles=[],activeFilter='';
+const CY=new Date().getFullYear();
 
-// ── STATE ──
-let currentArticleId = null;
-let currentRating    = 0;
-const CY = new Date().getFullYear();
+// SEO
+function updateMeta(title,desc){
+  document.title=title+' | أثر+';
+  document.querySelector('meta[name=description]').setAttribute('content',desc||'');
+  document.querySelector('meta[property="og:title"]').setAttribute('content',title);
+  document.querySelector('meta[property="og:description"]').setAttribute('content',desc||'');
+}
 
-// ── NAV ──
+// ANNOUNCEMENT
+async function loadAnnouncement(){
+  const rows=await db.get('announcements','active=eq.true&order=created_at.desc&limit=1');
+  if(!rows||!rows.length){document.getElementById('ann-bar').classList.add('hidden');return;}
+  const ann=rows[0];
+  document.getElementById('ann-text').textContent=ann.text;
+  if(ann.target_date){
+    const target=new Date(ann.target_date);
+    const tick=()=>{
+      const diff=target-new Date();
+      if(diff<=0){document.getElementById('ann-countdown').textContent='';return;}
+      const d=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000);
+      document.getElementById('ann-countdown').textContent=`${d} يوم ${h} ساعة`;
+    };
+    tick();setInterval(tick,60000);
+  } else {
+    document.getElementById('ann-countdown').textContent='';
+  }
+}
+
+// NAV
 function goPage(p){
   document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
   document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
-  const nl=document.getElementById('nav-'+p);
-  if(nl) nl.classList.add('active');
-  if(p==='home')   { loadWall(); loadHomeGrid(); }
-  if(p==='gallery'){ loadGallery(); }
+  const nl=document.getElementById('nav-'+p);if(nl)nl.classList.add('active');
+  if(p==='home'){loadWall();loadHomeGrid();loadGoldStrip();}
+  if(p==='gallery')loadGalleryAll();
+  if(p==='sponsors')loadSponsorsPage();
   window.scrollTo(0,0);
 }
-function toggleDrawer(){
-  document.getElementById('hamburger').classList.toggle('open');
-  document.getElementById('mobile-drawer').classList.toggle('open');
-  document.getElementById('drawer-overlay').classList.toggle('open');
-}
-function closeDrawer(){
-  ['hamburger','mobile-drawer','drawer-overlay'].forEach(id=>document.getElementById(id).classList.remove('open'));
+function toggleDrawer(){['hamburger','mobile-drawer','drawer-overlay'].forEach(id=>document.getElementById(id).classList.toggle('open'));}
+function closeDrawer(){['hamburger','mobile-drawer','drawer-overlay'].forEach(id=>document.getElementById(id).classList.remove('open'));}
+
+// SPONSORS
+async function loadGoldStrip(){
+  const rows=await db.get('sponsors','level=eq.gold&active=eq.true&order=id.asc');
+  if(!rows||!rows.length)return;
+  document.getElementById('gold-strip').style.display='flex';
+  document.getElementById('gold-strip-logos').innerHTML=rows.map(s=>`
+    <a class="sstrip-logo" href="${s.url||'#'}" target="_blank">
+      ${s.logo?`<img src="${s.logo}" alt="${s.name}">`:`<span>${s.name}</span>`}
+    </a>`).join('');
 }
 
-// ── WALL ──
+async function loadSponsorsPage(){
+  const rows=await db.get('sponsors','active=eq.true&order=id.asc');
+  const el=document.getElementById('sponsors-page-content');
+  if(!rows||!rows.length){el.innerHTML=`<p style="color:var(--text-muted);text-align:center;padding:3rem">لا يوجد رعاة بعد</p>`;return;}
+  const lvls=[{k:'gold',l:'الذهبي',c:'sp-gold'},{k:'silver',l:'الفضي',c:'sp-silver'},{k:'bronze',l:'البرونزي',c:'sp-bronze'}];
+  let html='';
+  for(const lv of lvls){
+    const g=rows.filter(s=>s.level===lv.k);
+    if(!g.length)continue;
+    html+=`<div style="margin-bottom:3rem">
+      <div style="font-size:.72rem;font-weight:800;letter-spacing:3px;margin-bottom:1.5rem;opacity:.65" class="${lv.c}">الراعي ${lv.l}</div>
+      <div class="sponsors-page-grid">${g.map(s=>`
+        <a class="sp-page-card" href="${s.url||'#'}" target="_blank">
+          ${s.logo?`<img src="${s.logo}" alt="${s.name}">`:`<div style="font-size:2.5rem;opacity:.18">🏢</div>`}
+          <div class="sp-name">${s.name}</div>
+          <span class="sp-lvl ${lv.c}">${lv.l}</span>
+        </a>`).join('')}
+      </div></div>`;
+  }
+  el.innerHTML=html;
+}
+
+// WALL
 async function loadWall(){
-  const rows = await db.get('wall','order=year.asc,id.asc');
-  const wg = document.getElementById('wall-grid');
-  if(!rows){ wg.innerHTML='<p style="color:var(--text-muted)">تعذّر التحميل</p>'; return; }
-
-  // group by year
-  const years = [...new Set(rows.map(w=>w.year||CY))].sort();
-  let html = '';
+  const rows=await db.get('wall','order=year.asc,id.asc');
+  const wg=document.getElementById('wall-grid');
+  if(!rows){wg.innerHTML='<p style="color:var(--text-muted)">تعذّر التحميل</p>';return;}
+  const years=[...new Set(rows.map(w=>w.year||CY))].sort();
+  let html='';
   for(const yr of years){
-    const group = rows.filter(w=>(w.year||CY)===yr);
-    html += `<div style="grid-column:1/-1;display:flex;align-items:center;gap:1rem;margin-top:1.5rem">
-      <div style="font-size:.72rem;font-weight:800;color:var(--gold);letter-spacing:3px;opacity:.7">${yr}</div>
-      <div style="flex:1;height:1px;background:rgba(201,162,39,.15)"></div>
-    </div>`;
-    html += group.map(w => {
+    const g=rows.filter(w=>(w.year||CY)===yr);
+    html+=`<div class="year-sep"><span class="year-sep-label">${yr}</span><span class="year-sep-line"></span></div>`;
+    html+=g.map(w=>{
       if(w.status==='done'){
-        const photo = w.img
-          ? `<img src="${w.img}" alt="${w.honoree}">`
-          : `<div class="wall-ph"><span>👤</span><small>صورة المكرَّم</small></div>`;
+        const ph=w.img?`<img src="${w.img}" alt="${w.honoree}">`:`<div class="wall-ph"><span>👤</span><small>صورة المكرَّم</small></div>`;
         return `<div class="wall-card done" ${w.article_id?`onclick="openArticle(${w.article_id})"`:''}>
           <div class="wall-qlabel">${w.q} · ${yr}</div>
-          <div class="wall-photo">${photo}</div>
+          <div class="wall-photo">${ph}</div>
           <div class="wall-info"><div class="wall-name">${w.honoree}</div><div class="wall-field">${w.field}</div><div class="wall-desc">${w.description||''}</div></div>
         </div>`;
       }
@@ -511,15 +645,12 @@ async function loadWall(){
       </div>`;
     }).join('');
   }
-  wg.innerHTML = html;
+  wg.innerHTML=html;
 }
 
-// ── CARDS ──
-function cardHTML(a, avgRating){
-  const img = a.img
-    ? `<img src="${a.img}" alt="${a.title}">`
-    : `<div class="card-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>صورة التكريم</span></div>`;
-  const rb = avgRating ? `<span style="color:var(--gold);font-size:.76rem">★ ${avgRating}</span>` : '';
+// CARDS
+function cardHTML(a){
+  const img=a.img?`<img src="${a.img}" alt="${a.title}">`:`<div class="card-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>صورة التكريم</span></div>`;
   return `<div class="card" onclick="openArticle(${a.id})">
     <div class="card-img">${img}</div>
     <div class="card-body">
@@ -527,69 +658,74 @@ function cardHTML(a, avgRating){
       <div class="card-title">${a.title}</div>
       <div class="card-excerpt">${a.lead||''}</div>
     </div>
-    <div class="card-foot">
-      <span class="tag">${a.cat}</span>
-      <span style="display:flex;align-items:center;gap:8px">${rb}<span class="read-more">اقرأ المزيد ←</span></span>
-    </div>
+    <div class="card-foot"><span class="tag">${a.cat}</span><span class="read-more">اقرأ المزيد ←</span></div>
   </div>`;
 }
 
 async function loadHomeGrid(){
-  const rows = await db.get('articles','status=eq.منشور&order=created_at.desc&limit=3');
-  const el = document.getElementById('home-grid');
-  if(!rows||!rows.length){ el.innerHTML='<p style="color:var(--text-muted)">لا توجد تكريمات بعد</p>'; return; }
-  el.innerHTML = rows.map(a=>cardHTML(a,null)).join('');
-  // load real total count for stats
-  const allPub = await db.get('articles','status=eq.منشور&select=id');
-  animateStats((allPub||[]).length);
+  const rows=await db.get('articles','status=eq.منشور&order=created_at.desc&limit=3');
+  document.getElementById('home-grid').innerHTML=rows?.length?rows.map(cardHTML).join(''):`<p style="color:var(--text-muted)">لا توجد تكريمات بعد</p>`;
+  const all=await db.get('articles','status=eq.منشور&select=id');
+  animateStats((all||[]).length);
 }
 
-async function loadGallery(){
-  const rows = await db.get('articles','status=eq.منشور&order=created_at.desc');
-  const el = document.getElementById('gallery-grid');
-  if(!rows||!rows.length){ el.innerHTML='<p style="color:var(--text-muted)">لا توجد تكريمات بعد</p>'; return; }
-  el.innerHTML = rows.map(a=>cardHTML(a,null)).join('');
+async function loadGalleryAll(){
+  const rows=await db.get('articles','status=eq.منشور&order=created_at.desc');
+  allArticles=rows||[];
+  renderGallery();
 }
 
-// ── ARTICLE ──
+function renderGallery(){
+  const q=(document.getElementById('search-input')?.value||'').toLowerCase();
+  const f=allArticles.filter(a=>(!activeFilter||a.cat===activeFilter)&&(!q||(a.title||'').toLowerCase().includes(q)||(a.lead||'').toLowerCase().includes(q)));
+  document.getElementById('gallery-grid').innerHTML=f.length?f.map(cardHTML).join(''):`<div class="no-results">لا توجد نتائج مطابقة</div>`;
+}
+function setPill(el){
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');activeFilter=el.dataset.cat;renderGallery();
+}
+
+// ARTICLE
 async function openArticle(id){
-  currentArticleId = id; currentRating = 0;
-  const a = await db.get(`articles`,`id=eq.${id}`);
-  if(!a||!a.length) return;
-  const art = a[0];
-  document.getElementById('a-tag').textContent  = art.cat;
-  document.getElementById('a-date').textContent = (art.date||'').replace(/-/g,'/');
-  document.getElementById('a-title').textContent= art.title;
-  document.getElementById('a-lead').textContent = art.lead||'';
-  let body = (art.body||'').split('\n\n').map(p=>`<p>${p}</p>`).join('');
-  const imgs = Array.isArray(art.imgs) ? art.imgs : (art.imgs ? JSON.parse(art.imgs) : []);
-  if(imgs.length) body += `<h2>صور من الحفل</h2><div class="art-gallery">${imgs.map(s=>`<img src="${s}" onclick="openLightbox('${s}')">`).join('')}</div>`;
-  document.getElementById('a-body').innerHTML = body;
-  document.getElementById('c-name').value = '';
-  document.getElementById('c-text').value = '';
+  currentArticleId=id;currentRating=0;
+  const a=await db.get('articles',`id=eq.${id}`);
+  if(!a||!a.length)return;
+  const art=a[0];
+  updateMeta(art.title,art.lead||'');
+  document.getElementById('a-tag').textContent=art.cat;
+  document.getElementById('a-date').textContent=(art.date||'').replace(/-/g,'/');
+  document.getElementById('a-title').textContent=art.title;
+  document.getElementById('a-lead').textContent=art.lead||'';
+  let body=(art.body||'').split('\n\n').map(p=>`<p>${p}</p>`).join('');
+  const imgs=Array.isArray(art.imgs)?art.imgs:(art.imgs?JSON.parse(art.imgs):[]);
+  if(imgs.length)body+=`<h2>صور من الحفل</h2><div class="art-gallery">${imgs.map(s=>`<img src="${s}" onclick="openLightbox('${s}')">`).join('')}</div>`;
+  document.getElementById('a-body').innerHTML=body;
+  const pu=encodeURIComponent(SITE_URL),pt=encodeURIComponent(art.title+' | أثر+');
+  document.getElementById('share-wa').href=`https://wa.me/?text=${pt}%20${pu}`;
+  document.getElementById('share-tw').href=`https://twitter.com/intent/tweet?text=${pt}&url=${pu}`;
+  document.getElementById('c-name').value='';
+  document.getElementById('c-text').value='';
   setRating(0);
   await loadComments(id);
   goPage('article');
 }
+function copyLink(){navigator.clipboard.writeText(SITE_URL).then(()=>showNotif('✓ تم نسخ الرابط'));}
 
-// ── COMMENTS ──
-function setRating(v){
-  currentRating=v;
-  document.querySelectorAll('#star-input span').forEach(s=>s.classList.toggle('on',+s.dataset.v<=v));
-}
+// COMMENTS
+function setRating(v){currentRating=v;document.querySelectorAll('#star-input span').forEach(s=>s.classList.toggle('on',+s.dataset.v<=v));}
 
 async function loadComments(id){
-  const rows = await db.get(`comments`,`article_id=eq.${id}&approved=eq.true&order=created_at.desc`);
-  const list = rows||[];
-  const rated = list.filter(c=>c.rating>0);
-  const avgEl = document.getElementById('avg-rating-display');
+  const rows=await db.get('comments',`article_id=eq.${id}&approved=eq.true&order=created_at.desc`);
+  const list=rows||[];
+  const rated=list.filter(c=>c.rating>0);
+  const avgEl=document.getElementById('avg-rating-display');
   if(rated.length){
-    const avg = (rated.reduce((s,c)=>s+c.rating,0)/rated.length).toFixed(1);
+    const avg=(rated.reduce((s,c)=>s+c.rating,0)/rated.length).toFixed(1);
     avgEl.innerHTML=`<div class="avg-rating"><span class="avg-num">${avg}</span><span class="avg-stars">${'★'.repeat(Math.round(+avg))}${'☆'.repeat(5-Math.round(+avg))}</span><span class="avg-count">(${rated.length} تقييم)</span></div>`;
-  } else avgEl.innerHTML='';
-  const cl = document.getElementById('comments-list');
-  if(!list.length){ cl.innerHTML=`<div style="color:var(--text-muted);font-size:.86rem;padding:1rem 0">لا توجد تعليقات بعد</div>`; return; }
-  cl.innerHTML = list.map(c=>`
+  }else avgEl.innerHTML='';
+  const cl=document.getElementById('comments-list');
+  if(!list.length){cl.innerHTML=`<div style="color:var(--text-muted);font-size:.86rem;padding:1rem 0">لا توجد تعليقات بعد</div>`;return;}
+  cl.innerHTML=list.map(c=>`
     <div class="comment-item">
       <div class="comment-head">
         <span class="comment-author">${c.author}</span>
@@ -603,63 +739,49 @@ async function loadComments(id){
 }
 
 async function submitComment(){
-  const name = document.getElementById('c-name').value.trim();
-  const text = document.getElementById('c-text').value.trim();
-  if(!name){ alert('الرجاء كتابة اسمك'); return; }
-  if(!text&&!currentRating){ alert('الرجاء كتابة تعليق أو اختيار تقييم'); return; }
+  const name=document.getElementById('c-name').value.trim();
+  const text=document.getElementById('c-text').value.trim();
+  if(!name){alert('الرجاء كتابة اسمك');return;}
+  if(!text&&!currentRating){alert('الرجاء كتابة تعليق أو اختيار تقييم');return;}
   await db.post('comments',{article_id:currentArticleId,author:name,body:text,rating:currentRating,approved:false});
-  document.getElementById('c-name').value='';
-  document.getElementById('c-text').value='';
-  setRating(0);
+  document.getElementById('c-name').value='';document.getElementById('c-text').value='';setRating(0);
   showNotif('✓ تم إرسال تعليقك وسيظهر بعد المراجعة');
 }
 
-// ── NOMINATE ──
+// NOMINATE
 async function submitNomination(){
-  const name   = document.getElementById('nom-name').value.trim();
-  const reason = document.getElementById('nom-reason').value.trim();
-  if(!name){ alert('الرجاء كتابة اسم المرشَّح'); return; }
-  if(!reason){ alert('الرجاء كتابة سبب الترشيح'); return; }
-  const btn = document.getElementById('nom-btn');
-  btn.disabled=true; btn.textContent='جاري الإرسال...';
-  await db.post('nominations',{
-    name, field:document.getElementById('nom-field').value.trim(),
-    reason, submitted_by:document.getElementById('nom-by').value.trim(),
-    phone:document.getElementById('nom-phone').value.trim()
-  });
+  const name=document.getElementById('nom-name').value.trim();
+  const reason=document.getElementById('nom-reason').value.trim();
+  if(!name){alert('الرجاء كتابة اسم المرشَّح');return;}
+  if(!reason){alert('الرجاء كتابة سبب الترشيح');return;}
+  const btn=document.getElementById('nom-btn');btn.disabled=true;btn.textContent='جاري الإرسال...';
+  await db.post('nominations',{name,field:document.getElementById('nom-field').value.trim(),reason,submitted_by:document.getElementById('nom-by').value.trim(),phone:document.getElementById('nom-phone').value.trim()});
   ['nom-name','nom-field','nom-reason','nom-by','nom-phone'].forEach(id=>document.getElementById(id).value='');
-  btn.disabled=false; btn.textContent='إرسال الترشيح';
+  btn.disabled=false;btn.textContent='إرسال الترشيح';
   showNotif('✓ تم إرسال الترشيح، شكرًا لك');
 }
 
-// ── CONTACT ──
+// CONTACT
 async function submitContact(){
-  const name  = document.getElementById('ct-name').value.trim();
-  const email = document.getElementById('ct-email').value.trim();
-  const msg   = document.getElementById('ct-msg').value.trim();
-  if(!name){ alert('الرجاء كتابة اسمك'); return; }
-  if(!email){ alert('الرجاء كتابة بريدك الإلكتروني'); return; }
-  if(!msg){ alert('الرجاء كتابة رسالتك'); return; }
-  const btn = document.getElementById('ct-btn');
-  btn.disabled=true; btn.textContent='جاري الإرسال...';
-  await db.post('contact_messages',{
-    name, email, phone:document.getElementById('ct-phone').value.trim(), message:msg
-  });
+  const name=document.getElementById('ct-name').value.trim();
+  const email=document.getElementById('ct-email').value.trim();
+  const msg=document.getElementById('ct-msg').value.trim();
+  if(!name){alert('الرجاء كتابة اسمك');return;}
+  if(!email){alert('الرجاء كتابة بريدك الإلكتروني');return;}
+  if(!msg){alert('الرجاء كتابة رسالتك');return;}
+  const btn=document.getElementById('ct-btn');btn.disabled=true;btn.textContent='جاري الإرسال...';
+  await db.post('contact_messages',{name,email,phone:document.getElementById('ct-phone').value.trim(),message:msg});
   ['ct-name','ct-email','ct-phone','ct-msg'].forEach(id=>document.getElementById(id).value='');
-  btn.disabled=false; btn.textContent='إرسال الرسالة';
+  btn.disabled=false;btn.textContent='إرسال الرسالة';
   showNotif('✓ تم إرسال رسالتك، سنتواصل معك قريبًا');
 }
 
-// ── STATS ──
+// STATS
 function animateStats(pub){
-  anim('cnt-h', pub, 1200);
-  anim('cnt-e', pub, 900);
-  // سنوات المبادرة محسوبة من سبتمبر ٢٠٢٥
-  const founding = new Date('2025-09-01');
-  const now = new Date();
-  const months = (now.getFullYear()-founding.getFullYear())*12 + (now.getMonth()-founding.getMonth());
-  const yrs = months < 12 ? +(months/12).toFixed(1) : Math.floor(months/12);
-  document.getElementById('cnt-y').textContent = yrs;
+  anim('cnt-h',pub,1200);anim('cnt-e',pub,900);
+  const founding=new Date('2025-09-01'),now=new Date();
+  const months=(now.getFullYear()-founding.getFullYear())*12+(now.getMonth()-founding.getMonth());
+  document.getElementById('cnt-y').textContent=months<12?+(months/12).toFixed(1):Math.floor(months/12);
 }
 function anim(id,target,dur){
   const el=document.getElementById(id);if(!el)return;
@@ -668,30 +790,23 @@ function anim(id,target,dur){
   requestAnimationFrame(f);
 }
 
-// ── LIGHTBOX ──
+// LIGHTBOX & NOTIF
 function openLightbox(src){document.getElementById('lightbox-img').src=src;document.getElementById('lightbox').style.display='flex';}
 function closeLightbox(){document.getElementById('lightbox').style.display='none';}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();});
+function showNotif(msg){const n=document.getElementById('notif');n.textContent=msg;n.classList.add('show');setTimeout(()=>n.classList.remove('show'),2800);}
 
-// ── NOTIF ──
-function showNotif(msg){
-  const n=document.getElementById('notif');
-  n.textContent=msg; n.classList.add('show');
-  setTimeout(()=>n.classList.remove('show'),2800);
-}
-
-// ── STARS BG ──
+// STARS
 const sc=document.getElementById('stars');
 for(let i=0;i<55;i++){
-  const s=document.createElement('div'); s.className='star';
+  const s=document.createElement('div');s.className='star';
   const sz=Math.random()<.25?3:2;
   s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;animation-delay:${Math.random()*4}s`;
   sc.appendChild(s);
 }
 
-// ── INIT ──
-loadWall();
-loadHomeGrid();
+// INIT
+loadAnnouncement();loadWall();loadHomeGrid();loadGoldStrip();
 </script>
 </body>
 </html>
