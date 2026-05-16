@@ -155,6 +155,7 @@ select option{background:var(--dark2)}
       <div class="sb-item" data-tab="articles" onclick="switchTab(this,'articles')">📋 التكريمات</div>
       <div class="sb-item" data-tab="add" onclick="switchTab(this,'add')">➕ إضافة تكريم</div>
       <div class="sb-item" data-tab="wall" onclick="switchTab(this,'wall')">🏆 جدار الأثر</div>
+      <div class="sb-item" data-tab="honorees" onclick="switchTab(this,'honorees')">👤 المكرَّمون</div>
       <div class="sb-section">الوارد</div>
       <div class="sb-item" data-tab="sponsors" onclick="switchTab(this,'sponsors')">🤝 الرعاة</div>
       <div class="sb-item" data-tab="announcements" onclick="switchTab(this,'announcements')">📢 الإعلانات</div>
@@ -235,6 +236,62 @@ select option{background:var(--dark2)}
           <div class="form-foot">
             <button class="btn-cancel" onclick="switchTabByName('articles')">إلغاء</button>
             <button class="btn-save" id="save-btn" onclick="saveArticle()">💾 حفظ</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- HONOREES -->
+      <div id="tab-honorees" class="adm-tab">
+        <div class="adm-header">
+          <div class="adm-title">المكرَّمون</div>
+          <button class="btn-save" onclick="openAddHonoree()">+ إضافة مكرَّم</button>
+        </div>
+        <div id="honorees-list"><div class="loading">جاري التحميل...</div></div>
+        <div id="honoree-form-wrap" style="display:none;margin-top:1.5rem">
+          <div class="form-panel">
+            <input type="hidden" id="h-id">
+            <div class="form-grid">
+              <div class="fg full"><label>الاسم الكامل *</label><input type="text" id="h-name" placeholder="الاسم رباعيًا"></div>
+              <div class="fg"><label>المجال / الإنجاز</label><input type="text" id="h-field" placeholder="تعليم · تفوق أكاديمي"></div>
+              <div class="fg"><label>ربط بخانة جدار الأثر</label>
+                <select id="h-wall-id"><option value="">— بدون ربط —</option></select>
+              </div>
+              <div class="fg"><label>ربط بمقال</label>
+                <select id="h-article-id"><option value="">— بدون ربط —</option></select>
+              </div>
+              <div class="fg full"><label>السيرة المختصرة</label>
+                <textarea id="h-bio" placeholder="نبذة عن المكرَّم وإنجازاته..."></textarea>
+              </div>
+              <div class="fg full"><label>اقتباس من المكرَّم (اختياري)</label>
+                <input type="text" id="h-quote" placeholder="كلمة أو جملة مؤثرة للمكرَّم...">
+              </div>
+              <div class="fg full">
+                <label>صورة المكرَّم الرئيسية</label>
+                <div class="upload-zone" onclick="document.getElementById('h-photo-inp').click()">
+                  <div class="upload-icon">👤</div>
+                  <div class="upload-text">اضغط لرفع الصورة الشخصية</div>
+                </div>
+                <input type="file" id="h-photo-inp" accept="image/*" style="display:none" onchange="previewHPhoto(this)">
+                <div id="h-photo-preview" style="display:none;margin-top:8px">
+                  <img id="h-photo-thumb" style="max-height:120px;border-radius:10px;border:1px solid rgba(255,255,255,.1)">
+                  <button onclick="removeHPhoto()" style="display:block;margin-top:4px;background:transparent;border:none;color:var(--red);font-family:'Tajawal',sans-serif;cursor:pointer;font-size:.78rem">✕ إزالة</button>
+                </div>
+              </div>
+              <div class="fg full">
+                <label>معرض صور من التكريم</label>
+                <div class="upload-zone" onclick="document.getElementById('h-gallery-inp').click()">
+                  <div class="upload-icon">📷</div>
+                  <div class="upload-text">اضغط لرفع صور متعددة</div>
+                  <div class="upload-hint">يمكن اختيار أكثر من صورة دفعة واحدة</div>
+                </div>
+                <input type="file" id="h-gallery-inp" accept="image/*" multiple style="display:none" onchange="previewHGallery(this)">
+                <div class="img-gallery-grid" id="h-gallery-preview"></div>
+              </div>
+            </div>
+            <div class="form-foot">
+              <button class="btn-cancel" onclick="closeHonoreeForm()">إلغاء</button>
+              <button class="btn-save" id="h-save-btn" onclick="saveHonoree()">💾 حفظ</button>
+            </div>
           </div>
         </div>
       </div>
@@ -409,6 +466,7 @@ function switchTab(el, tab){
   if(tab==='dashboard')   loadDashboard();
   if(tab==='articles')    loadTable();
   if(tab==='wall')        loadWallAdmin();
+  if(tab==='honorees')    loadHonoreesAdmin();
   if(tab==='nominations') loadNominations();
   if(tab==='messages')    loadMessages();
   if(tab==='comments')    loadCommentsReview();
@@ -584,6 +642,124 @@ function renderMultiPreviews(){
     </div>`).join('');
 }
 function removeMultiImg(i){ pendingMultiImgs.splice(i,1); renderMultiPreviews(); }
+
+// ── HONOREES ──
+let pendingHPhoto = null;
+let pendingHGallery = [];
+
+async function loadHonoreesAdmin(){
+  const rows = await db.get('honorees','order=created_at.desc');
+  const el = document.getElementById('honorees-list');
+  if(!rows||!rows.length){ el.innerHTML='<div class="empty-state">لا يوجد مكرَّمون بعد · اضغط "+ إضافة مكرَّم" للبدء</div>'; return; }
+  el.innerHTML = `<div class="tbl-wrap">
+    <div class="tbl-head" style="grid-template-columns:2fr 1fr 120px"><div>الاسم</div><div>المجال</div><div>إجراءات</div></div>
+    ${rows.map(h=>`
+    <div class="tbl-row" style="grid-template-columns:2fr 1fr 120px">
+      <div style="display:flex;align-items:center;gap:10px;font-size:.88rem;font-weight:500">
+        ${h.photo?`<img src="${h.photo}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid rgba(201,162,39,.3)">`:''}
+        ${h.name}
+      </div>
+      <div style="font-size:.82rem;color:var(--text-muted)">${h.field||'—'}</div>
+      <div class="tbl-actions">
+        <button class="act-btn" onclick="editHonoree(${h.id})">تعديل</button>
+        <button class="act-btn del" onclick="deleteHonoree(${h.id})">حذف</button>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+async function openAddHonoree(){
+  pendingHPhoto=null; pendingHGallery=[];
+  document.getElementById('h-id').value='';
+  ['h-name','h-field','h-bio','h-quote'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('h-photo-preview').style.display='none';
+  document.getElementById('h-gallery-preview').innerHTML='';
+  await populateHSelects();
+  document.getElementById('honoree-form-wrap').style.display='block';
+  document.getElementById('honoree-form-wrap').scrollIntoView({behavior:'smooth'});
+}
+
+async function populateHSelects(selectedWall='', selectedArt=''){
+  const [walls,arts]=await Promise.all([
+    db.get('wall','status=eq.done&order=year.asc,id.asc'),
+    db.get('articles','status=eq.منشور&select=id,title&order=created_at.desc'),
+  ]);
+  document.getElementById('h-wall-id').innerHTML=`<option value="">— بدون ربط —</option>`
+    +(walls||[]).map(w=>`<option value="${w.id}" ${selectedWall==w.id?'selected':''}>${w.q} · ${w.year||''} · ${w.honoree||''}</option>`).join('');
+  document.getElementById('h-article-id').innerHTML=`<option value="">— بدون ربط —</option>`
+    +(arts||[]).map(a=>`<option value="${a.id}" ${selectedArt==a.id?'selected':''}>${a.title}</option>`).join('');
+}
+
+async function editHonoree(id){
+  const rows=await db.get('honorees',`id=eq.${id}`);
+  if(!rows||!rows.length)return;
+  const h=rows[0];
+  pendingHPhoto=null;
+  const gallery=Array.isArray(h.gallery)?h.gallery:(h.gallery?JSON.parse(h.gallery):[]);
+  pendingHGallery=[...gallery];
+  document.getElementById('h-id').value=id;
+  document.getElementById('h-name').value=h.name||'';
+  document.getElementById('h-field').value=h.field||'';
+  document.getElementById('h-bio').value=h.bio||'';
+  document.getElementById('h-quote').value=h.quote||'';
+  if(h.photo){document.getElementById('h-photo-thumb').src=h.photo;document.getElementById('h-photo-preview').style.display='block';}
+  else{document.getElementById('h-photo-preview').style.display='none';}
+  renderHGalleryPreview();
+  await populateHSelects(h.wall_id||'', h.article_id||'');
+  document.getElementById('honoree-form-wrap').style.display='block';
+  document.getElementById('honoree-form-wrap').scrollIntoView({behavior:'smooth'});
+}
+
+async function deleteHonoree(id){
+  if(!confirm('هل أنت متأكد من حذف هذا المكرَّم؟'))return;
+  await db.del('honorees',`id=eq.${id}`);
+  showNotif('تم الحذف'); loadHonoreesAdmin();
+}
+
+async function saveHonoree(){
+  const name=document.getElementById('h-name').value.trim();
+  if(!name){alert('الرجاء كتابة اسم المكرَّم');return;}
+  const btn=document.getElementById('h-save-btn');
+  btn.disabled=true; btn.textContent='جاري الحفظ...';
+  let photo='';
+  if(pendingHPhoto) photo=await toB64(pendingHPhoto);
+  else if(document.getElementById('h-photo-preview').style.display!=='none') photo=document.getElementById('h-photo-thumb').src;
+  const obj={
+    name, field:document.getElementById('h-field').value.trim(),
+    bio:document.getElementById('h-bio').value.trim(),
+    quote:document.getElementById('h-quote').value.trim()||null,
+    photo, gallery:JSON.stringify(pendingHGallery),
+    wall_id:document.getElementById('h-wall-id').value||null,
+    article_id:document.getElementById('h-article-id').value||null,
+  };
+  const id=document.getElementById('h-id').value;
+  if(id) await db.patch('honorees',`id=eq.${id}`,obj);
+  else await db.post('honorees',obj);
+  btn.disabled=false; btn.textContent='💾 حفظ';
+  showNotif('✓ تم الحفظ'); closeHonoreeForm(); loadHonoreesAdmin();
+}
+
+function closeHonoreeForm(){ document.getElementById('honoree-form-wrap').style.display='none'; }
+function previewHPhoto(inp){
+  if(!inp.files||!inp.files[0])return;
+  pendingHPhoto=inp.files[0];
+  const r=new FileReader();
+  r.onload=e=>{document.getElementById('h-photo-thumb').src=e.target.result;document.getElementById('h-photo-preview').style.display='block';};
+  r.readAsDataURL(inp.files[0]);
+}
+function removeHPhoto(){ pendingHPhoto=null; document.getElementById('h-photo-preview').style.display='none'; document.getElementById('h-photo-inp').value=''; }
+async function previewHGallery(inp){
+  if(!inp.files||!inp.files.length)return;
+  for(const f of Array.from(inp.files)) pendingHGallery.push(await toB64(f));
+  renderHGalleryPreview(); inp.value='';
+}
+function renderHGalleryPreview(){
+  document.getElementById('h-gallery-preview').innerHTML=pendingHGallery.map((src,i)=>`
+    <div class="img-thumb-wrap"><img src="${src}">
+      <button class="img-rm" onclick="removeHGalleryImg(${i})">✕</button>
+    </div>`).join('');
+}
+function removeHGalleryImg(i){ pendingHGallery.splice(i,1); renderHGalleryPreview(); }
 
 // ── WALL ──
 async function loadWallAdmin(){
