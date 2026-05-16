@@ -579,7 +579,7 @@ function setRating(v){
 }
 
 async function loadComments(id){
-  const rows = await db.get(`comments`,`article_id=eq.${id}&order=created_at.desc`);
+  const rows = await db.get(`comments`,`article_id=eq.${id}&approved=eq.true&order=created_at.desc`);
   const list = rows||[];
   const rated = list.filter(c=>c.rating>0);
   const avgEl = document.getElementById('avg-rating-display');
@@ -607,12 +607,11 @@ async function submitComment(){
   const text = document.getElementById('c-text').value.trim();
   if(!name){ alert('الرجاء كتابة اسمك'); return; }
   if(!text&&!currentRating){ alert('الرجاء كتابة تعليق أو اختيار تقييم'); return; }
-  await db.post('comments',{article_id:currentArticleId,author:name,body:text,rating:currentRating});
+  await db.post('comments',{article_id:currentArticleId,author:name,body:text,rating:currentRating,approved:false});
   document.getElementById('c-name').value='';
   document.getElementById('c-text').value='';
   setRating(0);
-  await loadComments(currentArticleId);
-  showNotif('✓ تم إرسال تعليقك');
+  showNotif('✓ تم إرسال تعليقك وسيظهر بعد المراجعة');
 }
 
 // ── NOMINATE ──
