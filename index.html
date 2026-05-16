@@ -68,7 +68,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,0.95);backdrop-fi
 .divider{width:52px;height:3px;background:linear-gradient(90deg,var(--gold),transparent);margin:.8rem auto;border-radius:2px}
 .sec-desc{color:var(--text-muted);font-size:.9rem}
 
-.wall-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:2rem}
+.wall-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:2rem;align-items:start}
 .wall-card{border-radius:14px;overflow:hidden;border:1px solid rgba(201,162,39,.1);background:var(--dark2);position:relative;transition:all .3s}
 .wall-card.done{cursor:pointer}
 .wall-card.done:hover{transform:translateY(-4px);border-color:rgba(201,162,39,.38);box-shadow:0 14px 36px rgba(0,0,0,.5)}
@@ -481,25 +481,37 @@ function closeDrawer(){
 
 // ── WALL ──
 async function loadWall(){
-  const rows = await db.get('wall','order=id.asc');
+  const rows = await db.get('wall','order=year.asc,id.asc');
   const wg = document.getElementById('wall-grid');
   if(!rows){ wg.innerHTML='<p style="color:var(--text-muted)">تعذّر التحميل</p>'; return; }
-  wg.innerHTML = rows.map(w => {
-    if(w.status==='done'){
-      const photo = w.img
-        ? `<img src="${w.img}" alt="${w.honoree}">`
-        : `<div class="wall-ph"><span>👤</span><small>صورة المكرَّم</small></div>`;
-      return `<div class="wall-card done" ${w.article_id?`onclick="openArticle(${w.article_id})"`:''}>
-        <div class="wall-qlabel">${w.q} · ${CY}</div>
-        <div class="wall-photo">${photo}</div>
-        <div class="wall-info"><div class="wall-name">${w.honoree}</div><div class="wall-field">${w.field}</div><div class="wall-desc">${w.description||''}</div></div>
-      </div>`;
-    }
-    return `<div class="wall-card upcoming">
-      <div class="wall-qlabel">${w.q} · ${CY}</div>
-      <div class="wall-upcoming-body"><div class="icon">⏳</div><div class="wall-name" style="opacity:.35">${w.label}</div><div class="lbl">قريبًا</div></div>
+
+  // group by year
+  const years = [...new Set(rows.map(w=>w.year||CY))].sort();
+  let html = '';
+  for(const yr of years){
+    const group = rows.filter(w=>(w.year||CY)===yr);
+    html += `<div style="grid-column:1/-1;display:flex;align-items:center;gap:1rem;margin-top:1.5rem">
+      <div style="font-size:.72rem;font-weight:800;color:var(--gold);letter-spacing:3px;opacity:.7">${yr}</div>
+      <div style="flex:1;height:1px;background:rgba(201,162,39,.15)"></div>
     </div>`;
-  }).join('');
+    html += group.map(w => {
+      if(w.status==='done'){
+        const photo = w.img
+          ? `<img src="${w.img}" alt="${w.honoree}">`
+          : `<div class="wall-ph"><span>👤</span><small>صورة المكرَّم</small></div>`;
+        return `<div class="wall-card done" ${w.article_id?`onclick="openArticle(${w.article_id})"`:''}>
+          <div class="wall-qlabel">${w.q} · ${yr}</div>
+          <div class="wall-photo">${photo}</div>
+          <div class="wall-info"><div class="wall-name">${w.honoree}</div><div class="wall-field">${w.field}</div><div class="wall-desc">${w.description||''}</div></div>
+        </div>`;
+      }
+      return `<div class="wall-card upcoming">
+        <div class="wall-qlabel">${w.q} · ${yr}</div>
+        <div class="wall-upcoming-body"><div class="icon">⏳</div><div class="wall-name" style="opacity:.35">${w.label}</div><div class="lbl">قريبًا</div></div>
+      </div>`;
+    }).join('');
+  }
+  wg.innerHTML = html;
 }
 
 // ── CARDS ──
@@ -527,7 +539,9 @@ async function loadHomeGrid(){
   const el = document.getElementById('home-grid');
   if(!rows||!rows.length){ el.innerHTML='<p style="color:var(--text-muted)">لا توجد تكريمات بعد</p>'; return; }
   el.innerHTML = rows.map(a=>cardHTML(a,null)).join('');
-  animateStats(rows.length);
+  // load real total count for stats
+  const allPub = await db.get('articles','status=eq.منشور&select=id');
+  animateStats((allPub||[]).length);
 }
 
 async function loadGallery(){
@@ -639,7 +653,8 @@ async function submitContact(){
 
 // ── STATS ──
 function animateStats(pub){
-  anim('cnt-h',pub*8,1400); anim('cnt-e',pub,900);
+  anim('cnt-h', pub, 1200);
+  anim('cnt-e', pub, 900);
 }
 function anim(id,target,dur){
   const el=document.getElementById(id);if(!el)return;
