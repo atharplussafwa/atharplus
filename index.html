@@ -787,6 +787,8 @@ async function openArticle(id){
   currentArticleId=id;currentRating=0;
   const a=await db.get('articles',`id=eq.${id}`);
   if(!a||!a.length)return;
+  // track view (fire and forget)
+  db.post('article_views',{article_id:id}).catch(()=>{});
   const art=a[0];
   updateMeta(art.title,art.lead||'');
   document.getElementById('a-tag').textContent=art.cat;
