@@ -270,7 +270,7 @@ select option{background:var(--dark2)}
               <div class="upload-zone" onclick="document.getElementById('f-img').click()">
                 <div class="upload-icon">🖼️</div>
                 <div class="upload-text">اضغط لاختيار صورة الغلاف</div>
-                <div class="upload-hint">PNG أو JPG</div>
+                <div class="upload-hint">PNG أو JPG · المقاس المقترح: <strong>1280 × 720 بكسل</strong> (نسبة 16:9)</div>
               </div>
               <input type="file" id="f-img" accept="image/*" style="display:none" onchange="previewCover(this)">
               <div id="cover-preview" style="display:none;margin-top:10px">
@@ -283,7 +283,7 @@ select option{background:var(--dark2)}
               <div class="upload-zone" onclick="document.getElementById('f-imgs').click()">
                 <div class="upload-icon">📷</div>
                 <div class="upload-text">اضغط لاختيار صور متعددة</div>
-                <div class="upload-hint">يمكن اختيار أكثر من صورة دفعة واحدة</div>
+                <div class="upload-hint">PNG أو JPG · المقاس المقترح: <strong>1200 × 800 بكسل</strong> · يمكن اختيار أكثر من صورة</div>
               </div>
               <input type="file" id="f-imgs" accept="image/*" multiple style="display:none" onchange="previewMulti(this)">
               <div class="img-gallery-grid" id="multi-preview"></div>
@@ -329,6 +329,7 @@ select option{background:var(--dark2)}
                 <div class="upload-zone" onclick="document.getElementById('h-photo-inp').click()">
                   <div class="upload-icon">👤</div>
                   <div class="upload-text">اضغط لرفع الصورة الشخصية</div>
+                  <div class="upload-hint">PNG أو JPG · المقاس المقترح: <strong>600 × 700 بكسل</strong> (نسبة عمودية)</div>
                 </div>
                 <input type="file" id="h-photo-inp" accept="image/*" style="display:none" onchange="previewHPhoto(this)">
                 <div id="h-photo-preview" style="display:none;margin-top:8px">
@@ -341,7 +342,7 @@ select option{background:var(--dark2)}
                 <div class="upload-zone" onclick="document.getElementById('h-gallery-inp').click()">
                   <div class="upload-icon">📷</div>
                   <div class="upload-text">اضغط لرفع صور متعددة</div>
-                  <div class="upload-hint">يمكن اختيار أكثر من صورة دفعة واحدة</div>
+                  <div class="upload-hint">PNG أو JPG · المقاس المقترح: <strong>1200 × 800 بكسل</strong> · يمكن اختيار أكثر من صورة</div>
                 </div>
                 <input type="file" id="h-gallery-inp" accept="image/*" multiple style="display:none" onchange="previewHGallery(this)">
                 <div class="img-gallery-grid" id="h-gallery-preview"></div>
@@ -395,7 +396,8 @@ select option{background:var(--dark2)}
                 <label>شعار الجهة</label>
                 <div class="upload-zone" onclick="document.getElementById('sp-logo-inp').click()">
                   <div class="upload-icon">🏢</div>
-                  <div class="upload-text">اضغط لرفع الشعار · PNG أو JPG أو SVG</div>
+                  <div class="upload-text">اضغط لرفع الشعار</div>
+                  <div class="upload-hint">PNG أو SVG (خلفية شفافة) · المقاس المقترح: <strong>400 × 200 بكسل</strong></div>
                 </div>
                 <input type="file" id="sp-logo-inp" accept="image/*" style="display:none" onchange="previewSpLogo(this)">
                 <div id="sp-logo-preview" style="display:none;margin-top:8px">
@@ -1007,7 +1009,7 @@ async function loadWallAdmin(){
           </select></div>
         <div class="fg"><label>صورة المكرَّم</label>
           <div class="upload-zone" style="padding:1rem" onclick="document.getElementById('wi-${w.id}').click()">
-            ${w.img?`<img src="${w.img}" style="max-height:70px;border-radius:6px">`:`<div class="upload-text" style="font-size:.82rem">اضغط لرفع الصورة</div>`}
+            ${w.img?`<img src="${w.img}" style="max-height:70px;border-radius:6px">`:`<div><div class="upload-text" style="font-size:.82rem">اضغط لرفع الصورة</div><div class="upload-hint" style="margin-top:4px">مقترح: 400 × 500 بكسل</div></div>`}
           </div>
           <input type="file" id="wi-${w.id}" accept="image/*" style="display:none" onchange="uploadWallImg(this,${w.id})"></div>
         <div class="fg"><label>الحالة</label>
