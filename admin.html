@@ -182,9 +182,8 @@ select option{background:var(--dark2)}
       <div class="sb-item" data-tab="add" onclick="switchTab(this,'add')">➕ إضافة تكريم</div>
       <div class="sb-item" data-tab="wall" onclick="switchTab(this,'wall')">🏆 جدار الأثر</div>
       <div class="sb-item" data-tab="honorees" onclick="switchTab(this,'honorees')">👤 المكرَّمون</div>
-      <div class="sb-section">الوارد</div>
-      <div class="sb-item" data-tab="sponsors" onclick="switchTab(this,'sponsors')">🤝 الرعاة</div>
       <div class="sb-item" data-tab="announcements" onclick="switchTab(this,'announcements')">📢 الإعلانات</div>
+      <div class="sb-section">الوارد</div>
       <div class="sb-item" data-tab="nominations" onclick="switchTab(this,'nominations')">🌟 الترشيحات <span class="sb-badge" id="badge-noms">0</span></div>
       <div class="sb-item" data-tab="messages" onclick="switchTab(this,'messages')">✉️ الرسائل <span class="sb-badge" id="badge-msgs">0</span></div>
       <div class="sb-item" data-tab="comments" onclick="switchTab(this,'comments')">💬 التعليقات <span class="sb-badge" id="badge-cmts">0</span></div>
@@ -363,55 +362,6 @@ select option{background:var(--dark2)}
           <button class="btn-save" onclick="addWallSlot()">+ إضافة ربع جديد</button>
         </div>
         <div class="wall-admin-grid" id="wall-admin-cards"><div class="loading">جاري التحميل...</div></div>
-      </div>
-
-      <!-- SPONSORS -->
-      <div id="tab-sponsors" class="adm-tab">
-        <div class="adm-header">
-          <div class="adm-title">الرعاة</div>
-          <button class="btn-save" onclick="openAddSponsor()">+ إضافة راعٍ</button>
-        </div>
-        <div id="sponsors-admin-list"><div class="loading">جاري التحميل...</div></div>
-        <!-- ADD/EDIT SPONSOR FORM -->
-        <div id="sponsor-form-wrap" style="display:none;margin-top:1.5rem">
-          <div class="form-panel">
-            <input type="hidden" id="sp-id">
-            <div class="form-grid">
-              <div class="fg full"><label>اسم الجهة الراعية *</label><input type="text" id="sp-name" placeholder="اسم الشركة أو المؤسسة"></div>
-              <div class="fg"><label>مستوى الرعاية</label>
-                <select id="sp-level">
-                  <option value="gold">ذهبي 🥇</option>
-                  <option value="silver">فضي 🥈</option>
-                  <option value="bronze">برونزي 🥉</option>
-                </select>
-              </div>
-              <div class="fg"><label>الحالة</label>
-                <select id="sp-active">
-                  <option value="true">نشط</option>
-                  <option value="false">مخفي</option>
-                </select>
-              </div>
-              <div class="fg full"><label>رابط الموقع (اختياري)</label><input type="text" id="sp-url" placeholder="https://example.com"></div>
-              <div class="fg full">
-                <label>شعار الجهة</label>
-                <div class="upload-zone" onclick="document.getElementById('sp-logo-inp').click()">
-                  <div class="upload-icon">🏢</div>
-                  <div class="upload-text">اضغط لرفع الشعار</div>
-                  <div class="upload-hint">PNG أو SVG (خلفية شفافة) · المقاس المقترح: <strong>400 × 200 بكسل</strong></div>
-                </div>
-                <input type="file" id="sp-logo-inp" accept="image/*" style="display:none" onchange="previewSpLogo(this)">
-                <div id="sp-logo-preview" style="display:none;margin-top:8px">
-                  <img id="sp-logo-thumb" style="max-height:60px;border-radius:6px;border:1px solid rgba(255,255,255,.1)">
-                  <button onclick="removeSpLogo()" style="display:block;margin-top:4px;background:transparent;border:none;color:var(--red);font-family:'Tajawal',sans-serif;cursor:pointer;font-size:.78rem">✕ إزالة</button>
-                </div>
-              </div>
-            </div>
-            <div class="form-foot">
-              <button class="btn-cancel" onclick="closeSponsorForm()">إلغاء</button>
-              <button class="btn-save" id="sp-save-btn" onclick="saveSponsor()">💾 حفظ</button>
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- ANNOUNCEMENTS -->
