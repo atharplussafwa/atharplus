@@ -194,17 +194,6 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,.96);backdrop-fil
 .comment-date{font-size:.73rem;color:var(--text-muted)}
 .comment-text{font-size:.86rem;color:#C8C4B8;line-height:1.65}
 
-/* SPONSORS PAGE */
-.sponsors-page-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.5rem;margin-top:1rem}
-.sp-page-card{background:var(--dark2);border-radius:14px;border:1px solid rgba(255,255,255,.07);padding:2rem;display:flex;flex-direction:column;align-items:center;gap:12px;text-decoration:none;transition:all .3s}
-.sp-page-card:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,.4)}
-.sp-page-card img{max-height:70px;max-width:80%;object-fit:contain}
-.sp-page-card .sp-name{font-weight:700;font-size:.95rem;text-align:center}
-.sp-lvl{font-size:.7rem;font-weight:700;letter-spacing:2px;padding:3px 12px;border-radius:20px}
-.sp-gold{background:rgba(201,162,39,.15);color:var(--gold);border:1px solid rgba(201,162,39,.3)}
-.sp-silver{background:rgba(192,192,192,.1);color:#C0C0C0;border:1px solid rgba(192,192,192,.2)}
-.sp-bronze{background:rgba(176,141,87,.1);color:#B08D57;border:1px solid rgba(176,141,87,.2)}
-
 /* ABOUT */
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
 .about-text p{color:#D0CBB8;line-height:2;margin-bottom:1.4rem;font-size:.98rem}
@@ -301,7 +290,6 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
   <ul class="nav-links">
     <li><a id="nav-home" class="active" onclick="goPage('home')">الرئيسية</a></li>
     <li><a id="nav-gallery" onclick="goPage('gallery')">التكريمات</a></li>
-    <li><a id="nav-sponsors" onclick="goPage('sponsors')">رعاتنا</a></li>
     <li><a id="nav-about" onclick="goPage('about')">عن المبادرة</a></li>
     <li><a id="nav-nominate" onclick="goPage('nominate')">رشِّح</a></li>
     <li><a id="nav-contact" onclick="goPage('contact')">تواصل معنا</a></li>
@@ -314,7 +302,6 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
 <div class="mobile-drawer" id="mobile-drawer">
   <a onclick="goPage('home');closeDrawer()">الرئيسية</a>
   <a onclick="goPage('gallery');closeDrawer()">التكريمات</a>
-  <a onclick="goPage('sponsors');closeDrawer()">رعاتنا</a>
   <a onclick="goPage('about');closeDrawer()">عن المبادرة</a>
   <a onclick="goPage('nominate');closeDrawer()">رشِّح شخصًا</a>
   <a onclick="goPage('contact');closeDrawer()">تواصل معنا</a>
@@ -375,7 +362,6 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
         <div class="f-col-title">روابط سريعة</div>
         <div class="f-links">
           <span onclick="goPage('gallery')">التكريمات</span>
-          <span onclick="goPage('sponsors')">رعاتنا</span>
           <span onclick="goPage('nominate')">رشِّح شخصًا</span>
           <span onclick="goPage('contact')">تواصل معنا</span>
           <span onclick="goPage('about')">عن المبادرة</span>
@@ -483,18 +469,6 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
   <div class="honoree-gallery-section" id="h-gallery-section" style="display:none">
     <div class="honoree-gallery-title">📷 لقطات من التكريم</div>
     <div class="honoree-gallery-grid" id="h-gallery-grid"></div>
-  </div>
-</div>
-
-<!-- SPONSORS -->
-<div id="page-sponsors" class="page">
-  <div class="section">
-    <div class="sec-header">
-      <div class="sec-title">رعاة <span class="gold">المبادرة</span></div>
-      <div class="divider"></div>
-      <div class="sec-desc">شركاء نجاح مبادرة أثر+ في تكريم الطاقات الشابة من صفوى</div>
-    </div>
-    <div id="sponsors-page-content"><div class="loading">جاري التحميل...</div></div>
   </div>
 </div>
 
@@ -920,7 +894,13 @@ for(let i=0;i<55;i++){
 }
 
 // INIT
-loadAnnouncement();loadWall();loadHomeGrid();loadGoldStrip();
+loadAnnouncement();loadWall();loadHomeGrid();
+// update footer with current hijri year
+try{
+  const hYear = new Date().toLocaleDateString('ar-SA-u-ca-islamic',{year:'numeric'}).replace(/[^٠-٩0-9]/g,'').trim();
+  const mYear = new Date().getFullYear();
+  document.getElementById('footer-year').textContent=`© ${mYear} م · ${hYear} هـ — مبادرة أثر+ · جميع الحقوق محفوظة`;
+}catch{}
 </script>
 </body>
 </html>
