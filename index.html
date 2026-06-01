@@ -94,9 +94,6 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,.96);backdrop-fil
 
 /* WALL */
 .wall-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:2rem;align-items:start}
-.year-sep{grid-column:1/-1;display:flex;align-items:center;gap:1rem;margin-top:1.5rem}
-.year-sep-label{font-size:.72rem;font-weight:800;color:var(--gold);letter-spacing:3px;opacity:.7}
-.year-sep-line{flex:1;height:1px;background:rgba(201,162,39,.15)}
 .wall-card{border-radius:14px;overflow:hidden;border:1px solid rgba(201,162,39,.1);background:var(--dark2);position:relative;transition:all .3s}
 .wall-card.done{cursor:pointer}
 .wall-card.done:hover{transform:translateY(-4px);border-color:rgba(201,162,39,.38);box-shadow:0 14px 36px rgba(0,0,0,.5)}
@@ -114,6 +111,21 @@ nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,.96);backdrop-fil
 .wall-upcoming-body{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:260px;gap:8px;text-align:center;padding:2rem}
 .wall-upcoming-body .icon{font-size:1.8rem;opacity:.25}
 .wall-upcoming-body .lbl{font-size:.78rem;color:var(--text-muted);opacity:.55}
+
+/* WALL MODAL */
+.wall-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:300;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+.wall-modal-overlay.hidden{display:none}
+.wall-modal{background:var(--dark2);border-radius:18px;border:1px solid rgba(201,162,39,.2);max-width:640px;width:100%;max-height:90vh;overflow-y:auto;position:relative}
+.wall-modal-photo{width:100%;height:280px;object-fit:cover;border-radius:18px 18px 0 0}
+.wall-modal-photo-ph{width:100%;height:200px;background:var(--dark3);border-radius:18px 18px 0 0;display:flex;align-items:center;justify-content:center;font-size:4rem;opacity:.15}
+.wall-modal-body{padding:1.75rem}
+.wall-modal-q{display:inline-flex;align-items:center;background:rgba(201,162,39,.1);border:1px solid rgba(201,162,39,.25);color:var(--gold);font-size:.72rem;font-weight:800;letter-spacing:2px;padding:4px 14px;border-radius:20px;margin-bottom:1rem}
+.wall-modal-name{font-size:1.7rem;font-weight:800;margin-bottom:.3rem}
+.wall-modal-field{font-size:.88rem;color:var(--gold);margin-bottom:1rem}
+.wall-modal-desc{font-size:.95rem;color:#C8C4B8;line-height:1.85;margin-bottom:1.25rem}
+.wall-modal-actions{display:flex;gap:10px;flex-wrap:wrap}
+.wall-modal-close{position:absolute;top:14px;left:14px;background:rgba(0,0,0,.5);border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.wall-modal-close:hover{background:rgba(0,0,0,.8)}
 
 /* FILTER */
 .filter-bar{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;align-items:center}
@@ -312,6 +324,21 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
 <div class="lightbox" id="lightbox" style="display:none" onclick="closeLightbox()">
   <button class="lightbox-close">✕</button>
   <img id="lightbox-img" src="" alt="">
+</div>
+
+<!-- WALL MODAL -->
+<div class="wall-modal-overlay hidden" id="wall-modal-overlay" onclick="if(event.target===this)closeWallModal()">
+  <div class="wall-modal" id="wall-modal">
+    <button class="wall-modal-close" onclick="closeWallModal()">✕</button>
+    <div id="wm-photo-wrap"></div>
+    <div class="wall-modal-body">
+      <div class="wall-modal-q" id="wm-q"></div>
+      <div class="wall-modal-name" id="wm-name"></div>
+      <div class="wall-modal-field" id="wm-field"></div>
+      <div class="wall-modal-desc" id="wm-desc"></div>
+      <div class="wall-modal-actions" id="wm-actions"></div>
+    </div>
+  </div>
 </div>
 
 <!-- HOME -->
@@ -653,38 +680,55 @@ async function loadWall(){
   const rows=await db.get('wall','order=year.asc,id.asc');
   const wg=document.getElementById('wall-grid');
   if(!rows){wg.innerHTML='<p style="color:var(--text-muted)">تعذّر التحميل</p>';return;}
-  const years=[...new Set(rows.map(w=>w.year||CY))].sort();
-  let html='';
-  for(const yr of years){
-    const g=rows.filter(w=>(w.year||CY)===yr);
-    html+=`<div class="year-sep"><span class="year-sep-label">${yr}</span><span class="year-sep-line"></span></div>`;
-    html+=g.map(w=>{
-      if(w.status==='done'){
-        const ph=w.img?`<img src="${w.img}" alt="${w.honoree}">`:`<div class="wall-ph"><span>👤</span><small>صورة المكرَّم</small></div>`;
-        // prefer honoree page, fallback to article
-        const click=`onclick="openWallCard(${w.id})"`;
-        return `<div class="wall-card done" ${click}>
-          <div class="wall-qlabel">${w.q} · ${yr}</div>
-          <div class="wall-photo">${ph}</div>
-          <div class="wall-info"><div class="wall-name">${w.honoree}</div><div class="wall-field">${w.field}</div><div class="wall-desc">${w.description||''}</div></div>
-        </div>`;
-      }
-      return `<div class="wall-card upcoming">
-        <div class="wall-qlabel">${w.q} · ${yr}</div>
-        <div class="wall-upcoming-body"><div class="icon">⏳</div><div class="wall-name" style="opacity:.35">${w.label}</div><div class="lbl">قريبًا</div></div>
+  wg.innerHTML=rows.map(w=>{
+    if(w.status==='done'){
+      const ph=w.img?`<img src="${w.img}" alt="${w.honoree}">`:`<div class="wall-ph"><span>👤</span><small>صورة المكرَّم</small></div>`;
+      return `<div class="wall-card done" onclick="openWallModal(${w.id})">
+        <div class="wall-qlabel">${w.q} · ${w.year||CY}</div>
+        <div class="wall-photo">${ph}</div>
+        <div class="wall-info">
+          <div class="wall-name">${w.honoree}</div>
+          <div class="wall-field">${w.field}</div>
+          <div class="wall-desc">${w.description||''}</div>
+        </div>
       </div>`;
-    }).join('');
-  }
-  wg.innerHTML=html;
+    }
+    return `<div class="wall-card upcoming">
+      <div class="wall-qlabel">${w.q} · ${w.year||CY}</div>
+      <div class="wall-upcoming-body"><div class="icon">⏳</div><div class="wall-name" style="opacity:.35">${w.label}</div><div class="lbl">قريبًا</div></div>
+    </div>`;
+  }).join('');
 }
 
-async function openWallCard(wallId){
-  // try to find honoree linked to this wall slot
+async function openWallModal(wallId){
+  const rows=await db.get('wall',`id=eq.${wallId}`);
+  if(!rows||!rows.length)return;
+  const w=rows[0];
+  // photo
+  document.getElementById('wm-photo-wrap').innerHTML=w.img
+    ?`<img class="wall-modal-photo" src="${w.img}" alt="${w.honoree}">`
+    :`<div class="wall-modal-photo-ph">👤</div>`;
+  document.getElementById('wm-q').textContent=`${w.q} · ${w.year||CY}`;
+  document.getElementById('wm-name').textContent=w.honoree;
+  document.getElementById('wm-field').textContent=w.field||'';
+  document.getElementById('wm-desc').textContent=w.description||'';
+  // check for honoree page
   const h=await db.get('honorees',`wall_id=eq.${wallId}`);
-  if(h&&h.length){ openHonoree(h[0]); return; }
-  // fallback: find wall row and open article if linked
-  const w=await db.get('wall',`id=eq.${wallId}`);
-  if(w&&w.length&&w[0].article_id){ openArticle(w[0].article_id); return; }
+  const acts=[];
+  if(h&&h.length){
+    acts.push(`<button class="btn-primary" onclick="openHonoree(${JSON.stringify(h[0]).replace(/"/g,'&quot;')})" style="font-size:.88rem;padding:10px 22px">👤 صفحة المكرَّم</button>`);
+  }
+  if(w.article_id){
+    acts.push(`<button class="btn-secondary" onclick="closeWallModal();openArticle(${w.article_id})" style="font-size:.88rem;padding:10px 22px">📄 خبر التكريم</button>`);
+  }
+  document.getElementById('wm-actions').innerHTML=acts.join('');
+  document.getElementById('wall-modal-overlay').classList.remove('hidden');
+  document.body.style.overflow='hidden';
+}
+
+function closeWallModal(){
+  document.getElementById('wall-modal-overlay').classList.add('hidden');
+  document.body.style.overflow='';
 }
 
 async function openHonoree(h){
@@ -881,7 +925,13 @@ function anim(id,target,dur){
 // LIGHTBOX & NOTIF
 function openLightbox(src){document.getElementById('lightbox-img').src=src;document.getElementById('lightbox').style.display='flex';}
 function closeLightbox(){document.getElementById('lightbox').style.display='none';}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    closeLightbox();
+    document.getElementById('wall-modal-overlay').classList.add('hidden');
+    document.body.style.overflow='';
+  }
+});
 function showNotif(msg){const n=document.getElementById('notif');n.textContent=msg;n.classList.add('show');setTimeout(()=>n.classList.remove('show'),2800);}
 
 // STARS
