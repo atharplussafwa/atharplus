@@ -360,9 +360,68 @@ select option{background:var(--dark2)}
       <div id="tab-wall" class="adm-tab">
         <div class="adm-header">
           <div class="adm-title">جدار الأثر</div>
-          <button class="btn-save" onclick="addWallSlot()">+ إضافة ربع جديد</button>
+          <button class="btn-save" onclick="openWallForm()">+ إضافة مكرَّم</button>
         </div>
-        <div class="wall-admin-grid" id="wall-admin-cards"><div class="loading">جاري التحميل...</div></div>
+        <!-- LIST -->
+        <div id="wall-list"><div class="loading">جاري التحميل...</div></div>
+        <!-- FORM -->
+        <div id="wall-form-wrap" style="display:none;margin-top:1.5rem">
+          <div class="form-panel">
+            <input type="hidden" id="wf-id">
+            <div class="form-grid">
+              <div class="fg"><label>الربع *</label>
+                <select id="wf-q">
+                  <option value="Q1">Q1 — يناير · مارس</option>
+                  <option value="Q2">Q2 — أبريل · يونيو</option>
+                  <option value="Q3">Q3 — يوليو · سبتمبر</option>
+                  <option value="Q4">Q4 — أكتوبر · ديسمبر</option>
+                </select>
+              </div>
+              <div class="fg"><label>السنة *</label>
+                <input type="number" id="wf-year" placeholder="2026" min="2020" max="2099">
+              </div>
+              <div class="fg full"><label>اسم المكرَّم/المكرَّمة *</label>
+                <input type="text" id="wf-honoree" placeholder="الاسم الكامل رباعيًا">
+              </div>
+              <div class="fg full"><label>المجال / الإنجاز</label>
+                <input type="text" id="wf-field" placeholder="مثال: تعليم · تفوق أكاديمي">
+              </div>
+              <div class="fg full"><label>وصف مختصر (يظهر في البطاقة)</label>
+                <input type="text" id="wf-desc" placeholder="جملة قصيرة تظهر أسفل المجال في البطاقة">
+              </div>
+              <div class="fg full"><label>التفاصيل الموسّعة (تظهر عند الضغط على البطاقة)</label>
+                <textarea id="wf-details" placeholder="اكتب هنا تفاصيل إضافية عن المكرَّم وإنجازاته، تظهر في النافذة المنبثقة عند ضغط الزائر على البطاقة..."></textarea>
+              </div>
+              <div class="fg full">
+                <label>صورة المكرَّم</label>
+                <div class="upload-zone" onclick="document.getElementById('wf-img-inp').click()">
+                  <div class="upload-icon">👤</div>
+                  <div class="upload-text">اضغط لرفع صورة المكرَّم</div>
+                  <div class="upload-hint">PNG أو JPG · المقاس المقترح: <strong>400 × 500 بكسل</strong></div>
+                </div>
+                <input type="file" id="wf-img-inp" accept="image/*" style="display:none" onchange="previewWallImg(this)">
+                <div id="wf-img-preview" style="display:none;margin-top:8px">
+                  <img id="wf-img-thumb" style="max-height:120px;border-radius:10px;border:1px solid rgba(255,255,255,.1)">
+                  <button onclick="removeWallImg()" style="display:block;margin-top:4px;background:transparent;border:none;color:var(--red);font-family:'Tajawal',sans-serif;cursor:pointer;font-size:.78rem">✕ إزالة الصورة</button>
+                </div>
+              </div>
+              <div class="fg"><label>ربط بمقال التكريم</label>
+                <select id="wf-article-id"><option value="">— بدون ربط —</option></select>
+              </div>
+              <div class="fg"><label>الحالة</label>
+                <select id="wf-status">
+                  <option value="done">مكتمل ✓</option>
+                  <option value="upcoming">قادم ⏳</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-foot">
+              <button class="btn-cancel" onclick="closeWallForm()">إلغاء</button>
+              <button class="act-btn del" id="wf-delete-btn" style="display:none" onclick="deleteWallSlot()">🗑 حذف</button>
+              <button class="btn-save" id="wf-save-btn" onclick="saveWallForm()">💾 حفظ</button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- ANNOUNCEMENTS -->
@@ -944,79 +1003,131 @@ function renderHGalleryPreview(){
 function removeHGalleryImg(i){ pendingHGallery.splice(i,1); renderHGalleryPreview(); }
 
 // ── WALL ──
+let pendingWallImg = null;
+
 async function loadWallAdmin(){
-  const [wallRows, artRows] = await Promise.all([
-    db.get('wall','order=year.asc,id.asc'),
-    db.get('articles','select=id,title&status=eq.منشور&order=created_at.desc'),
-  ]);
-  const arts = artRows||[];
-  document.getElementById('wall-admin-cards').innerHTML = (wallRows||[]).map((w,i)=>`
-    <div class="wall-slot">
-      <div class="wall-slot-head">
-        <div class="wall-slot-title">${w.q} · ${w.label} · ${w.year||''}</div>
-        <span class="badge ${w.status==='done'?'badge-pub':'badge-draft'}">${w.status==='done'?'مكتمل':'قادم'}</span>
+  const rows = await db.get('wall','order=year.asc,id.asc');
+  const el = document.getElementById('wall-list');
+  if(!rows||!rows.length){ el.innerHTML='<div class="empty-state">لا توجد بيانات · اضغط "+ إضافة مكرَّم" للبدء</div>'; return; }
+  el.innerHTML=`<div class="tbl-wrap">
+    <div class="tbl-head" style="grid-template-columns:1fr 1fr 1fr 100px">
+      <div>المكرَّم</div><div>الربع / السنة</div><div>الحالة</div><div>إجراءات</div>
+    </div>
+    ${rows.map(w=>`
+    <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 100px">
+      <div style="display:flex;align-items:center;gap:10px;font-size:.88rem;font-weight:500">
+        ${w.img?`<img src="${w.img}" style="width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid rgba(201,162,39,.3)">`:''}
+        ${w.honoree||'—'}
       </div>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div class="fg"><label>السنة</label>
-          <input type="number" id="wy-${w.id}" value="${w.year||new Date().getFullYear()}" placeholder="2026" min="2020" max="2099"></div>
-        <div class="fg"><label>اسم المكرَّم/المكرَّمة</label>
-          <input type="text" id="wn-${w.id}" value="${w.honoree||''}" placeholder="الاسم الكامل"></div>
-        <div class="fg"><label>المجال / الإنجاز</label>
-          <input type="text" id="wf-${w.id}" value="${w.field||''}" placeholder="تعليم · تفوق أكاديمي"></div>
-        <div class="fg"><label>وصف مختصر</label>
-          <input type="text" id="wd-${w.id}" value="${w.description||''}" placeholder="جملة قصيرة"></div>
-        <div class="fg"><label>ربط بمقال</label>
-          <select id="wa-${w.id}">
-            <option value="">— بدون ربط —</option>
-            ${arts.map(a=>`<option value="${a.id}" ${w.article_id==a.id?'selected':''}>${a.title}</option>`).join('')}
-          </select></div>
-        <div class="fg"><label>صورة المكرَّم</label>
-          <div class="upload-zone" style="padding:1rem" onclick="document.getElementById('wi-${w.id}').click()">
-            ${w.img?`<img src="${w.img}" style="max-height:70px;border-radius:6px">`:`<div><div class="upload-text" style="font-size:.82rem">اضغط لرفع الصورة</div><div class="upload-hint" style="margin-top:4px">مقترح: 400 × 500 بكسل</div></div>`}
-          </div>
-          <input type="file" id="wi-${w.id}" accept="image/*" style="display:none" onchange="uploadWallImg(this,${w.id})"></div>
-        <div class="fg"><label>الحالة</label>
-          <select id="ws-${w.id}">
-            <option value="done" ${w.status==='done'?'selected':''}>مكتمل</option>
-            <option value="upcoming" ${w.status==='upcoming'?'selected':''}>قادم</option>
-          </select></div>
-        <button class="btn-save" onclick="saveWallSlot(${w.id})" style="align-self:flex-start">حفظ</button>
+      <div style="font-size:.82rem;color:var(--text-muted)">${w.q} · ${w.year||''}</div>
+      <div><span class="badge ${w.status==='done'?'badge-pub':'badge-draft'}">${w.status==='done'?'مكتمل':'قادم'}</span></div>
+      <div class="tbl-actions">
+        <button class="act-btn" onclick="editWallSlot(${w.id})">تعديل</button>
       </div>
-    </div>`).join('');
+    </div>`).join('')}
+  </div>`;
 }
 
-async function addWallSlot(){
-  const qs = ['Q1','Q2','Q3','Q4'];
-  const labels = ['يناير – مارس','أبريل – يونيو','يوليو – سبتمبر','أكتوبر – ديسمبر'];
-  const q = prompt('اختر الربع (Q1 / Q2 / Q3 / Q4):','Q1');
-  if(!q || !qs.includes(q)) return;
-  const yr = prompt('أدخل السنة:',new Date().getFullYear());
-  if(!yr) return;
-  const idx = qs.indexOf(q);
-  await db.post('wall',{q, label:labels[idx], year:parseInt(yr), honoree:'', field:'', description:'', img:'', article_id:null, status:'upcoming'});
-  showNotif('✓ تم إضافة الربع');
-  loadWallAdmin();
+async function openWallForm(){
+  pendingWallImg=null;
+  document.getElementById('wf-id').value='';
+  document.getElementById('wf-q').value='Q1';
+  document.getElementById('wf-year').value=new Date().getFullYear();
+  document.getElementById('wf-honoree').value='';
+  document.getElementById('wf-field').value='';
+  document.getElementById('wf-desc').value='';
+  document.getElementById('wf-details').value='';
+  document.getElementById('wf-status').value='done';
+  document.getElementById('wf-img-preview').style.display='none';
+  document.getElementById('wf-delete-btn').style.display='none';
+  await populateWallArticles('');
+  document.getElementById('wall-form-wrap').style.display='block';
+  document.getElementById('wall-form-wrap').scrollIntoView({behavior:'smooth'});
 }
 
-async function uploadWallImg(inp, wid){
-  if(!inp.files||!inp.files[0]) return;
-  const b64 = await toB64(inp.files[0]);
-  await db.patch('wall',`id=eq.${wid}`,{img:b64});
-  showNotif('✓ تم رفع الصورة');
-  loadWallAdmin();
+async function editWallSlot(id){
+  const rows=await db.get('wall',`id=eq.${id}`);
+  if(!rows||!rows.length)return;
+  const w=rows[0];
+  pendingWallImg=null;
+  document.getElementById('wf-id').value=id;
+  document.getElementById('wf-q').value=w.q||'Q1';
+  document.getElementById('wf-year').value=w.year||new Date().getFullYear();
+  document.getElementById('wf-honoree').value=w.honoree||'';
+  document.getElementById('wf-field').value=w.field||'';
+  document.getElementById('wf-desc').value=w.description||'';
+  document.getElementById('wf-details').value=w.details||'';
+  document.getElementById('wf-status').value=w.status||'done';
+  if(w.img){document.getElementById('wf-img-thumb').src=w.img;document.getElementById('wf-img-preview').style.display='block';}
+  else{document.getElementById('wf-img-preview').style.display='none';}
+  document.getElementById('wf-delete-btn').style.display='inline-flex';
+  await populateWallArticles(w.article_id||'');
+  document.getElementById('wall-form-wrap').style.display='block';
+  document.getElementById('wall-form-wrap').scrollIntoView({behavior:'smooth'});
 }
 
-async function saveWallSlot(wid){
-  const obj = {
-    year       : parseInt(document.getElementById(`wy-${wid}`).value)||new Date().getFullYear(),
-    honoree    : document.getElementById(`wn-${wid}`).value,
-    field      : document.getElementById(`wf-${wid}`).value,
-    description: document.getElementById(`wd-${wid}`).value,
-    article_id : document.getElementById(`wa-${wid}`).value || null,
-    status     : document.getElementById(`ws-${wid}`).value,
+async function populateWallArticles(selectedId){
+  const arts=await db.get('articles','status=eq.منشور&select=id,title&order=created_at.desc');
+  document.getElementById('wf-article-id').innerHTML=`<option value="">— بدون ربط —</option>`
+    +(arts||[]).map(a=>`<option value="${a.id}" ${a.id==selectedId?'selected':''}>${a.title}</option>`).join('');
+}
+
+async function saveWallForm(){
+  const honoree=document.getElementById('wf-honoree').value.trim();
+  if(!honoree){alert('الرجاء كتابة اسم المكرَّم');return;}
+  const btn=document.getElementById('wf-save-btn');
+  btn.disabled=true;btn.textContent='جاري الحفظ...';
+  let img='';
+  if(pendingWallImg) img=await toB64(pendingWallImg);
+  else if(document.getElementById('wf-img-preview').style.display!=='none') img=document.getElementById('wf-img-thumb').src;
+  const qLabels={Q1:'يناير – مارس',Q2:'أبريل – يونيو',Q3:'يوليو – سبتمبر',Q4:'أكتوبر – ديسمبر'};
+  const q=document.getElementById('wf-q').value;
+  const obj={
+    q, label:qLabels[q],
+    year:parseInt(document.getElementById('wf-year').value)||new Date().getFullYear(),
+    honoree,
+    field:document.getElementById('wf-field').value.trim(),
+    description:document.getElementById('wf-desc').value.trim(),
+    details:document.getElementById('wf-details').value.trim(),
+    img,
+    article_id:document.getElementById('wf-article-id').value||null,
+    status:document.getElementById('wf-status').value,
   };
-  await db.patch('wall',`id=eq.${wid}`, obj);
+  const id=document.getElementById('wf-id').value;
+  if(id) await db.patch('wall',`id=eq.${id}`,obj);
+  else await db.post('wall',obj);
+  btn.disabled=false;btn.textContent='💾 حفظ';
   showNotif('✓ تم الحفظ');
+  closeWallForm();
+  loadWallAdmin();
+}
+
+async function deleteWallSlot(){
+  const id=document.getElementById('wf-id').value;
+  if(!id)return;
+  if(!confirm('هل أنت متأكد من حذف هذا المكرَّم من الجدار؟'))return;
+  await db.del('wall',`id=eq.${id}`);
+  showNotif('تم الحذف');
+  closeWallForm();
+  loadWallAdmin();
+}
+
+function closeWallForm(){
+  document.getElementById('wall-form-wrap').style.display='none';
+  pendingWallImg=null;
+}
+
+function previewWallImg(inp){
+  if(!inp.files||!inp.files[0])return;
+  pendingWallImg=inp.files[0];
+  const r=new FileReader();
+  r.onload=e=>{document.getElementById('wf-img-thumb').src=e.target.result;document.getElementById('wf-img-preview').style.display='block';};
+  r.readAsDataURL(inp.files[0]);
+}
+function removeWallImg(){
+  pendingWallImg=null;
+  document.getElementById('wf-img-preview').style.display='none';
+  document.getElementById('wf-img-inp').value='';
 }
 
 // ── COMMENTS REVIEW ──
