@@ -293,6 +293,7 @@ select option{background:var(--dark2)}
           </div>
           <div class="form-foot">
             <button class="btn-cancel" onclick="switchTabByName('articles')">إلغاء</button>
+            <button class="act-btn del" id="delete-art-btn" onclick="deleteCurrentArticle()" style="display:none;padding:10px 20px">🗑 حذف التكريم</button>
             <button class="btn-save" id="save-btn" onclick="saveArticle()">💾 حفظ</button>
           </div>
         </div>
@@ -698,6 +699,7 @@ async function loadTable(){
 function openAddForm(){
   editingId=null; pendingCover=null; pendingMultiImgs=[];
   document.getElementById('form-label').textContent='إضافة تكريم جديد';
+  document.getElementById('delete-art-btn').style.display='none';
   clearForm();
   switchTabByName('add');
 }
@@ -710,6 +712,7 @@ async function editArticle(id){
   const imgs = Array.isArray(a.imgs)?a.imgs:(a.imgs?JSON.parse(a.imgs):[]);
   pendingMultiImgs = [...imgs];
   document.getElementById('form-label').textContent='تعديل التكريم';
+  document.getElementById('delete-art-btn').style.display='inline-flex';
   document.getElementById('f-id').value    = id;
   document.getElementById('f-title').value = a.title||'';
   document.getElementById('f-cat').value   = a.cat||'تعليم';
@@ -725,6 +728,16 @@ async function editArticle(id){
   }
   renderMultiPreviews();
   switchTabByName('add');
+}
+
+async function deleteCurrentArticle(){
+  if(!editingId)return;
+  if(!confirm('هل أنت متأكد من حذف هذا التكريم نهائياً؟'))return;
+  await db.del('articles',`id=eq.${editingId}`);
+  editingId=null;
+  showNotif('تم الحذف');
+  switchTabByName('articles');
+  loadDashboard();
 }
 
 async function deleteArticle(id){
