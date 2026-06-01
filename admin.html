@@ -493,7 +493,7 @@ const api = async (path, opts={}) => {
 };
 const db = {
   get:   (t,q='')    => api(`${t}${q?'?'+q:''}`),
-  post:  (t,body)    => api(t, {method:'POST', body:JSON.stringify(body)}),
+  post:  (t,body)    => api(t, {method:'POST', body:JSON.stringify(body), prefer:'return=minimal'}),
   patch: (t,q,body)  => api(`${t}?${q}`, {method:'PATCH', body:JSON.stringify(body)}),
   del:   (t,q)       => api(`${t}?${q}`, {method:'DELETE', prefer:''}),
 };
