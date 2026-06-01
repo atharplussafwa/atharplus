@@ -711,7 +711,9 @@ async function openWallModal(wallId){
   document.getElementById('wm-q').textContent=`${w.q} · ${w.year||CY}`;
   document.getElementById('wm-name').textContent=w.honoree;
   document.getElementById('wm-field').textContent=w.field||'';
-  document.getElementById('wm-desc').textContent=w.description||'';
+  // show details if available, fallback to description
+  const detailText = w.details||w.description||'';
+  document.getElementById('wm-desc').textContent=detailText;
   // check for honoree page
   const h=await db.get('honorees',`wall_id=eq.${wallId}`);
   const acts=[];
