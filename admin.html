@@ -369,13 +369,8 @@ select option{background:var(--dark2)}
           <div class="form-panel">
             <input type="hidden" id="wf-id">
             <div class="form-grid">
-              <div class="fg"><label>الربع *</label>
-                <select id="wf-q">
-                  <option value="Q1">Q1 — يناير · مارس</option>
-                  <option value="Q2">Q2 — أبريل · يونيو</option>
-                  <option value="Q3">Q3 — يوليو · سبتمبر</option>
-                  <option value="Q4">Q4 — أكتوبر · ديسمبر</option>
-                </select>
+              <div class="fg"><label>الشهر *</label>
+                <input type="text" id="wf-q" placeholder="مثال: سبتمبر · أكتوبر">
               </div>
               <div class="fg"><label>السنة *</label>
                 <input type="number" id="wf-year" placeholder="2026" min="2020" max="2099">
@@ -1011,7 +1006,7 @@ async function loadWallAdmin(){
   if(!rows||!rows.length){ el.innerHTML='<div class="empty-state">لا توجد بيانات · اضغط "+ إضافة مكرَّم" للبدء</div>'; return; }
   el.innerHTML=`<div class="tbl-wrap">
     <div class="tbl-head" style="grid-template-columns:1fr 1fr 1fr 100px">
-      <div>المكرَّم</div><div>الربع / السنة</div><div>الحالة</div><div>إجراءات</div>
+      <div>المكرَّم</div><div>الشهر / السنة</div><div>الحالة</div><div>إجراءات</div>
     </div>
     ${rows.map(w=>`
     <div class="tbl-row" style="grid-template-columns:1fr 1fr 1fr 100px">
@@ -1031,7 +1026,7 @@ async function loadWallAdmin(){
 async function openWallForm(){
   pendingWallImg=null;
   document.getElementById('wf-id').value='';
-  document.getElementById('wf-q').value='Q1';
+  document.getElementById('wf-q').value='';
   document.getElementById('wf-year').value=new Date().getFullYear();
   document.getElementById('wf-honoree').value='';
   document.getElementById('wf-field').value='';
@@ -1051,7 +1046,7 @@ async function editWallSlot(id){
   const w=rows[0];
   pendingWallImg=null;
   document.getElementById('wf-id').value=id;
-  document.getElementById('wf-q').value=w.q||'Q1';
+  document.getElementById('wf-q').value=w.q||w.label||'';
   document.getElementById('wf-year').value=w.year||new Date().getFullYear();
   document.getElementById('wf-honoree').value=w.honoree||'';
   document.getElementById('wf-field').value=w.field||'';
@@ -1080,10 +1075,9 @@ async function saveWallForm(){
   let img='';
   if(pendingWallImg) img=await toB64(pendingWallImg);
   else if(document.getElementById('wf-img-preview').style.display!=='none') img=document.getElementById('wf-img-thumb').src;
-  const qLabels={Q1:'يناير – مارس',Q2:'أبريل – يونيو',Q3:'يوليو – سبتمبر',Q4:'أكتوبر – ديسمبر'};
-  const q=document.getElementById('wf-q').value;
+  const q=document.getElementById('wf-q').value.trim();
   const obj={
-    q, label:qLabels[q],
+    q, label:q,
     year:parseInt(document.getElementById('wf-year').value)||new Date().getFullYear(),
     honoree,
     field:document.getElementById('wf-field').value.trim(),
