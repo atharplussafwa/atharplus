@@ -245,11 +245,11 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
 .honoree-gallery-grid img{width:100%;height:160px;object-fit:cover;border-radius:10px;border:1px solid rgba(255,255,255,.07);cursor:pointer;transition:transform .2s}
 .honoree-gallery-grid img:hover{transform:scale(1.03)}
 /* FLOATING SHIELD */
-.shield-float{position:fixed;left:2rem;top:50%;transform:translateY(-50%);z-index:10;pointer-events:none;transition:opacity .5s ease}
-.shield-float img{width:143px;opacity:.18;filter:drop-shadow(0 8px 28px rgba(0,0,0,.6));transform:rotate(8deg)}
-.shield-float.hide{opacity:0;pointer-events:none}
+.shield-float{position:fixed;right:5%;top:50%;transform:translateY(-50%);z-index:5;pointer-events:none;transition:opacity .6s ease}
+.shield-float img{width:165px;opacity:.2;filter:drop-shadow(0 10px 32px rgba(0,0,0,.7));transform:rotate(-6deg)}
+.shield-float.hide{opacity:0}
 @media(max-width:768px){
-  .shield-float img{width:91px;opacity:.12}
+  .shield-float img{width:100px;opacity:.1;right:2%}
   .honoree-hero-inner{grid-template-columns:1fr;text-align:center}
   .honoree-photo,.honoree-photo-ph{width:200px;height:230px;margin:0 auto}
   .honoree-field-tag,.honoree-actions{align-self:center;justify-content:center}
@@ -701,15 +701,15 @@ for(let i=0;i<55;i++){const s=document.createElement('div');s.className='star';c
 loadAnnouncement();loadWall();loadHomeGrid();
 try{const hYear=new Date().toLocaleDateString('ar-SA-u-ca-islamic',{year:'numeric'}).replace(/[^٠-٩0-9]/g,'').trim();const mYear=new Date().getFullYear();document.getElementById('footer-year').textContent=`© ${mYear} م · ${hYear} هـ — مبادرة أثر+ · جميع الحقوق محفوظة`;}catch{}
 
-// SHIELD scroll behavior
+// SHIELD — hide when scrolled past hero
 (function(){
-  let lastY=0;
   window.addEventListener('scroll',()=>{
-    const y=window.scrollY;
     const s=document.getElementById('shield-float');
     if(!s)return;
-    s.classList.toggle('hide',y>lastY&&y>300);
-    lastY=y;
+    const hero=document.querySelector('.hero');
+    if(!hero){s.classList.add('hide');return;}
+    const heroBottom=hero.getBoundingClientRect().bottom;
+    s.classList.toggle('hide', heroBottom < 0);
   },{passive:true});
 })();
 
