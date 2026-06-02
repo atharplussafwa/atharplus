@@ -766,12 +766,23 @@ async function openHonoree(h){
 }
 
 // CARDS
+function formatCardDate(dateStr){
+  if(!dateStr) return '';
+  try{
+    const d = new Date(dateStr);
+    if(isNaN(d)) return dateStr;
+    const miladi = d.toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'});
+    const hijri  = d.toLocaleDateString('ar-SA-u-ca-islamic',{year:'numeric',month:'long',day:'numeric'});
+    return `${miladi} · ${hijri}`;
+  }catch{ return dateStr; }
+}
+
 function cardHTML(a){
   const img=a.img?`<img src="${a.img}" alt="${a.title}">`:`<div class="card-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>صورة التكريم</span></div>`;
   return `<div class="card" onclick="openArticle(${a.id})">
     <div class="card-img">${img}</div>
     <div class="card-body">
-      <div class="card-year">${(a.date||'').split('-')[0]} م · ${toHijri(a.date).split(' ').pop()||''} هـ</div>
+      <div class="card-year" style="font-size:.72rem">${formatCardDate(a.date)}</div>
       <div class="card-title">${a.title}</div>
       <div class="card-excerpt">${a.lead||''}</div>
     </div>
@@ -787,7 +798,7 @@ async function loadHomeGrid(){
 }
 
 async function loadGalleryAll(){
-  const rows=await db.get('articles','status=eq.منشور&order=created_at.desc');
+  const rows=await db.get('articles','status=eq.منشور&order=created_at.asc');
   allArticles=rows||[];
   renderGallery();
 }
@@ -915,7 +926,17 @@ function animateStats(pub){
   anim('cnt-h',pub,1200);anim('cnt-e',pub,900);
   const founding=new Date('2025-09-01'),now=new Date();
   const months=(now.getFullYear()-founding.getFullYear())*12+(now.getMonth()-founding.getMonth());
-  document.getElementById('cnt-y').textContent=months<12?+(months/12).toFixed(1):Math.floor(months/12);
+  const el=document.getElementById('cnt-y');
+  if(months<12){
+    // show months instead
+    el.textContent=months;
+    const lbl=el.closest('.stat')?.querySelector('.stat-label');
+    if(lbl) lbl.textContent='أشهر';
+  } else {
+    el.textContent=Math.floor(months/12);
+    const lbl=el.closest('.stat')?.querySelector('.stat-label');
+    if(lbl) lbl.textContent=Math.floor(months/12)===1?'سنة':'سنوات';
+  }
 }
 function anim(id,target,dur){
   const el=document.getElementById(id);if(!el)return;
