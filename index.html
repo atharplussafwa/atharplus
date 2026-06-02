@@ -798,7 +798,7 @@ async function loadHomeGrid(){
 }
 
 async function loadGalleryAll(){
-  const rows=await db.get('articles','status=eq.منشور&order=created_at.asc');
+  const rows=await db.get('articles','status=eq.منشور&order=date.asc');
   allArticles=rows||[];
   renderGallery();
 }
