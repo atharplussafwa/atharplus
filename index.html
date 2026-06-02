@@ -341,7 +341,7 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,162,39,.1)}
     <div class="sec-header">
       <div class="sec-title">جدار <span class="gold">الأثر</span></div>
       <div class="divider"></div>
-      <div class="sec-desc">مكرَّم كل ثلاثة أشهر · مبدع واحد يمثّل صفوى</div>
+      <div class="sec-desc">مبدع واحد يمثّل صفوى</div>
     </div>
     <div class="wall-grid" id="wall-grid"><div class="loading">جاري التحميل...</div></div>
   </div>
@@ -563,9 +563,9 @@ async function loadWall(){
   wg.innerHTML=rows.map(w=>{
     if(w.status==='done'){
       const ph=w.img?`<img src="${w.img}" alt="${w.honoree}">`:`<div class="wall-ph"><span>👤</span><small>صورة المكرَّم</small></div>`;
-      return `<div class="wall-card done" onclick="openWallModal(${w.id})"><div class="wall-qlabel">${w.q} · ${w.year||CY}</div><div class="wall-photo">${ph}</div><div class="wall-info"><div class="wall-name">${w.honoree}</div><div class="wall-field">${w.field}</div><div class="wall-desc">${w.description||''}</div></div></div>`;
+      return `<div class="wall-card done" onclick="openWallModal(${w.id})"><div class="wall-qlabel">${w.label||w.q} · ${w.year||CY}</div><div class="wall-photo">${ph}</div><div class="wall-info"><div class="wall-name">${w.honoree}</div><div class="wall-field">${w.field}</div><div class="wall-desc">${w.description||''}</div></div></div>`;
     }
-    return `<div class="wall-card upcoming"><div class="wall-qlabel">${w.q} · ${w.year||CY}</div><div class="wall-upcoming-body"><div class="icon">⏳</div><div class="wall-name" style="opacity:.35">${w.label}</div><div class="lbl">قريبًا</div></div></div>`;
+    return `<div class="wall-card upcoming"><div class="wall-qlabel">${w.label||w.q} · ${w.year||CY}</div><div class="wall-upcoming-body"><div class="icon">⏳</div><div class="wall-name" style="opacity:.35">${w.label}</div><div class="lbl">قريبًا</div></div></div>`;
   }).join('');
 }
 async function openWallModal(wallId){
@@ -573,7 +573,7 @@ async function openWallModal(wallId){
   if(!rows||!rows.length)return;
   const w=rows[0];
   document.getElementById('wm-photo-wrap').innerHTML=w.img?`<img class="wall-modal-photo" src="${w.img}" alt="${w.honoree}">`:`<div class="wall-modal-photo-ph">👤</div>`;
-  document.getElementById('wm-q').textContent=`${w.q} · ${w.year||CY}`;
+  document.getElementById('wm-q').textContent=`${w.label||w.q} · ${w.year||CY}`;
   document.getElementById('wm-name').textContent=w.honoree;
   document.getElementById('wm-field').textContent=w.field||'';
   document.getElementById('wm-desc').textContent=w.details||w.description||'';
@@ -591,7 +591,7 @@ async function openHonoree(h){
   document.getElementById('h-photo-wrap').innerHTML=h.photo?`<img class="honoree-photo" src="${h.photo}" alt="${h.name}">`:`<div class="honoree-photo-ph"><span>👤</span></div>`;
   const w=h.wall_id?(await db.get('wall',`id=eq.${h.wall_id}`))||[]:[];
   const wRow=w[0];
-  document.getElementById('h-badge').textContent=wRow?`${wRow.q} · ${wRow.year||CY}`:'';
+  document.getElementById('h-badge').textContent=wRow?`${wRow.label||wRow.q} · ${wRow.year||CY}`:'';
   document.getElementById('h-badge').style.display=wRow?'block':'none';
   document.getElementById('h-field').textContent=h.field||'';
   document.getElementById('h-name').textContent=h.name;
