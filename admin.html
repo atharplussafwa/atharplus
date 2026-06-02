@@ -370,7 +370,21 @@ select option{background:var(--dark2)}
             <input type="hidden" id="wf-id">
             <div class="form-grid">
               <div class="fg"><label>الشهر *</label>
-                <input type="text" id="wf-q" placeholder="مثال: سبتمبر · أكتوبر">
+                <select id="wf-q">
+                  <option value="">— اختر الشهر —</option>
+                  <option value="يناير">يناير</option>
+                  <option value="فبراير">فبراير</option>
+                  <option value="مارس">مارس</option>
+                  <option value="أبريل">أبريل</option>
+                  <option value="مايو">مايو</option>
+                  <option value="يونيو">يونيو</option>
+                  <option value="يوليو">يوليو</option>
+                  <option value="أغسطس">أغسطس</option>
+                  <option value="سبتمبر">سبتمبر</option>
+                  <option value="أكتوبر">أكتوبر</option>
+                  <option value="نوفمبر">نوفمبر</option>
+                  <option value="ديسمبر">ديسمبر</option>
+                </select>
               </div>
               <div class="fg"><label>السنة *</label>
                 <input type="number" id="wf-year" placeholder="2026" min="2020" max="2099">
