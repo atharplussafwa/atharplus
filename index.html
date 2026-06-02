@@ -791,7 +791,7 @@ function cardHTML(a){
 }
 
 async function loadHomeGrid(){
-  const rows=await db.get('articles','status=eq.منشور&order=created_at.desc&limit=3');
+  const rows=await db.get('articles','status=eq.منشور&order=date.desc&limit=3');
   document.getElementById('home-grid').innerHTML=rows?.length?rows.map(cardHTML).join(''):`<p style="color:var(--text-muted)">لا توجد تكريمات بعد</p>`;
   const all=await db.get('articles','status=eq.منشور&select=id');
   animateStats((all||[]).length);
