@@ -80,8 +80,8 @@ nav{position:sticky;top:0;z-index:100;background:rgba(253,250,244,.97);backdrop-
 .sec-title .gold{color:var(--gold)}
 .divider{width:52px;height:3px;background:linear-gradient(90deg,var(--gold),transparent);margin:.8rem auto;border-radius:2px}
 .sec-desc{color:var(--text-muted);font-size:.9rem}
-.wall-grid{display:flex;flex-wrap:wrap;gap:1rem;margin-top:2rem;align-items:flex-start}
-.wall-card{border-radius:14px;overflow:hidden;border:1px solid rgba(26,102,68,.15);background:#fff;position:relative;transition:all .3s;box-shadow:0 2px 12px rgba(44,26,14,.08);width:calc(25% - .75rem);min-width:0;flex-shrink:0}
+.wall-grid{display:flex;flex-wrap:nowrap;gap:1rem;margin-top:2rem;align-items:flex-start;overflow-x:auto;padding-bottom:.5rem;-webkit-overflow-scrolling:touch;scrollbar-width:none}.wall-grid::-webkit-scrollbar{display:none}
+.wall-card{border-radius:14px;overflow:hidden;border:1px solid rgba(26,102,68,.15);background:#fff;position:relative;transition:all .3s;box-shadow:0 2px 12px rgba(44,26,14,.08);width:220px;min-width:220px;flex-shrink:0}
 .wall-card.done{cursor:pointer}
 .wall-card.done:hover{transform:translateY(-4px);border-color:rgba(26,102,68,.45);box-shadow:0 14px 36px rgba(44,26,14,.18)}
 .wall-card.upcoming{border-style:dashed;border-color:rgba(26,102,68,.15);opacity:.65}
@@ -261,7 +261,7 @@ footer{background:#2C1A0E;border-top:1px solid rgba(26,102,68,.12)}
   .art-body,.comments-section,.share-bar{padding:0 1.2rem 2rem}
 }
 
-@media(max-width:600px){.wall-card{width:calc(50% - .5rem)!important}}
+@media(max-width:600px){.wall-card{width:160px!important;min-width:160px!important}.wall-photo{height:130px!important}.wall-name{font-size:.82rem!important}.wall-field,.wall-desc{font-size:.68rem!important}}
 </style>
 </head>
 <body>
