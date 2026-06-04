@@ -1283,15 +1283,26 @@ async function loadNominations(){
   const el = document.getElementById('nominations-list');
   if(!rows||!rows.length){ el.innerHTML='<div class="empty-state">لا توجد ترشيحات بعد</div>'; return; }
   el.innerHTML = rows.map(n=>`
-    <div class="inbox-item">
+    <div class="inbox-item" id="nom-${n.id}">
       <div class="inbox-head">
         <div class="inbox-name">${n.name}</div>
-        <span class="inbox-date">${new Date(n.created_at).toLocaleDateString('ar-SA')}</span>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="inbox-date">${new Date(n.created_at).toLocaleDateString('ar-SA')}</span>
+          <button onclick="deleteNomination(${n.id})" class="act-btn del" style="padding:4px 12px;font-size:.75rem">🗑 حذف</button>
+        </div>
       </div>
       ${n.field?`<div class="inbox-meta">المجال: ${n.field}</div>`:''}
       <div class="inbox-body">${n.reason}</div>
       ${n.submitted_by?`<div class="inbox-by">مُرشَّح بواسطة: ${n.submitted_by}${n.phone?' · '+n.phone:''}</div>`:''}
     </div>`).join('');
+}
+
+async function deleteNomination(id){
+  if(!confirm('حذف هذا الترشيح نهائياً؟')) return;
+  await db.del('nominations',`id=eq.${id}`);
+  document.getElementById(`nom-${id}`)?.remove();
+  showNotif('تم الحذف');
+  loadDashboard();
 }
 
 // ── MESSAGES ──
