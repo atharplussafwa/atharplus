@@ -561,6 +561,7 @@ function goPage(p){
   document.getElementById('page-'+p).classList.add('active');
   document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
   const nl=document.getElementById('nav-'+p);if(nl)nl.classList.add('active');
+  if(p!=='article')history.pushState({page:p},'',SITE_URL+(p==='home'?'':'#'+p));
   if(p==='home'){loadWall();loadHomeGrid();loadGoldStrip();}
   if(p==='gallery')loadGalleryAll();
   window.scrollTo(0,0);
@@ -661,13 +662,15 @@ async function openArticle(id){
   const imgs=Array.isArray(art.imgs)?art.imgs:(art.imgs?JSON.parse(art.imgs):[]);
   if(imgs.length)body+=`<h2>صور من الحفل</h2><div class="art-gallery">${imgs.map(s=>`<img src="${s}" onclick="openLightbox('${s}')">`).join('')}</div>`;
   document.getElementById('a-body').innerHTML=body;
-  const pu=encodeURIComponent(SITE_URL),pt=encodeURIComponent(art.title+' | أثر+');
+  const artUrl=`${SITE_URL}?article=${id}`;
+  history.pushState({article:id},'',artUrl);
+  const pu=encodeURIComponent(artUrl),pt=encodeURIComponent(art.title+' | أثر+');
   document.getElementById('share-wa').href=`https://wa.me/?text=${pt}%20${pu}`;
   document.getElementById('share-tw').href=`https://twitter.com/intent/tweet?text=${pt}&url=${pu}`;
   document.getElementById('c-name').value='';document.getElementById('c-text').value='';
   setRating(0);await loadComments(id);goPage('article');
 }
-function copyLink(){navigator.clipboard.writeText(SITE_URL).then(()=>showNotif('✓ تم نسخ الرابط'));}
+function copyLink(){const url=currentArticleId?`${SITE_URL}?article=${currentArticleId}`:SITE_URL;navigator.clipboard.writeText(url).then(()=>showNotif('✓ تم نسخ الرابط'));}
 function setRating(v){currentRating=v;document.querySelectorAll('#star-input span').forEach(s=>s.classList.toggle('on',+s.dataset.v<=v));}
 async function loadComments(id){
   const rows=await db.get('comments',`article_id=eq.${id}&approved=eq.true&order=created_at.desc`);
@@ -738,7 +741,19 @@ async function loadPromoPopup(){
 }
 function closePromoModal(){document.getElementById('promo-modal-overlay').classList.add('hidden');document.body.style.overflow='';}
 
-loadAnnouncement();loadWall();loadHomeGrid();loadPromoPopup();
+loadAnnouncement();loadGoldStrip();loadPromoPopup();
+(function(){
+  const params=new URLSearchParams(location.search);
+  const artId=params.get('article');
+  if(artId){openArticle(+artId);}
+  else{loadWall();loadHomeGrid();}
+})();
+window.addEventListener('popstate',(e)=>{
+  const params=new URLSearchParams(location.search);
+  const artId=params.get('article');
+  if(artId){openArticle(+artId);}
+  else{goPage('home');}
+});
 try{const hYear=new Date().toLocaleDateString('ar-SA-u-ca-islamic',{year:'numeric'}).replace(/[^٠-٩0-9]/g,'').trim();const mYear=new Date().getFullYear();document.getElementById('footer-year').textContent=`© ${mYear} م · ${hYear} هـ — مبادرة أثر+ · جميع الحقوق محفوظة`;}catch{}
 
 
