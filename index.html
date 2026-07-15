@@ -719,7 +719,6 @@ for(let i=0;i<55;i++){const s=document.createElement('div');s.className='star';c
 
 // ── PROMO POPUP ──
 async function loadPromoPopup(){
-  if(sessionStorage.getItem('athar_promo_seen')) return;
   try{
     const res = await fetch(`${SUPA_URL}/rest/v1/promo_popup?id=eq.1&select=*`,{headers:{apikey:SUPA_KEY,Authorization:`Bearer ${SUPA_KEY}`}});
     const rows = await res.json();
@@ -731,9 +730,10 @@ async function loadPromoPopup(){
         <div class="promo-modal-desc">${p.description}</div>
         ${p.link?`<a class="promo-modal-link" href="${p.link}" target="_blank" rel="noopener">عرض المزيد ←</a>`:''}
       </div>`;
-    document.getElementById('promo-modal-overlay').classList.remove('hidden');
-    document.body.style.overflow='hidden';
-    sessionStorage.setItem('athar_promo_seen','1');
+    setTimeout(()=>{
+      document.getElementById('promo-modal-overlay').classList.remove('hidden');
+      document.body.style.overflow='hidden';
+    },1000);
   }catch(e){console.error(e);}
 }
 function closePromoModal(){document.getElementById('promo-modal-overlay').classList.add('hidden');document.body.style.overflow='';}
