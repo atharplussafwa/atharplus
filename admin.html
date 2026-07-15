@@ -183,6 +183,7 @@ select option{background:var(--dark2)}
       <div class="sb-item" data-tab="wall" onclick="switchTab(this,'wall')">🏆 جدار الأثر</div>
       <div class="sb-item" data-tab="honorees" onclick="switchTab(this,'honorees')">👤 المكرَّمون</div>
       <div class="sb-item" data-tab="announcements" onclick="switchTab(this,'announcements')">📢 الإعلانات</div>
+      <div class="sb-item" data-tab="popup" onclick="switchTab(this,'popup')">🖼️ النافذة المنبثقة</div>
       <div class="sb-section">الوارد</div>
       <div class="sb-item" data-tab="nominations" onclick="switchTab(this,'nominations')">🌟 الترشيحات <span class="sb-badge" id="badge-noms">0</span></div>
       <div class="sb-item" data-tab="messages" onclick="switchTab(this,'messages')">✉️ الرسائل <span class="sb-badge" id="badge-msgs">0</span></div>
@@ -458,6 +459,35 @@ select option{background:var(--dark2)}
         </div>
       </div>
 
+      <!-- PROMO POPUP -->
+      <div id="tab-popup" class="adm-tab">
+        <div class="adm-header"><div class="adm-title">النافذة المنبثقة الترويجية</div></div>
+        <div class="form-panel" style="max-width:560px">
+          <div class="form-grid">
+            <div class="fg full">
+              <label>الصورة</label>
+              <input type="file" id="popup-img-file" accept="image/*" onchange="onPopupImgPick(event)">
+              <div id="popup-img-preview" style="margin-top:.75rem"></div>
+            </div>
+            <div class="fg full">
+              <label>الوصف القصير *</label>
+              <textarea id="popup-desc" rows="3" placeholder="نص قصير يظهر تحت الصورة"></textarea>
+            </div>
+            <div class="fg full">
+              <label>رابط (اختياري)</label>
+              <input type="text" id="popup-link" placeholder="https://...">
+            </div>
+            <div class="fg">
+              <label>الحالة</label>
+              <select id="popup-active"><option value="true">نشط — تظهر للزوار</option><option value="false">مخفي</option></select>
+            </div>
+          </div>
+          <div class="form-foot" style="justify-content:flex-end;display:flex;gap:1rem">
+            <button class="btn-save" onclick="savePopup()">💾 حفظ</button>
+          </div>
+        </div>
+      </div>
+
       <!-- NOMINATIONS -->
       <div id="tab-nominations" class="adm-tab">
         <div class="adm-header"><div class="adm-title">الترشيحات الواردة</div></div>
@@ -553,6 +583,7 @@ function switchTab(el, tab){
   if(tab==='comments')    loadCommentsReview();
   if(tab==='sponsors')    loadSponsorsAdmin();
   if(tab==='announcements') loadAnnouncementsAdmin();
+  if(tab==='popup') loadPopupAdmin();
 }
 function switchTabByName(tab){
   document.querySelectorAll('.adm-tab').forEach(t=>t.classList.remove('active'));
@@ -1378,6 +1409,43 @@ async function deleteAnn(id){
   await db.del('announcements',`id=eq.${id}`);
   showNotif('تم الحذف');
   loadAnnouncementsAdmin();
+}
+
+// ── PROMO POPUP ──
+let pendingPopupImg = null;
+
+async function loadPopupAdmin(){
+  const rows = await db.get('promo_popup','id=eq.1');
+  const p = rows && rows[0] ? rows[0] : {};
+  document.getElementById('popup-desc').value = p.description || '';
+  document.getElementById('popup-link').value = p.link || '';
+  document.getElementById('popup-active').value = String(p.active === true);
+  pendingPopupImg = p.image || null;
+  document.getElementById('popup-img-preview').innerHTML = pendingPopupImg
+    ? `<img src="${pendingPopupImg}" style="max-width:220px;max-height:220px;border-radius:10px;border:1px solid rgba(26,102,68,.2)">`
+    : '';
+}
+
+async function onPopupImgPick(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  pendingPopupImg = await toB64(file);
+  document.getElementById('popup-img-preview').innerHTML =
+    `<img src="${pendingPopupImg}" style="max-width:220px;max-height:220px;border-radius:10px;border:1px solid rgba(26,102,68,.2)">`;
+}
+
+async function savePopup(){
+  const description = document.getElementById('popup-desc').value.trim();
+  if(!description){ alert('الرجاء كتابة الوصف'); return; }
+  const obj = {
+    image: pendingPopupImg,
+    description,
+    link: document.getElementById('popup-link').value.trim() || null,
+    active: document.getElementById('popup-active').value === 'true',
+    updated_at: new Date().toISOString()
+  };
+  await db.patch('promo_popup','id=eq.1',obj);
+  showNotif('✓ تم الحفظ — التغيير فوري للزوار');
 }
 
 // ── NOTIF ──
