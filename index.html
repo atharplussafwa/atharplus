@@ -96,6 +96,12 @@ nav{position:sticky;top:0;z-index:100;background:rgba(253,250,244,.97);backdrop-
 .wall-field{font-size:.78rem;color:var(--gold);margin-bottom:5px}
 .wall-desc{font-size:.76rem;color:var(--text-muted);line-height:1.55}
 .wall-upcoming-body{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:260px;gap:8px;text-align:center;padding:2rem}
+.wall-card.teaser{border:2px dashed rgba(26,102,68,.35);background:linear-gradient(135deg,#FDFAF4 0%,#F0EDE4 100%);opacity:1}
+.wall-teaser-body{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:260px;gap:10px;text-align:center;padding:2rem;height:100%}
+.wall-teaser-body .icon{font-size:2.4rem;animation:teaserPulse 2s ease-in-out infinite}
+.wall-teaser-body .t1{font-size:1.05rem;font-weight:800;color:var(--gold)}
+.wall-teaser-body .t2{font-size:.8rem;color:var(--text-muted)}
+@keyframes teaserPulse{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.15);opacity:1}}
 .wall-upcoming-body .icon{font-size:1.8rem;opacity:.25}
 .wall-upcoming-body .lbl{font-size:.78rem;color:var(--text-muted);opacity:.55}
 .wall-modal-overlay{position:fixed;inset:0;background:rgba(44,26,14,.88);z-index:300;display:flex;align-items:center;justify-content:center;padding:1.5rem}
@@ -561,7 +567,7 @@ async function loadWall(){
       return `<div class="wall-card done" onclick="openWallModal(${w.id})"><div class="wall-qlabel">${w.label||w.q} · ${w.year||CY}</div><div class="wall-photo">${ph}</div><div class="wall-info"><div class="wall-name">${w.honoree}</div><div class="wall-field">${w.field}</div><div class="wall-desc">${w.description||''}</div></div></div>`;
     }
     return `<div class="wall-card upcoming"><div class="wall-qlabel">${w.label||w.q} · ${w.year||CY}</div><div class="wall-upcoming-body"><div class="icon">⏳</div><div class="wall-name" style="opacity:.35">${w.label}</div><div class="lbl">قريبًا</div></div></div>`;
-  }).join('');
+  }).join('')+`<div class="wall-card teaser"><div class="wall-teaser-body"><div class="icon">✨</div><div class="t1">انتظرونا قريباً</div><div class="t2">المكرَّم القادم في جدار الأثر</div></div></div>`;
 }
 async function openWallModal(wallId){
   const rows=await db.get('wall',`id=eq.${wallId}`);
