@@ -531,7 +531,7 @@ footer{background:#2C1A0E;border-top:1px solid rgba(26,102,68,.12)}
 </div><script>
 const SUPA_URL='https://nhsklhgoybiutnbxzwkg.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5oc2tsaGdveWJpdXRuYnh6d2tnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjIwMjUsImV4cCI6MjA5NDQ5ODAyNX0.NBHKay0OOt1Hw0S7sD8XMrAscWScvPSdfyPA3agecyw';
-const SITE_URL='https://quraishfamily.github.io/atharplus';
+const SITE_URL=location.origin+location.pathname.replace(/\/index\.html$/,'').replace(/\/$/,'');
 const api=async(path,opts={})=>{
   const res=await fetch(`${SUPA_URL}/rest/v1/${path}`,{headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Content-Type':'application/json','Prefer':opts.prefer??'return=representation',...opts.headers},...opts});
   if(!res.ok){console.error(path,res.status,await res.text());return null;}
