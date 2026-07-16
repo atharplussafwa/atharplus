@@ -292,7 +292,7 @@ footer{background:#2C1A0E;border-top:1px solid rgba(26,102,68,.12)}
   <div class="logo" onclick="goPage('home')">أثر<span>+</span></div>
   <ul class="nav-links">
     <li><a id="nav-home" class="active" onclick="goPage('home')">الرئيسية</a></li>
-    <li><a id="nav-gallery" onclick="goPage('gallery')">التكريمات</a></li>
+    <li><a id="nav-gallery" onclick="goPage('gallery')">أخبار</a></li>
     <li><a id="nav-about" onclick="goPage('about')">عن المبادرة</a></li>
     <li><a id="nav-nominate" onclick="goPage('nominate')">رشِّح</a></li>
     <li><a id="nav-contact" onclick="goPage('contact')">تواصل معنا</a></li>
@@ -302,7 +302,7 @@ footer{background:#2C1A0E;border-top:1px solid rgba(26,102,68,.12)}
 <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
 <div class="mobile-drawer" id="mobile-drawer">
   <a onclick="goPage('home');closeDrawer()">الرئيسية</a>
-  <a onclick="goPage('gallery');closeDrawer()">التكريمات</a>
+  <a onclick="goPage('gallery');closeDrawer()">أخبار</a>
   <a onclick="goPage('about');closeDrawer()">عن المبادرة</a>
   <a onclick="goPage('nominate');closeDrawer()">رشِّح شخصًا</a>
   <a onclick="goPage('contact');closeDrawer()">تواصل معنا</a>
@@ -340,7 +340,7 @@ footer{background:#2C1A0E;border-top:1px solid rgba(26,102,68,.12)}
     <h1 class="hero-title">نُكرِّم <span class="gold">المبدعين</span><br>ونُخلِّد <span class="gold">أثرهم</span></h1>
     <p class="hero-sub">أثر+، مبادرة توثيقية تحتفي بالطاقات الشابة المبدعة من مدينة صفوى، وتُخلِّد لحظات التكريم لتبقى ذكريات جميلة.</p>
     <div class="hero-cta">
-      <button class="btn-primary" onclick="goPage('gallery')">استعرض التكريمات</button>
+      <button class="btn-primary" onclick="goPage('gallery')">استعرض الأخبار</button>
       <button class="btn-secondary" onclick="goPage('nominate')">رشِّح مبدعًا</button>
     </div>
     <div class="stats-row">
@@ -363,7 +363,7 @@ footer{background:#2C1A0E;border-top:1px solid rgba(26,102,68,.12)}
   </div>
   <div class="section">
     <div class="sec-header">
-      <div class="sec-title">آخر <span class="gold">التكريمات</span></div>
+      <div class="sec-title">آخر <span class="gold">الأخبار</span></div>
       <div class="divider"></div>
       <div class="sec-desc">أحدث ما وُثِّق من حفلات التكريم</div>
     </div>
@@ -378,7 +378,7 @@ footer{background:#2C1A0E;border-top:1px solid rgba(26,102,68,.12)}
       <div>
         <div class="f-col-title">روابط سريعة</div>
         <div class="f-links">
-          <span onclick="goPage('gallery')">التكريمات</span>
+          <span onclick="goPage('gallery')">أخبار</span>
           <span onclick="goPage('nominate')">رشِّح شخصًا</span>
           <span onclick="goPage('contact')">تواصل معنا</span>
           <span onclick="goPage('about')">عن المبادرة</span>
@@ -398,7 +398,7 @@ footer{background:#2C1A0E;border-top:1px solid rgba(26,102,68,.12)}
 <div id="page-gallery" class="page">
   <div class="section">
     <div class="sec-header">
-      <div class="sec-title">أرشيف <span class="gold">التكريمات</span></div>
+      <div class="sec-title">أرشيف <span class="gold">الأخبار</span></div>
       <div class="divider"></div>
       <div class="sec-desc">توثيق شامل لجميع حفلات تكريم الطاقات الشابة</div>
     </div>
@@ -633,11 +633,11 @@ function cardHTML(a){
 }
 async function loadHomeGrid(){
   const rows=await db.get('articles','status=eq.منشور&order=date.desc&limit=3');
-  document.getElementById('home-grid').innerHTML=rows?.length?rows.map(cardHTML).join(''):`<p style="color:var(--text-muted)">لا توجد تكريمات بعد</p>`;
+  document.getElementById('home-grid').innerHTML=rows?.length?rows.map(cardHTML).join(''):`<p style="color:var(--text-muted)">لا توجد أخبار بعد</p>`;
   const all=await db.get('articles','status=eq.منشور&select=id');
   animateStats((all||[]).length);
 }
-async function loadGalleryAll(){const rows=await db.get('articles','status=eq.منشور&order=date.asc');allArticles=rows||[];renderGallery();}
+async function loadGalleryAll(){const rows=await db.get('articles','status=eq.منشور&order=date.desc');allArticles=rows||[];renderGallery();}
 function renderGallery(){
   const q=(document.getElementById('search-input')?.value||'').toLowerCase();
   const f=allArticles.filter(a=>(!activeFilter||a.cat===activeFilter)&&(!q||(a.title||'').toLowerCase().includes(q)||(a.lead||'').toLowerCase().includes(q)));
