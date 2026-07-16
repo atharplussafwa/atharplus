@@ -646,6 +646,13 @@ function renderGallery(){
 function setPill(el){document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');activeFilter=el.dataset.cat;renderGallery();}
 function toHijri(dateStr){try{const d=new Date(dateStr);if(isNaN(d))return '';return d.toLocaleDateString('ar-SA-u-ca-islamic',{year:'numeric',month:'long',day:'numeric'});}catch{return '';}}
 function formatDualDate(dateStr){if(!dateStr)return '';const m=new Date(dateStr).toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'});const h=toHijri(dateStr);return h?`${h} · ${m}`:m;}
+function linkify(text){
+  return text.replace(/(https?:\/\/[^\s<]+)/g, url=>{
+    const clean = url.replace(/[).,،؛]+$/,'');
+    const trail = url.slice(clean.length);
+    return `<a href="${clean}" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:underline">${clean}</a>${trail}`;
+  });
+}
 async function openArticle(id){
   currentArticleId=id;currentRating=0;
   const a=await db.get('articles',`id=eq.${id}`);
@@ -657,7 +664,7 @@ async function openArticle(id){
   document.getElementById('a-date').textContent=formatDualDate(art.date);
   document.getElementById('a-title').textContent=art.title;
   document.getElementById('a-lead').textContent=art.lead||'';
-  let body=(art.body||'').split('\n\n').map(p=>`<p>${p}</p>`).join('');
+  let body=(art.body||'').split('\n\n').map(p=>`<p>${linkify(p)}</p>`).join('');
   const imgs=Array.isArray(art.imgs)?art.imgs:(art.imgs?JSON.parse(art.imgs):[]);
   if(imgs.length)body+=`<h2>صور من الحفل</h2><div class="art-gallery">${imgs.map(s=>`<img src="${s}" onclick="openLightbox('${s}')">`).join('')}</div>`;
   document.getElementById('a-body').innerHTML=body;
