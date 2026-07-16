@@ -119,9 +119,10 @@ nav{position:sticky;top:0;z-index:100;background:rgba(253,250,244,.97);backdrop-
 .wall-modal-close:hover{background:rgba(0,0,0,.8)}
 .promo-modal-overlay{position:fixed;inset:0;background:rgba(44,26,14,.88);z-index:400;display:flex;align-items:center;justify-content:center;padding:1.5rem}
 .promo-modal-overlay.hidden{display:none}
-.promo-modal{background:#FDFAF4;border-radius:18px;border:1px solid rgba(26,102,68,.2);max-width:460px;width:100%;max-height:90vh;overflow-y:auto;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.3)}
-.promo-modal-close{position:absolute;top:12px;left:12px;background:rgba(44,26,14,.45);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;z-index:1}
-.promo-modal-close:hover{background:rgba(0,0,0,.8)}
+.promo-modal{background:#FDFAF4;border-radius:18px;border:1px solid rgba(26,102,68,.2);max-width:460px;width:100%;max-height:90vh;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.3);display:flex;flex-direction:column;overflow:hidden}
+.promo-modal-scroll{overflow-y:auto}
+.promo-modal-close{position:absolute;top:12px;left:12px;background:rgba(44,26,14,.55);border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;z-index:5}
+.promo-modal-close:hover{background:rgba(0,0,0,.85)}
 .promo-modal-img{display:block;width:100%;max-height:60vh;object-fit:contain;border-radius:18px 18px 0 0;background:#F0EDE4}
 .promo-modal-body{padding:1.5rem;text-align:center}
 .promo-modal-desc{font-size:.95rem;color:#5C4A30;line-height:1.8;margin-bottom:1rem}
@@ -328,8 +329,8 @@ footer{background:#2C1A0E;border-top:1px solid rgba(26,102,68,.12)}
 </div>
 <div class="promo-modal-overlay hidden" id="promo-modal-overlay" onclick="if(event.target===this)closePromoModal()">
   <div class="promo-modal">
-    <button class="promo-modal-close" onclick="closePromoModal()">✕</button>
-    <div id="promo-modal-content"></div>
+    <button class="promo-modal-close" onclick="closePromoModal()" type="button">✕</button>
+    <div class="promo-modal-scroll" id="promo-modal-content"></div>
   </div>
 </div>
 <div id="page-home" class="page active">
