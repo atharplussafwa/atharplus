@@ -1338,18 +1338,29 @@ async function deleteNomination(id){
 
 // ── MESSAGES ──
 async function loadMessages(){
-  const rows = await db.get('contact_messages','order=created_at.desc');
+  const rows = await db.get('contact_messages','order=read.asc,created_at.desc');
   const el = document.getElementById('messages-list');
   if(!rows||!rows.length){ el.innerHTML='<div class="empty-state">لا توجد رسائل بعد</div>'; return; }
   el.innerHTML = rows.map(m=>`
-    <div class="inbox-item">
+    <div class="inbox-item" style="${m.read?'':'border-right:3px solid #C9A227'}">
       <div class="inbox-head">
         <div class="inbox-name">${m.name}</div>
-        <span class="inbox-date">${new Date(m.created_at).toLocaleDateString('ar-SA')}</span>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="badge ${m.read?'badge-draft':'badge-pub'}">${m.read?'مقروءة':'جديدة'}</span>
+          <span class="inbox-date">${new Date(m.created_at).toLocaleDateString('ar-SA')}</span>
+        </div>
       </div>
       <div class="inbox-meta">${m.email}${m.phone?' · '+m.phone:''}</div>
       <div class="inbox-body">${m.message}</div>
+      <div style="margin-top:8px">
+        <button class="act-btn" onclick="toggleMsgRead(${m.id},${!m.read})">${m.read?'وضع كجديدة':'وضع كمقروءة'}</button>
+      </div>
     </div>`).join('');
+}
+
+async function toggleMsgRead(id, newVal){
+  await db.patch('contact_messages',`id=eq.${id}`,{read:newVal});
+  loadMessages();
 }
 
 // ── ANNOUNCEMENTS ──
