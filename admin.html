@@ -23,8 +23,8 @@ body{font-family:'Tajawal',sans-serif;background:var(--dark);color:var(--text);d
 .login-logo span{color:var(--text);font-weight:300}
 .login-tagline{font-size:.82rem;color:var(--text-muted);margin-bottom:.4rem}
 .login-sub{font-size:.78rem;color:var(--text-muted);margin-bottom:2rem;opacity:.6}
-.login-box input[type=password]{background:var(--dark3);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:13px 16px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:1.1rem;outline:none;width:100%;margin-bottom:.8rem;text-align:center;letter-spacing:6px;transition:border-color .2s}
-.login-box input[type=password]:focus{border-color:rgba(201,162,39,.5)}
+.login-box input[type=password],.login-box input[type=email]{background:var(--dark3);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:13px 16px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:1.1rem;outline:none;width:100%;margin-bottom:.8rem;text-align:center;letter-spacing:6px;transition:border-color .2s}
+.login-box input[type=password]:focus,.login-box input[type=email]:focus{border-color:rgba(201,162,39,.5)}
 .login-err{color:var(--red);font-size:.8rem;min-height:1.1rem;margin-bottom:.8rem}
 .login-btn{background:var(--gold);color:var(--dark);width:100%;padding:13px;border-radius:10px;font-family:'Tajawal',sans-serif;font-weight:700;font-size:1rem;border:none;cursor:pointer;transition:background .2s}
 .login-btn:hover{background:var(--gold-light)}
@@ -156,10 +156,11 @@ select option{background:var(--dark2)}
   <div class="login-box">
     <div class="login-logo">أثر<span>+</span></div>
     <div class="login-tagline">لوحة التحكم</div>
-    <div class="login-sub">أدخل كلمة المرور للدخول</div>
-    <input type="password" id="login-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')tryLogin()">
+    <div class="login-sub">سجّل الدخول بحساب أثر+</div>
+    <input type="email" id="login-email" placeholder="البريد الإلكتروني" style="text-align:center;letter-spacing:normal;margin-bottom:.6rem" autocomplete="username">
+    <input type="password" id="login-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')tryLogin()" autocomplete="current-password">
     <div class="login-err" id="login-err"></div>
-    <button class="login-btn" onclick="tryLogin()">دخول</button>
+    <button class="login-btn" id="login-btn" onclick="tryLogin()">دخول</button>
     <a class="login-back" href="index.html">← العودة للموقع</a>
   </div>
 </div>
@@ -511,21 +512,22 @@ select option{background:var(--dark2)}
 </div>
 
 <script>
-const ADMIN_PASSWORD = 'athar2025';
 const SUPA_URL = 'https://nhsklhgoybiutnbxzwkg.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5oc2tsaGdveWJpdXRuYnh6d2tnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjIwMjUsImV4cCI6MjA5NDQ5ODAyNX0.NBHKay0OOt1Hw0S7sD8XMrAscWScvPSdfyPA3agecyw';
 
 // ── SUPABASE API ──
 const api = async (path, opts={}) => {
+  const token = sessionStorage.getItem('athar_admin_token') || SUPA_KEY;
   const res = await fetch(`${SUPA_URL}/rest/v1/${path}`, {
     headers:{
       'apikey': SUPA_KEY,
-      'Authorization': `Bearer ${SUPA_KEY}`,
+      'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
       'Prefer': opts.prefer ?? 'return=representation',
       ...opts.headers
     }, ...opts
   });
+  if(res.status===401){ logout(); return null; }
   if(!res.ok){ const e=await res.text(); console.error(path, e); showNotif('⚠️ خطأ: '+res.status); return null; }
   const txt = await res.text();
   return txt ? JSON.parse(txt) : null;
@@ -547,19 +549,37 @@ let pendingCover = null;
 let pendingMultiImgs = [];
 
 // ── AUTH ──
-function tryLogin(){
+async function tryLogin(){
+  const email = document.getElementById('login-email').value.trim();
   const pw = document.getElementById('login-pw').value;
-  if(pw === ADMIN_PASSWORD){
-    document.getElementById('login-screen').classList.add('hidden');
-    document.getElementById('admin-app').classList.add('visible');
-    loadDashboard();
-  } else {
-    document.getElementById('login-err').textContent = 'كلمة المرور غير صحيحة';
-    document.getElementById('login-pw').value = '';
-    document.getElementById('login-pw').focus();
+  const btn = document.getElementById('login-btn');
+  const errEl = document.getElementById('login-err');
+  errEl.textContent='';
+  if(!email || !pw){ errEl.textContent='أدخل البريد وكلمة المرور'; return; }
+  btn.disabled=true; btn.textContent='جاري الدخول...';
+  try{
+    const res = await fetch(`${SUPA_URL}/auth/v1/token?grant_type=password`,{
+      method:'POST',
+      headers:{'apikey':SUPA_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({email,password:pw})
+    });
+    const data = await res.json();
+    if(!res.ok || !data.access_token){
+      errEl.textContent = 'البريد أو كلمة المرور غير صحيحة';
+      document.getElementById('login-pw').value = '';
+    } else {
+      sessionStorage.setItem('athar_admin_token', data.access_token);
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('admin-app').classList.add('visible');
+      loadDashboard();
+    }
+  }catch(e){
+    errEl.textContent = 'تعذّر الاتصال، حاول مجدداً';
   }
+  btn.disabled=false; btn.textContent='دخول';
 }
 function logout(){
+  sessionStorage.removeItem('athar_admin_token');
   document.getElementById('admin-app').classList.remove('visible');
   document.getElementById('login-screen').classList.remove('hidden');
   document.getElementById('login-pw').value = '';
@@ -1466,6 +1486,12 @@ function showNotif(msg){
   const n=document.getElementById('notif');
   n.textContent=msg; n.classList.add('show');
   setTimeout(()=>n.classList.remove('show'),2600);
+}
+
+if(sessionStorage.getItem('athar_admin_token')){
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('admin-app').classList.add('visible');
+  loadDashboard();
 }
 </script>
 </body>
