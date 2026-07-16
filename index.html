@@ -297,7 +297,6 @@ footer{background:#2C1A0E;border-top:1px solid rgba(26,102,68,.12)}
     <li><a id="nav-nominate" onclick="goPage('nominate')">رشِّح</a></li>
     <li><a id="nav-contact" onclick="goPage('contact')">تواصل معنا</a></li>
   </ul>
-  <a class="nav-admin" href="admin.html">لوحة التحكم</a>
   <button class="hamburger" id="hamburger" onclick="toggleDrawer()"><span></span><span></span><span></span></button>
 </nav>
 <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
@@ -307,7 +306,6 @@ footer{background:#2C1A0E;border-top:1px solid rgba(26,102,68,.12)}
   <a onclick="goPage('about');closeDrawer()">عن المبادرة</a>
   <a onclick="goPage('nominate');closeDrawer()">رشِّح شخصًا</a>
   <a onclick="goPage('contact');closeDrawer()">تواصل معنا</a>
-  <a class="drawer-admin-btn" href="admin.html">لوحة التحكم</a>
 </div>
 <div class="notif" id="notif"></div>
 <div class="lightbox" id="lightbox" style="display:none" onclick="closeLightbox()">
@@ -394,7 +392,7 @@ footer{background:#2C1A0E;border-top:1px solid rgba(26,102,68,.12)}
         </div>
       </div>
     </div>
-    <div class="footer-bottom" id="footer-year">© 2025 م مبادرة أثر+ · جميع الحقوق محفوظة</div>
+    <div class="footer-bottom" id="footer-year"><a href="admin.html" style="color:inherit;text-decoration:none">©</a> 2025 م مبادرة أثر+ · جميع الحقوق محفوظة</div>
   </footer>
 </div>
 <div id="page-gallery" class="page">
@@ -755,7 +753,7 @@ window.addEventListener('popstate',(e)=>{
   if(artId){openArticle(+artId);}
   else{goPage('home');}
 });
-try{const hYear=new Date().toLocaleDateString('ar-SA-u-ca-islamic',{year:'numeric'}).replace(/[^٠-٩0-9]/g,'').trim();const mYear=new Date().getFullYear();document.getElementById('footer-year').textContent=`© ${mYear} م · ${hYear} هـ — مبادرة أثر+ · جميع الحقوق محفوظة`;}catch{}
+try{const hYear=new Date().toLocaleDateString('ar-SA-u-ca-islamic',{year:'numeric'}).replace(/[^٠-٩0-9]/g,'').trim();const mYear=new Date().getFullYear();document.getElementById('footer-year').innerHTML=`<a href="admin.html" style="color:inherit;text-decoration:none">©</a> ${mYear} م · ${hYear} هـ — مبادرة أثر+ · جميع الحقوق محفوظة`;}catch{}
 
 
 
