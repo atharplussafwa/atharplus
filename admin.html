@@ -754,7 +754,7 @@ async function loadDashboard(){
   const [arts, noms, msgs, cmts] = await Promise.all([
     db.get('articles','select=id,status'),
     db.get('nominations','select=id'),
-    db.get('contact_messages','select=id'),
+    db.get('contact_messages','select=id&read=eq.false'),
     db.get('comments','select=id&approved=eq.false'),
   ]);
   const total = arts?.length||0;
@@ -768,9 +768,10 @@ async function loadDashboard(){
   document.getElementById('s-draft').textContent = dft;
   document.getElementById('s-noms').textContent  = nc;
   document.getElementById('s-msgs').textContent  = mc;
-  document.getElementById('badge-noms').textContent = nc;
-  document.getElementById('badge-msgs').textContent = mc;
-  document.getElementById('badge-cmts').textContent = cc;
+  const setBadge=(id,n)=>{const el=document.getElementById(id);el.textContent=n;el.style.display=n>0?'inline-block':'none';};
+  setBadge('badge-noms',nc);
+  setBadge('badge-msgs',mc);
+  setBadge('badge-cmts',cc);
   const recent = await db.get('articles','select=id,title,status&order=created_at.desc&limit=5');
   document.getElementById('recent-list').innerHTML = (recent||[]).map(a=>`
     <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 1.25rem;border-top:1px solid rgba(255,255,255,.04);font-size:.86rem">
@@ -1361,6 +1362,7 @@ async function loadMessages(){
 async function toggleMsgRead(id, newVal){
   await db.patch('contact_messages',`id=eq.${id}`,{read:newVal});
   loadMessages();
+  loadDashboard();
 }
 
 // ── ANNOUNCEMENTS ──
