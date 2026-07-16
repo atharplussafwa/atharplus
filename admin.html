@@ -180,7 +180,7 @@ select option{background:var(--dark2)}
       <div class="sb-item active" data-tab="dashboard" onclick="switchTab(this,'dashboard')">📊 لوحة التحكم</div>
       <div class="sb-item" data-tab="analytics" onclick="switchTab(this,'analytics')">📈 الإحصائيات</div>
       <div class="sb-item" data-tab="articles" onclick="switchTab(this,'articles')">📋 التكريمات</div>
-      <div class="sb-item" data-tab="add" onclick="switchTab(this,'add')">➕ إضافة تكريم</div>
+      <div class="sb-item" data-tab="add" onclick="switchTab(this,'add')">➕ إضافة خبر</div>
       <div class="sb-item" data-tab="wall" onclick="switchTab(this,'wall')">🏆 جدار الأثر</div>
       <div class="sb-item" data-tab="honorees" onclick="switchTab(this,'honorees')">👤 المكرَّمون</div>
       <div class="sb-item" data-tab="announcements" onclick="switchTab(this,'announcements')">📢 الإعلانات</div>
@@ -255,11 +255,11 @@ select option{background:var(--dark2)}
 
       <!-- ADD/EDIT -->
       <div id="tab-add" class="adm-tab">
-        <div class="adm-header"><div class="adm-title" id="form-label">إضافة تكريم جديد</div></div>
+        <div class="adm-header"><div class="adm-title" id="form-label">إضافة خبر جديد</div></div>
         <div class="form-panel">
           <input type="hidden" id="f-id">
           <div class="form-grid">
-            <div class="fg full"><label>عنوان التكريم *</label><input type="text" id="f-title" placeholder="مثال: تكريم الطلاب المتفوقين 2025"></div>
+            <div class="fg full"><label>عنوان الخبر *</label><input type="text" id="f-title" placeholder="مثال: أثر+ تُطلق موقعها الرسمي"></div>
             <div class="fg"><label>التصنيف</label>
               <select id="f-cat"><option>تعليم</option><option>رياضة</option><option>فنون</option><option>علوم</option><option>أدب</option><option>مجتمع</option><option>ريادة</option></select>
             </div>
@@ -818,7 +818,7 @@ async function loadTable(){
 // ── ADD/EDIT FORM ──
 function openAddForm(){
   editingId=null; pendingCover=null; pendingMultiImgs=[];
-  document.getElementById('form-label').textContent='إضافة تكريم جديد';
+  document.getElementById('form-label').textContent='إضافة خبر جديد';
   document.getElementById('delete-art-btn').style.display='none';
   clearForm();
   switchTabByName('add');
@@ -831,7 +831,7 @@ async function editArticle(id){
   editingId=id; pendingCover=null;
   const imgs = Array.isArray(a.imgs)?a.imgs:(a.imgs?JSON.parse(a.imgs):[]);
   pendingMultiImgs = [...imgs];
-  document.getElementById('form-label').textContent='تعديل التكريم';
+  document.getElementById('form-label').textContent='تعديل الخبر';
   document.getElementById('delete-art-btn').style.display='inline-flex';
   document.getElementById('f-id').value    = id;
   document.getElementById('f-title').value = a.title||'';
@@ -852,7 +852,7 @@ async function editArticle(id){
 
 async function deleteCurrentArticle(){
   if(!editingId)return;
-  if(!confirm('هل أنت متأكد من حذف هذا التكريم نهائياً؟'))return;
+  if(!confirm('هل أنت متأكد من حذف هذا الخبر نهائياً؟'))return;
   await db.del('articles',`id=eq.${editingId}`);
   editingId=null;
   showNotif('تم الحذف');
@@ -861,7 +861,7 @@ async function deleteCurrentArticle(){
 }
 
 async function deleteArticle(id){
-  if(!confirm('هل أنت متأكد من حذف هذا التكريم؟')) return;
+  if(!confirm('هل أنت متأكد من حذف هذا الخبر؟')) return;
   await db.del('articles',`id=eq.${id}`);
   showNotif('تم الحذف');
   loadTable(); loadDashboard();
@@ -869,7 +869,7 @@ async function deleteArticle(id){
 
 async function saveArticle(){
   const title = document.getElementById('f-title').value.trim();
-  if(!title){ alert('الرجاء كتابة عنوان التكريم'); return; }
+  if(!title){ alert('الرجاء كتابة عنوان الخبر'); return; }
   const btn = document.getElementById('save-btn');
   btn.disabled=true; btn.textContent='جاري الحفظ...';
   // cover image
