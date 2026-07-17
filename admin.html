@@ -200,8 +200,7 @@ select option{background:var(--dark2)}
       <div class="sb-section">المحتوى</div>
       <div class="sb-item active" data-tab="dashboard" onclick="switchTab(this,'dashboard')">📊 لوحة التحكم</div>
       <div class="sb-item" data-tab="analytics" onclick="switchTab(this,'analytics')">📈 الإحصائيات</div>
-      <div class="sb-item" data-tab="articles" onclick="switchTab(this,'articles')">📋 التكريمات</div>
-      <div class="sb-item" data-tab="add" onclick="switchTab(this,'add')">➕ إضافة خبر</div>
+      <div class="sb-item" data-tab="articles" onclick="switchTab(this,'articles')">📋 الأخبار</div>
       <div class="sb-item" data-tab="wall" onclick="switchTab(this,'wall')">🏆 جدار الأثر</div>
       <div class="sb-item" data-tab="honorees" onclick="switchTab(this,'honorees')">👤 المكرَّمون</div>
       <div class="sb-item" data-tab="announcements" onclick="switchTab(this,'announcements')">📢 الإعلانات</div>
@@ -217,14 +216,14 @@ select option{background:var(--dark2)}
       <div id="tab-dashboard" class="adm-tab active">
         <div class="adm-header"><div class="adm-title">لوحة التحكم</div></div>
         <div class="stats-grid">
-          <div class="stat-card"><div class="stat-card-num" id="s-total">-</div><div class="stat-card-label">إجمالي التكريمات</div></div>
+          <div class="stat-card"><div class="stat-card-num" id="s-total">-</div><div class="stat-card-label">إجمالي الأخبار</div></div>
           <div class="stat-card"><div class="stat-card-num" id="s-pub">-</div><div class="stat-card-label">منشور</div></div>
           <div class="stat-card"><div class="stat-card-num" id="s-draft">-</div><div class="stat-card-label">مسودة</div></div>
           <div class="stat-card"><div class="stat-card-num" id="s-noms">-</div><div class="stat-card-label">ترشيحات</div></div>
           <div class="stat-card"><div class="stat-card-num" id="s-msgs">-</div><div class="stat-card-label">رسائل</div></div>
         </div>
         <div class="tbl-wrap">
-          <div style="padding:1rem 1.25rem;font-size:.8rem;font-weight:700;color:var(--text-muted);border-bottom:1px solid rgba(255,255,255,.04)">آخر التكريمات</div>
+          <div style="padding:1rem 1.25rem;font-size:.8rem;font-weight:700;color:var(--text-muted);border-bottom:1px solid rgba(255,255,255,.04)">آخر الأخبار</div>
           <div id="recent-list"><div class="loading" style="padding:1rem 1.25rem">جاري التحميل...</div></div>
         </div>
       </div>
@@ -249,11 +248,11 @@ select option{background:var(--dark2)}
           <div class="an-card"><div class="an-card-num" id="an-avg">-</div><div class="an-card-label">متوسط التقييم</div></div>
         </div>
         <div class="chart-wrap">
-          <div class="chart-title">🏆 أكثر التكريمات مشاهدةً</div>
+          <div class="chart-title">🏆 أكثر الأخبار مشاهدةً</div>
           <div class="bar-chart" id="top-articles-chart"><div class="loading" style="padding:1rem 0">جاري التحميل...</div></div>
         </div>
         <div class="chart-wrap">
-          <div class="chart-title">📂 التكريمات حسب التصنيف</div>
+          <div class="chart-title">📂 الأخبار حسب التصنيف</div>
           <div class="cat-chart" id="cat-chart"><div class="loading" style="padding:1rem 0">جاري التحميل...</div></div>
         </div>
         <div class="chart-wrap">
@@ -265,7 +264,7 @@ select option{background:var(--dark2)}
       <!-- ARTICLES -->
       <div id="tab-articles" class="adm-tab">
         <div class="adm-header">
-          <div class="adm-title">التكريمات</div>
+          <div class="adm-title">الأخبار</div>
           <button class="btn-save" onclick="openAddForm()">+ إضافة جديد</button>
         </div>
         <div class="tbl-wrap">
@@ -784,7 +783,7 @@ async function exportData(){
   };
 
   const html = `<html><head><meta charset="UTF-8"></head><body style="background:#0D1117;color:#F0EDE8">
-    ${section('التكريمات',artCSV)}
+    ${section('الأخبار',artCSV)}
     ${section('المشاهدات',viewCSV)}
     ${section('الترشيحات',nomCSV)}
     ${section('رسائل التواصل',msgCSV)}
