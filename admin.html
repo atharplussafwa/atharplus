@@ -655,13 +655,14 @@ function setPeriod(el, days){
 async function loadAnalytics(){
   const since = new Date(Date.now() - analyticsDays * 86400000).toISOString();
 
-  const [views, allViews, arts, comments, noms, allComments] = await Promise.all([
+  const [views, allViews, arts, comments, noms, allComments, wallRows] = await Promise.all([
     db.get('article_views', `viewed_at=gte.${since}&select=article_id,viewed_at`),
     db.get('article_views', 'select=article_id,viewed_at'),
     db.get('articles', 'status=eq.منشور&select=id,title,cat'),
     db.get('comments', `approved=eq.true&created_at=gte.${since}&select=id,rating`),
     db.get('nominations', `created_at=gte.${since}&select=id`),
     db.get('comments', 'approved=eq.true&rating=gt.0&select=rating'),
+    db.get('wall', 'select=id&status=eq.done'),
   ]);
 
   const vList = views||[];
@@ -670,6 +671,7 @@ async function loadAnalytics(){
   const cmtList = comments||[];
   const nomList = noms||[];
   const allCmts = allComments||[];
+  const wallList = wallRows||[];
 
   // total views in period
   document.getElementById('an-views').textContent = vList.length;
@@ -681,7 +683,7 @@ async function loadAnalytics(){
   subEl.textContent = diff>0?`↑ ${diff} مقارنة بالفترة السابقة`:diff<0?`↓ ${Math.abs(diff)} مقارنة بالفترة السابقة`:'مستقر';
   subEl.style.color = diff>=0?'var(--green)':'var(--red)';
 
-  document.getElementById('an-arts').textContent = artList.length;
+  document.getElementById('an-arts').textContent = wallList.length;
   document.getElementById('an-comments').textContent = cmtList.length;
   document.getElementById('an-noms').textContent = nomList.length;
 
