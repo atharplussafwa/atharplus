@@ -137,8 +137,23 @@ select option{background:var(--dark2)}
 .notif{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--green);color:#0D1117;padding:10px 22px;border-radius:8px;font-weight:700;font-size:.85rem;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 .notif.show{opacity:1}
 
+.mob-menu-btn{display:none;background:none;border:1px solid rgba(255,255,255,.15);color:var(--text);width:36px;height:36px;border-radius:8px;font-size:1.1rem;cursor:pointer;align-items:center;justify-content:center}
+.mob-sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:98}
+.mob-sidebar-overlay.show{display:block}
 @media(max-width:768px){
-  .sidebar{display:none}
+  .mob-menu-btn{display:flex}
+  .topbar-site{display:none}
+  .topbar-logo{font-size:.85rem}
+  .sidebar{
+    display:flex !important;
+    position:fixed;top:0;right:0;
+    height:100vh;z-index:99;
+    width:78vw;max-width:300px;
+    transform:translateX(100%);
+    transition:transform .28s ease;
+    box-shadow:-8px 0 24px rgba(0,0,0,.3);
+  }
+  .sidebar.open{transform:translateX(0)}
   .form-grid{grid-template-columns:1fr}
   .tbl-head,.tbl-row{grid-template-columns:1fr 80px 100px}
   .tbl-head>div:nth-child(2),.tbl-row>div:nth-child(2){display:none}
@@ -168,14 +183,18 @@ select option{background:var(--dark2)}
 <!-- APP -->
 <div class="app" id="admin-app">
   <div class="topbar">
-    <div class="topbar-logo">أثر<span>+</span> <span style="font-size:.7rem;color:var(--text-muted);font-weight:400;margin-right:.5rem">لوحة التحكم</span></div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="mob-menu-btn" id="mob-menu-btn" onclick="toggleMobSidebar()">☰</button>
+      <div class="topbar-logo">أثر<span>+</span> <span style="font-size:.7rem;color:var(--text-muted);font-weight:400;margin-right:.5rem">لوحة التحكم</span></div>
+    </div>
     <div class="topbar-right">
       <a class="topbar-site" href="index.html" target="_blank">← الموقع الرئيسي</a>
       <button class="topbar-logout" onclick="logout()">تسجيل خروج</button>
     </div>
   </div>
+  <div class="mob-sidebar-overlay" id="mob-sidebar-overlay" onclick="closeMobSidebar()"></div>
   <div class="admin-body">
-    <div class="sidebar">
+    <div class="sidebar" id="admin-sidebar">
       <div class="sb-section">المحتوى</div>
       <div class="sb-item active" data-tab="dashboard" onclick="switchTab(this,'dashboard')">📊 لوحة التحكم</div>
       <div class="sb-item" data-tab="analytics" onclick="switchTab(this,'analytics')">📈 الإحصائيات</div>
@@ -604,6 +623,15 @@ function switchTab(el, tab){
   if(tab==='sponsors')    loadSponsorsAdmin();
   if(tab==='announcements') loadAnnouncementsAdmin();
   if(tab==='popup') loadPopupAdmin();
+  closeMobSidebar();
+}
+function toggleMobSidebar(){
+  document.getElementById('admin-sidebar').classList.toggle('open');
+  document.getElementById('mob-sidebar-overlay').classList.toggle('show');
+}
+function closeMobSidebar(){
+  document.getElementById('admin-sidebar').classList.remove('open');
+  document.getElementById('mob-sidebar-overlay').classList.remove('show');
 }
 function switchTabByName(tab){
   document.querySelectorAll('.adm-tab').forEach(t=>t.classList.remove('active'));
