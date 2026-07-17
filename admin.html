@@ -146,14 +146,16 @@ select option{background:var(--dark2)}
   .topbar-logo{font-size:.85rem}
   .sidebar{
     display:flex !important;
-    position:fixed;top:0;right:0;
-    height:100vh;z-index:99;
-    width:78vw;max-width:300px;
-    transform:translateX(100%);
+    flex-direction:column;
+    position:fixed;top:58px;right:0;left:0;
+    height:auto;max-height:calc(100vh - 58px);
+    z-index:99;
+    width:100%;max-width:none;
+    transform:translateY(-110%);
     transition:transform .28s ease;
-    box-shadow:-8px 0 24px rgba(0,0,0,.3);
+    box-shadow:0 8px 24px rgba(0,0,0,.3);
   }
-  .sidebar.open{transform:translateX(0)}
+  .sidebar.open{transform:translateY(0)}
   .form-grid{grid-template-columns:1fr}
   .tbl-head,.tbl-row{grid-template-columns:1fr 80px 100px}
   .tbl-head>div:nth-child(2),.tbl-row>div:nth-child(2){display:none}
