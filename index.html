@@ -68,22 +68,6 @@ nav{position:sticky;top:0;z-index:100;background:rgba(253,250,244,.97);backdrop-
 .stat-label{font-size:.82rem;color:var(--text-muted);margin-top:4px}
 .sponsor-strip{background:var(--dark2);border-top:1px solid rgba(26,102,68,.12);border-bottom:1px solid rgba(201,162,39,.1);padding:1.2rem 2rem;display:flex;align-items:center;gap:2rem;overflow:hidden}
 
-.cycle-status-wrap{padding:2.4rem 2rem 1rem;max-width:900px;margin:0 auto}
-.cycle-status-box{background:var(--dark2);border:1px solid rgba(201,162,39,.15);border-radius:16px;padding:1.6rem 1.8rem}
-.cycle-status-head{display:flex;align-items:center;gap:10px;margin-bottom:1.3rem;font-size:.95rem;font-weight:700;color:var(--text)}
-.cycle-status-dot{width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(201,162,39,.18);animation:cyclePulse 2s ease-in-out infinite}
-@keyframes cyclePulse{0%,100%{opacity:.6}50%{opacity:1}}
-.cycle-steps{display:flex;align-items:center;justify-content:space-between}
-.cycle-step{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;position:relative}
-.cycle-step-circle{width:26px;height:26px;border-radius:50%;background:var(--dark3);border:2px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--text-muted);z-index:2;transition:all .3s ease}
-.cycle-step.done .cycle-step-circle{background:var(--green);border-color:var(--green);color:#fff}
-.cycle-step.active .cycle-step-circle{background:var(--gold);border-color:var(--gold);color:var(--dark);box-shadow:0 0 0 5px rgba(201,162,39,.18)}
-.cycle-step-label{font-size:.72rem;color:var(--text-muted);text-align:center}
-.cycle-step.active .cycle-step-label,.cycle-step.done .cycle-step-label{color:var(--text);font-weight:600}
-.cycle-step::before{content:'';position:absolute;top:13px;right:50%;width:100%;height:2px;background:rgba(255,255,255,.12);z-index:1}
-.cycle-step:first-child::before{display:none}
-.cycle-step.done::before{background:var(--green)}
-@media(max-width:600px){.cycle-step-label{font-size:.62rem}.cycle-status-box{padding:1.2rem 1rem}}
 .sponsor-strip-label{font-size:.72rem;color:var(--text-muted);white-space:nowrap;letter-spacing:1px;opacity:.7}
 .sponsor-strip-logos{display:flex;gap:2rem;align-items:center;flex-wrap:wrap}
 .sstrip-logo{display:flex;align-items:center;gap:8px;opacity:.6;transition:opacity .2s;text-decoration:none}
@@ -118,6 +102,11 @@ nav{position:sticky;top:0;z-index:100;background:rgba(253,250,244,.97);backdrop-
 .wall-teaser-body .icon{font-size:2.4rem;animation:teaserPulse 2s ease-in-out infinite}
 .wall-teaser-body .t1{font-size:1.05rem;font-weight:800;color:var(--gold)}
 .wall-teaser-body .t2{font-size:.8rem;color:var(--text-muted)}
+.teaser-dots{display:flex;align-items:center;gap:6px;margin-top:4px}
+.teaser-dot{width:7px;height:7px;border-radius:50%;background:rgba(139,115,85,.25)}
+.teaser-dot.done{background:var(--green)}
+.teaser-dot.active{background:var(--gold);box-shadow:0 0 0 4px rgba(26,102,68,.18);animation:cyclePulse 2s ease-in-out infinite}
+@keyframes cyclePulse{0%,100%{opacity:.6}50%{opacity:1}}
 @keyframes teaserPulse{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.15);opacity:1}}
 .wall-upcoming-body .icon{font-size:1.8rem;opacity:.25}
 .wall-upcoming-body .lbl{font-size:.78rem;color:var(--text-muted);opacity:.55}
@@ -366,19 +355,6 @@ footer{background:#2C1A0E;border-top:1px solid rgba(26,102,68,.12)}
       <div class="stat"><div class="stat-num" id="cnt-y">0</div><div class="stat-label">سنوات</div></div>
     </div>
   </div>
-  <div class="sponsor-strip" id="gold-strip" style="display:none">
-    <span class="sponsor-strip-label">بدعم كريم من</span>
-    <div class="sponsor-strip-logos" id="gold-strip-logos"></div>
-  </div>
-  <div class="cycle-status-wrap" id="cycle-status-wrap" style="display:none">
-    <div class="cycle-status-box">
-      <div class="cycle-status-head">
-        <span class="cycle-status-dot"></span>
-        <span id="cycle-status-title">جاري تحديد المكرَّم القادم</span>
-      </div>
-      <div class="cycle-steps" id="cycle-steps"></div>
-    </div>
-  </div>
   <div class="wall-section">
     <div class="sec-header">
       <div class="sec-title">جدار <span class="gold">الأثر</span></div>
@@ -562,38 +538,40 @@ const NOMS_URL='https://phdbfmicmijidtsbquvm.supabase.co';
 const NOMS_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBoZGJmbWljbWlqaWR0c2JxdXZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MzI0NDgsImV4cCI6MjA5NTEwODQ0OH0.d9PsVge3nrvG3FjctVExCJs617jzop8setPgXCz8JYE';
 
 async function loadCycleStatus(){
-  const wrap = document.getElementById('cycle-status-wrap');
+  const box = document.getElementById('wall-teaser-body');
+  if(!box) return;
   try{
     const res = await fetch(`${NOMS_URL}/rest/v1/settings?key=in.(cycle_status,cycle_name,cycle_quarter,cycle_year)&select=key,value`,{
       headers:{apikey:NOMS_KEY,Authorization:`Bearer ${NOMS_KEY}`}
     });
     const rows = await res.json();
-    if(!Array.isArray(rows)){ wrap.style.display='none'; return; }
+    if(!Array.isArray(rows)) return;
     const map={}; rows.forEach(r=>map[r.key]=r.value);
     const stages=['nominations','shortlisting','voting','awards'];
     const status=map.cycle_status;
-    if(!stages.includes(status)){ wrap.style.display='none'; return; }
+    if(!stages.includes(status)) return; // draft/completed → تبقى البطاقة الافتراضية "انتظرونا قريباً"
 
     const labels={nominations:'الترشيح',shortlisting:'القائمة المختصرة',voting:'التصويت',awards:'الجائزة'};
-    const titles={
+    const shortDesc={
       nominations:'باب الترشيح مفتوح الآن',
       shortlisting:'جاري مراجعة القائمة المختصرة',
-      voting:'اللجنة في مرحلة التصويت النهائي لاختيار المكرَّم القادم',
-      awards:'جاري التحضير لإعلان الفائز وحفل التكريم'
+      voting:'اللجنة في مرحلة التصويت النهائي',
+      awards:'جاري التحضير لإعلان الفائز'
     };
     const curIdx = stages.indexOf(status);
 
-    document.getElementById('cycle-status-title').textContent =
-      titles[status] + (map.cycle_name?` — ${map.cycle_name}`:'');
-
-    document.getElementById('cycle-steps').innerHTML = stages.map((s,i)=>{
+    const dots = stages.map((s,i)=>{
       const cls = i<curIdx?'done':(i===curIdx?'active':'');
-      const inner = i<curIdx?'✓':(i+1);
-      return `<div class="cycle-step ${cls}"><div class="cycle-step-circle">${inner}</div><div class="cycle-step-label">${labels[s]}</div></div>`;
+      return `<span class="teaser-dot ${cls}"></span>`;
     }).join('');
 
-    wrap.style.display='block';
-  }catch(e){ console.error(e); wrap.style.display='none'; }
+    box.innerHTML = `
+      <div class="icon">✨</div>
+      <div class="t1">${labels[status]}</div>
+      <div class="t2">${shortDesc[status]}</div>
+      <div class="teaser-dots">${dots}</div>
+    `;
+  }catch(e){ console.error(e); }
 }
 const api=async(path,opts={})=>{
   const res=await fetch(`${SUPA_URL}/rest/v1/${path}`,{headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Content-Type':'application/json','Prefer':opts.prefer??'return=representation',...opts.headers},...opts});
@@ -626,7 +604,7 @@ function goPage(p){
   document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
   const nl=document.getElementById('nav-'+p);if(nl)nl.classList.add('active');
   if(p!=='article')history.pushState({page:p},'',SITE_URL+(p==='home'?'':'#'+p));
-  if(p==='home'){loadWall();loadHomeGrid();loadGoldStrip();loadCycleStatus();}
+  if(p==='home'){loadWall();loadHomeGrid();}
   if(p==='gallery')loadGalleryAll();
   window.scrollTo(0,0);
 }
@@ -648,7 +626,8 @@ async function loadWall(){
       return `<div class="wall-card done" onclick="openWallModal(${w.id})"><div class="wall-qlabel">${w.label||w.q} · ${w.year||CY}</div><div class="wall-photo">${ph}</div><div class="wall-info"><div class="wall-name">${w.honoree}</div><div class="wall-field">${w.field}</div><div class="wall-desc">${w.description||''}</div></div></div>`;
     }
     return `<div class="wall-card upcoming"><div class="wall-qlabel">${w.label||w.q} · ${w.year||CY}</div><div class="wall-upcoming-body"><div class="icon">⏳</div><div class="wall-name" style="opacity:.35">${w.label}</div><div class="lbl">قريبًا</div></div></div>`;
-  }).join('')+`<div class="wall-card teaser"><div class="wall-teaser-body"><div class="icon">✨</div><div class="t1">انتظرونا قريباً</div><div class="t2">المكرَّم القادم في جدار الأثر</div></div></div>`;
+  }).join('')+`<div class="wall-card teaser"><div class="wall-teaser-body" id="wall-teaser-body"><div class="icon">✨</div><div class="t1">انتظرونا قريباً</div><div class="t2">المكرَّم القادم في جدار الأثر</div></div></div>`;
+  loadCycleStatus();
 }
 async function openWallModal(wallId){
   const rows=await db.get('wall',`id=eq.${wallId}`);
@@ -812,7 +791,7 @@ async function loadPromoPopup(){
 }
 function closePromoModal(){document.getElementById('promo-modal-overlay').classList.add('hidden');document.body.style.overflow='';}
 
-loadAnnouncement();loadGoldStrip();loadPromoPopup();loadCycleStatus();
+loadAnnouncement();loadPromoPopup();
 (function(){
   const params=new URLSearchParams(location.search);
   const artId=params.get('article');
