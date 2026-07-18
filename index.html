@@ -108,6 +108,24 @@ nav{position:sticky;top:0;z-index:100;background:rgba(253,250,244,.97);backdrop-
 .teaser-dot.active{background:var(--gold);box-shadow:0 0 0 4px rgba(26,102,68,.18);animation:cyclePulse 2s ease-in-out infinite}
 @keyframes cyclePulse{0%,100%{opacity:.6}50%{opacity:1}}
 
+.phase-box{
+  margin-top:6px;
+  padding:.8rem 1.4rem;
+  border-radius:14px;
+  border:2px solid var(--gold);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  animation:phaseGlow 2.2s ease-in-out infinite;
+}
+.phase-name{font-size:.95rem;font-weight:800;color:var(--gold)}
+.phase-desc{font-size:.72rem;color:var(--text-muted)}
+@keyframes phaseGlow{
+  0%,100%{box-shadow:0 0 0 0 rgba(201,162,39,.35);border-color:var(--gold)}
+  50%{box-shadow:0 0 0 7px rgba(201,162,39,0);border-color:rgba(201,162,39,.5)}
+}
+
 .cycle-badge{
   position:fixed;
   bottom:22px;
@@ -599,9 +617,13 @@ async function loadCycleStatus(){
     const wallBox = document.getElementById('wall-teaser-body');
     if(wallBox) wallBox.innerHTML = `
       <div class="icon">✨</div>
-      <div class="t1">${labels[status]}</div>
-      <div class="t2">${shortDesc[status]}</div>
-      <div class="teaser-dots">${dots}</div>
+      <div class="t1">انتظرونا قريباً</div>
+      <div class="t2">المكرَّم القادم في جدار الأثر</div>
+      <div class="phase-box">
+        <div class="phase-name">${labels[status]}</div>
+        <div class="phase-desc">${shortDesc[status]}</div>
+        <div class="teaser-dots">${dots}</div>
+      </div>
     `;
 
     const badge = document.getElementById('cycle-badge');
