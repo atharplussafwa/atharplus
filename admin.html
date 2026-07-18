@@ -564,6 +564,26 @@ const toB64 = file => new Promise(r=>{
   const rd=new FileReader(); rd.onload=e=>r(e.target.result); rd.readAsDataURL(file);
 });
 
+// ── رفع صورة حقيقية لمساحة التخزين بدل تحويلها Base64 ──
+async function uploadToStorage(file, folder){
+  const ext = (file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'') || 'jpg';
+  const path = `${folder}/${Date.now()}_${Math.random().toString(36).slice(2,8)}.${ext}`;
+  const token = sessionStorage.getItem('athar_admin_token') || SUPA_KEY;
+  try{
+    const res = await fetch(`${SUPA_URL}/storage/v1/object/media/${path}`, {
+      method:'POST',
+      headers:{
+        'apikey': SUPA_KEY,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': file.type || 'application/octet-stream'
+      },
+      body:file
+    });
+    if(!res.ok){ console.error('upload failed', await res.text()); showNotif('⚠️ فشل رفع الصورة'); return null; }
+    return `${SUPA_URL}/storage/v1/object/public/media/${path}`;
+  }catch(e){ console.error(e); showNotif('⚠️ فشل رفع الصورة'); return null; }
+}
+
 let editingId = null;
 let pendingCover = null;
 let pendingMultiImgs = [];
@@ -913,7 +933,9 @@ async function saveArticle(){
   // cover image
   let imgVal = '';
   if(pendingCover){
-    imgVal = await toB64(pendingCover);
+    const uploaded = await uploadToStorage(pendingCover, 'articles');
+    if(!uploaded){ btn.disabled=false; btn.textContent='💾 حفظ'; return; }
+    imgVal = uploaded;
   } else if(document.getElementById('cover-preview').style.display!=='none'){
     imgVal = document.getElementById('cover-thumb').src;
   }
@@ -969,8 +991,8 @@ async function previewMulti(inp){
   if(!inp.files||!inp.files.length) return;
   const files=Array.from(inp.files);
   for(const f of files){
-    const b64=await toB64(f);
-    pendingMultiImgs.push(b64);
+    const url = await uploadToStorage(f, 'articles');
+    if(url) pendingMultiImgs.push(url);
   }
   renderMultiPreviews();
   inp.value='';
