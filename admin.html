@@ -560,12 +560,39 @@ const db = {
 };
 
 // ── IMAGE → BASE64 ──
-const toB64 = file => new Promise(r=>{
-  const rd=new FileReader(); rd.onload=e=>r(e.target.result); rd.readAsDataURL(file);
-});
+const toB64 = file => compressImage(file).then(f => new Promise(r=>{
+  const rd=new FileReader(); rd.onload=e=>r(e.target.result); rd.readAsDataURL(f);
+}));
+
+// ── ضغط الصورة تلقائياً قبل أي رفع أو تحويل (تصغير الأبعاد + ضغط الجودة) ──
+function compressImage(file, maxDim=1600, quality=0.82){
+  return new Promise(resolve=>{
+    if(!file.type || !file.type.startsWith('image/') || file.type==='image/gif'){ resolve(file); return; }
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      let {width,height} = img;
+      if(width>maxDim || height>maxDim){
+        if(width>height){ height=Math.round(height*maxDim/width); width=maxDim; }
+        else{ width=Math.round(width*maxDim/height); height=maxDim; }
+      }
+      const canvas=document.createElement('canvas');
+      canvas.width=width; canvas.height=height;
+      canvas.getContext('2d').drawImage(img,0,0,width,height);
+      canvas.toBlob(blob=>{
+        URL.revokeObjectURL(url);
+        if(!blob){ resolve(file); return; }
+        resolve(new File([blob], file.name.replace(/\.[^.]+$/,'')+'.jpg', {type:'image/jpeg'}));
+      }, 'image/jpeg', quality);
+    };
+    img.onerror = ()=>{ URL.revokeObjectURL(url); resolve(file); };
+    img.src = url;
+  });
+}
 
 // ── رفع صورة حقيقية لمساحة التخزين بدل تحويلها Base64 ──
 async function uploadToStorage(file, folder){
+  file = await compressImage(file);
   const ext = (file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'') || 'jpg';
   const path = `${folder}/${Date.now()}_${Math.random().toString(36).slice(2,8)}.${ext}`;
   const token = sessionStorage.getItem('athar_admin_token') || SUPA_KEY;
