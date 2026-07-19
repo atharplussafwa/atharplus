@@ -230,6 +230,10 @@ nav{position:sticky;top:0;z-index:100;background:rgba(253,250,244,.97);backdrop-
 .share-copy:hover{border-color:rgba(26,102,68,.4);color:var(--gold)}
 .comments-section{max-width:800px;margin:2rem auto;padding:0 2rem 3rem}
 .comments-title{font-size:1.05rem;font-weight:700;margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid rgba(26,102,68,.1)}
+.related-wrap{max-width:800px;margin:0 auto;padding:0 2rem 1rem}
+.related-title{font-size:1.05rem;font-weight:700;margin-bottom:1.2rem}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
+@media(max-width:600px){.related-wrap{padding:0 1.2rem 1rem}}
 .avg-rating{display:inline-flex;align-items:center;gap:8px;background:rgba(26,102,68,.07);border:1px solid rgba(201,162,39,.2);border-radius:8px;padding:6px 14px;margin-bottom:1.5rem}
 .avg-num{font-size:1.25rem;font-weight:800;color:var(--gold)}
 .avg-stars{color:var(--gold);font-size:.88rem}
@@ -492,6 +496,7 @@ footer{background:#2C1A0E;border-top:1px solid rgba(26,102,68,.12)}
     <a class="share-btn share-tw" id="share-tw" href="#" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>تويتر / X</a>
     <button class="share-btn share-copy" onclick="copyLink()">🔗 نسخ الرابط</button>
   </div>
+  <div id="a-related-wrap"></div>
   <div class="comments-section" id="a-comments-section">
     <div id="avg-rating-display"></div>
     <div class="comments-title">التعليقات والتقييمات</div>
@@ -734,7 +739,7 @@ async function openHonoree(h){
   document.getElementById('h-actions').innerHTML=acts.join('');
   const imgs=Array.isArray(h.gallery)?h.gallery:(h.gallery?JSON.parse(h.gallery):[]);
   const gs=document.getElementById('h-gallery-section');
-  if(imgs.length){gs.style.display='block';document.getElementById('h-gallery-grid').innerHTML=imgs.map(s=>`<img src="${s}" onclick="openLightbox('${s}')">`).join('');}else{gs.style.display='none';}
+  if(imgs.length){gs.style.display='block';document.getElementById('h-gallery-grid').innerHTML=imgs.map((s,i)=>`<img src="${s}" alt="${h.name} - صورة ${i+1}" onclick="openLightbox('${s}')">`).join('');}else{gs.style.display='none';}
   goPage('honoree');
 }
 function formatCardDate(dateStr){
@@ -777,6 +782,7 @@ function showArticleNotFound(){
   document.getElementById('a-body').innerHTML=`<div style="text-align:center;padding:1rem 0 2.5rem">
     <button class="btn-primary" onclick="goPage('gallery')">← تصفّح الأخبار</button>
   </div>`;
+  document.getElementById('a-related-wrap').innerHTML='';
   document.getElementById('a-share-bar').style.display='none';
   document.getElementById('a-comments-section').style.display='none';
   goPage('article');
@@ -799,7 +805,7 @@ async function openArticle(id){
     ? `<div class="a-cover"><img src="${art.img}" alt="${art.title}"></div>` : '';
   let body=(art.body||'').split('\n\n').map(p=>`<p>${linkify(p)}</p>`).join('');
   const imgs=Array.isArray(art.imgs)?art.imgs:(art.imgs?JSON.parse(art.imgs):[]);
-  if(imgs.length)body+=`<h2>صور من الحفل</h2><div class="art-gallery">${imgs.map(s=>`<img src="${s}" onclick="openLightbox('${s}')">`).join('')}</div>`;
+  if(imgs.length)body+=`<h2>صور من الحفل</h2><div class="art-gallery">${imgs.map((s,i)=>`<img src="${s}" alt="${art.title} - صورة ${i+1}" onclick="openLightbox('${s}')">`).join('')}</div>`;
   document.getElementById('a-body').innerHTML=body;
   const artUrl=`${SITE_URL}?article=${id}`;
   history.pushState({article:id},'',artUrl);
@@ -807,7 +813,17 @@ async function openArticle(id){
   document.getElementById('share-wa').href=`https://wa.me/?text=${pt}%20${pu}`;
   document.getElementById('share-tw').href=`https://twitter.com/intent/tweet?text=${pt}&url=${pu}`;
   document.getElementById('c-name').value='';document.getElementById('c-text').value='';
-  setRating(0);await loadComments(id);goPage('article');
+  setRating(0);await loadComments(id);await loadRelatedArticles(id,art.cat);goPage('article');
+}
+async function loadRelatedArticles(id,cat){
+  const wrap=document.getElementById('a-related-wrap');
+  if(!cat){wrap.innerHTML='';return;}
+  const rows=await db.get('articles',`status=eq.منشور&cat=eq.${encodeURIComponent(cat)}&id=neq.${id}&order=date.desc&limit=3`);
+  if(!rows||!rows.length){wrap.innerHTML='';return;}
+  wrap.innerHTML=`<div class="related-wrap">
+    <div class="related-title">أخبار <span class="gold">ذات صلة</span></div>
+    <div class="related-grid">${rows.map(cardHTML).join('')}</div>
+  </div>`;
 }
 function copyLink(){const url=currentArticleId?`${SITE_URL}?article=${currentArticleId}`:SITE_URL;navigator.clipboard.writeText(url).then(()=>showNotif('✓ تم نسخ الرابط'));}
 function setRating(v){currentRating=v;document.querySelectorAll('#star-input span').forEach(s=>s.classList.toggle('on',+s.dataset.v<=v));}
@@ -882,7 +898,7 @@ async function loadPromoPopup(){
     const p = rows && rows[0];
     if(!p || !p.active || !p.description) return;
     document.getElementById('promo-modal-content').innerHTML =
-      (p.image?`<img class="promo-modal-img" src="${p.image}" alt="">`:'')+
+      (p.image?`<img class="promo-modal-img" src="${p.image}" alt="إعلان أثر+">`:'')+
       `<div class="promo-modal-body">
         <div class="promo-modal-desc">${p.description}</div>
         ${p.link?`<a class="promo-modal-link" href="${p.link}" target="_blank" rel="noopener">عرض المزيد ←</a>`:''}
