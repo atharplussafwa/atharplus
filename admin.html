@@ -597,7 +597,7 @@ async function uploadToStorage(file, folder){
   const path = `${folder}/${Date.now()}_${Math.random().toString(36).slice(2,8)}.${ext}`;
   const token = sessionStorage.getItem('athar_admin_token') || SUPA_KEY;
   try{
-    const res = await fetch(`${SUPA_URL}/storage/v1/object/media/${path}`, {
+    const res = await fetch(`${SUPA_URL}/storage/v1/object/Media/${path}`, {
       method:'POST',
       headers:{
         'apikey': SUPA_KEY,
@@ -607,7 +607,7 @@ async function uploadToStorage(file, folder){
       body:file
     });
     if(!res.ok){ console.error('upload failed', await res.text()); showNotif('⚠️ فشل رفع الصورة'); return null; }
-    return `${SUPA_URL}/storage/v1/object/public/media/${path}`;
+    return `${SUPA_URL}/storage/v1/object/public/Media/${path}`;
   }catch(e){ console.error(e); showNotif('⚠️ فشل رفع الصورة'); return null; }
 }
 
