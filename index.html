@@ -11,6 +11,7 @@
 <meta property="og:locale" content="ar_SA">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--gold:#1A6644;--gold-light:#2A8A5C;--gold-dark:#0F4D30;--dark:#FDFAF4;--dark2:#F0EDE4;--dark3:#E4DFD4;--text:#2C1A0E;--text-muted:#8B7355;--green:#1A6644;--red:#B03A2E;}
@@ -243,6 +244,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(253,250,244,.97);backdrop-
 .comment-form input:focus,.comment-form textarea:focus{border-color:rgba(26,102,68,.45)}
 .comment-form textarea{min-height:90px;resize:vertical}
 .submit-comment{background:var(--gold);color:#FDFAF4;padding:9px 24px;border-radius:8px;font-family:'Tajawal',sans-serif;font-weight:700;font-size:.88rem;border:none;cursor:pointer;transition:background .2s}
+.submit-comment:disabled{opacity:.5;cursor:not-allowed}
 .submit-comment:hover{background:var(--gold-light)}
 .comment-item{padding:1rem 0;border-bottom:1px solid rgba(26,102,68,.08)}
 .comment-item:last-child{border-bottom:none}
@@ -504,7 +506,8 @@ footer{background:#2C1A0E;border-top:1px solid rgba(26,102,68,.12)}
       </div>
       <input type="text" id="c-name" placeholder="اسمك *">
       <textarea id="c-text" placeholder="اكتب تعليقك..."></textarea>
-      <button class="submit-comment" onclick="submitComment()">إرسال</button>
+      <div class="cf-turnstile" id="ts-comment" data-sitekey="0x4AAAAAAD5MbNwCKPrJho-R" data-callback="onTsComment" data-expired-callback="onTsCommentExpired" style="margin-bottom:12px"></div>
+      <button class="submit-comment" id="c-btn" onclick="submitComment()" disabled>إرسال</button>
     </div>
     <div id="comments-list"></div>
   </div>
@@ -560,7 +563,10 @@ footer{background:#2C1A0E;border-top:1px solid rgba(26,102,68,.12)}
         <div class="fg"><label>اسمك (من يُرشِّح)</label><input type="text" id="nom-by" placeholder="اسمك الكريم"></div>
         <div class="fg"><label>رقم تواصلك (اختياري)</label><input type="text" id="nom-phone" placeholder="+966 5x xxx xxxx"></div>
       </div>
-      <div class="form-foot"><button class="btn-submit" id="nom-btn" onclick="submitNomination()">إرسال الترشيح</button></div>
+      <div class="form-foot">
+        <div class="cf-turnstile" id="ts-nom" data-sitekey="0x4AAAAAAD5MbNwCKPrJho-R" data-callback="onTsNom" data-expired-callback="onTsNomExpired" style="margin-bottom:14px"></div>
+        <button class="btn-submit" id="nom-btn" onclick="submitNomination()" disabled>إرسال الترشيح</button>
+      </div>
     </div>
   </div>
 </div>
@@ -579,7 +585,10 @@ footer{background:#2C1A0E;border-top:1px solid rgba(26,102,68,.12)}
         <div class="fg"><label>رقم التواصل (اختياري)</label><input type="text" id="ct-phone" placeholder="+966 5x xxx xxxx"></div>
         <div class="fg full"><label>رسالتك *</label><textarea id="ct-msg" placeholder="اكتب ما تودّ إيصاله إلينا..."></textarea></div>
       </div>
-      <div class="form-foot"><button class="btn-submit" id="ct-btn" onclick="submitContact()">إرسال الرسالة</button></div>
+      <div class="form-foot">
+        <div class="cf-turnstile" id="ts-contact" data-sitekey="0x4AAAAAAD5MbNwCKPrJho-R" data-callback="onTsContact" data-expired-callback="onTsContactExpired" style="margin-bottom:14px"></div>
+        <button class="btn-submit" id="ct-btn" onclick="submitContact()" disabled>إرسال الرسالة</button>
+      </div>
     </div>
   </div>
 </div><script>
@@ -794,28 +803,43 @@ async function loadComments(id){
   if(!list.length){cl.innerHTML=`<div style="color:var(--text-muted);font-size:.86rem;padding:1rem 0">لا توجد تعليقات بعد</div>`;return;}
   cl.innerHTML=list.map(c=>`<div class="comment-item"><div class="comment-head"><span class="comment-author">${c.author}</span><span style="display:flex;align-items:center;gap:8px">${c.rating?`<span class="comment-stars">${'★'.repeat(c.rating)}${'☆'.repeat(5-c.rating)}</span>`:''}<span class="comment-date">${toHijri(c.created_at)||new Date(c.created_at).toLocaleDateString('ar-SA')}</span></span></div>${c.body?`<div class="comment-text">${c.body}</div>`:''}</div>`).join('');
 }
+// ── Cloudflare Turnstile: تفعيل/تعطيل أزرار الإرسال ──
+function onTsComment(){document.getElementById('c-btn').disabled=false;}
+function onTsCommentExpired(){document.getElementById('c-btn').disabled=true;}
+function onTsNom(){document.getElementById('nom-btn').disabled=false;}
+function onTsNomExpired(){document.getElementById('nom-btn').disabled=true;}
+function onTsContact(){document.getElementById('ct-btn').disabled=false;}
+function onTsContactExpired(){document.getElementById('ct-btn').disabled=true;}
+
 async function submitComment(){
   const name=document.getElementById('c-name').value.trim();const text=document.getElementById('c-text').value.trim();
   if(!name){alert('الرجاء كتابة اسمك');return;}if(!text&&!currentRating){alert('الرجاء كتابة تعليق أو اختيار تقييم');return;}
+  if(!(window.turnstile&&turnstile.getResponse(document.getElementById('ts-comment')))){alert('الرجاء إكمال التحقق قبل الإرسال');return;}
   await db.post('comments',{article_id:currentArticleId,author:name,body:text,rating:currentRating,approved:false});
   document.getElementById('c-name').value='';document.getElementById('c-text').value='';setRating(0);
+  if(window.turnstile)turnstile.reset(document.getElementById('ts-comment'));
+  document.getElementById('c-btn').disabled=true;
   showNotif('✓ تم إرسال تعليقك وسيظهر بعد المراجعة');
 }
 async function submitNomination(){
   const name=document.getElementById('nom-name').value.trim();const reason=document.getElementById('nom-reason').value.trim();
   if(!name){alert('الرجاء كتابة اسم المرشَّح');return;}if(!reason){alert('الرجاء كتابة سبب الترشيح');return;}
+  if(!(window.turnstile&&turnstile.getResponse(document.getElementById('ts-nom')))){alert('الرجاء إكمال التحقق قبل الإرسال');return;}
   const btn=document.getElementById('nom-btn');btn.disabled=true;btn.textContent='جاري الإرسال...';
   await db.post('nominations',{name,field:document.getElementById('nom-field').value.trim(),reason,submitted_by:document.getElementById('nom-by').value.trim(),phone:document.getElementById('nom-phone').value.trim()});
   ['nom-name','nom-field','nom-reason','nom-by','nom-phone'].forEach(id=>document.getElementById(id).value='');
-  btn.disabled=false;btn.textContent='إرسال الترشيح';showNotif('✓ تم إرسال الترشيح، شكرًا لك');
+  if(window.turnstile)turnstile.reset(document.getElementById('ts-nom'));
+  btn.disabled=true;btn.textContent='إرسال الترشيح';showNotif('✓ تم إرسال الترشيح، شكرًا لك');
 }
 async function submitContact(){
   const name=document.getElementById('ct-name').value.trim();const email=document.getElementById('ct-email').value.trim();const msg=document.getElementById('ct-msg').value.trim();
   if(!name){alert('الرجاء كتابة اسمك');return;}if(!email){alert('الرجاء كتابة بريدك الإلكتروني');return;}if(!msg){alert('الرجاء كتابة رسالتك');return;}
+  if(!(window.turnstile&&turnstile.getResponse(document.getElementById('ts-contact')))){alert('الرجاء إكمال التحقق قبل الإرسال');return;}
   const btn=document.getElementById('ct-btn');btn.disabled=true;btn.textContent='جاري الإرسال...';
   await db.post('contact_messages',{name,email,phone:document.getElementById('ct-phone').value.trim(),message:msg});
   ['ct-name','ct-email','ct-phone','ct-msg'].forEach(id=>document.getElementById(id).value='');
-  btn.disabled=false;btn.textContent='إرسال الرسالة';showNotif('✓ تم إرسال رسالتك، سنتواصل معك قريبًا');
+  if(window.turnstile)turnstile.reset(document.getElementById('ts-contact'));
+  btn.disabled=true;btn.textContent='إرسال الرسالة';showNotif('✓ تم إرسال رسالتك، سنتواصل معك قريبًا');
 }
 function animateStats(pub){
   anim('cnt-h',pub,1200);anim('cnt-e',pub,900);
