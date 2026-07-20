@@ -410,7 +410,6 @@ footer{background:#2C1A0E;border-top:1px solid rgba(26,102,68,.12)}
     </div>
     <div class="stats-row">
       <div class="stat"><div class="stat-num" id="cnt-h">0</div><div class="stat-label">مكرَّم</div></div>
-      <div class="stat"><div class="stat-num" id="cnt-e">0</div><div class="stat-label">حفل تكريم</div></div>
       <div class="stat"><div class="stat-num" id="cnt-y">0</div><div class="stat-label">سنوات</div></div>
     </div>
   </div>
@@ -753,8 +752,8 @@ function cardHTML(a){
 async function loadHomeGrid(){
   const rows=await db.get('articles','status=eq.منشور&order=date.desc&limit=3');
   document.getElementById('home-grid').innerHTML=rows?.length?rows.map(cardHTML).join(''):`<p style="color:var(--text-muted)">لا توجد أخبار بعد</p>`;
-  const all=await db.get('articles','status=eq.منشور&select=id');
-  animateStats((all||[]).length);
+  const honorees=await db.get('wall','status=eq.done&select=id');
+  animateStats((honorees||[]).length);
 }
 async function loadGalleryAll(){const rows=await db.get('articles','status=eq.منشور&order=date.desc');allArticles=rows||[];renderGallery();}
 function renderGallery(){
@@ -875,7 +874,7 @@ async function submitContact(){
   btn.disabled=true;btn.textContent='إرسال الرسالة';showNotif('✓ تم إرسال رسالتك، سنتواصل معك قريبًا');
 }
 function animateStats(pub){
-  anim('cnt-h',pub,1200);anim('cnt-e',pub,900);
+  anim('cnt-h',pub,1200);
   const founding=new Date('2025-09-01'),now=new Date();
   const months=(now.getFullYear()-founding.getFullYear())*12+(now.getMonth()-founding.getMonth());
   const el=document.getElementById('cnt-y');
